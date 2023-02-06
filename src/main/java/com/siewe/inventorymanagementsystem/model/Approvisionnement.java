@@ -44,9 +44,9 @@ public class Approvisionnement {
     @ManyToOne(optional = false)
     private Product product;
 
- //    @JoinColumn(name = "bl_id", referencedColumnName = "id")
-//    @ManyToOne
-//    private Bl bl;
+     @JoinColumn(name = "bl_id", referencedColumnName = "id")
+    @ManyToOne
+    private ListFacture bl;
 
     @JoinColumn(name = "supplier_id", referencedColumnName = "id")
     @ManyToOne

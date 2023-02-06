@@ -23,6 +23,7 @@ import java.util.Map;
 
 @CrossOrigin
 @RestController
+@RequestMapping("/api")
 public class UserController {
     private final Logger log = LoggerFactory.getLogger(UserController.class);
 
@@ -50,7 +51,7 @@ public class UserController {
             return new ResponseEntity(new CustomErrorType("Unable to create. A user with id " +
                     userDto.getId() + " already exist."), HttpStatus.CONFLICT);
         }*/
-        if(userRepository.findByUsername(userDto.getLogin().toLowerCase()) != null){
+        if (userRepository.findByUsername(userDto.getLogin().toLowerCase()) != null) {
             error.put("error", "username already in use");
             return new ResponseEntity(error, HttpStatus.BAD_REQUEST);
         }
@@ -71,12 +72,12 @@ public class UserController {
         return new ResponseEntity<UserDto>(result, HttpStatus.CREATED);
     }
 
-    @PostMapping("/api/user-seller")
+    @PostMapping("/user-seller")
     public ResponseEntity<UserDto> createSeller(@Valid @RequestBody UserDto userDto, HttpServletRequest request) throws URISyntaxException {
         log.debug("REST request to save User : {}", userDto);
         HashMap<String, String> error = new HashMap<>();
 
-        if(userRepository.findByUsername(userDto.getLogin().toLowerCase()) != null){
+        if (userRepository.findByUsername(userDto.getLogin().toLowerCase()) != null) {
             error.put("error", "Ce nom d'utilisateur est déjà utilisé !");
             return new ResponseEntity(error, HttpStatus.BAD_REQUEST);
         }
@@ -90,10 +91,10 @@ public class UserController {
      * @param userDto the user to update
      * @return the ResponseEntity with status 200 (OK) and with body the updated user,
      * or with status 400 (Bad Request) if the user is not valid,
-     * or with status 500 (Internal Server Error) if the user couldnt be updated
+     * or with status 500 (Internal Server Error) if the user couldn't be updated
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
-    @PutMapping("/api/users")
+    @PutMapping("/users")
     public ResponseEntity<UserDto> updateUser(@Valid @RequestBody UserDto userDto) throws URISyntaxException {
         log.debug("REST request to update User : {}", userDto);
         if (userDto.getId() == null) {
@@ -108,7 +109,7 @@ public class UserController {
      *
      * @return the ResponseEntity with status 200 (OK) and the list of users in body
      */
-    @GetMapping("/api/users")
+    @GetMapping("/users")
     public Page<UserDto> getAllUsers(@RequestParam(name = "page", defaultValue = "0") Integer page,
                                      @RequestParam(name = "size", defaultValue = "5") Integer size,
                                      @RequestParam(name = "sortBy", defaultValue = "createdDate") String sortBy,
@@ -120,7 +121,7 @@ public class UserController {
         return userService.findAll(page, size, sortBy, direction, login, roles);
     }
 
-    @GetMapping("/api/sellers")
+    @GetMapping("/sellers")
     public Page<UserDto> getSellers(
             @RequestParam(name = "page", defaultValue = "0") Integer page,
             @RequestParam(name = "size", defaultValue = "5") Integer size,
@@ -138,7 +139,7 @@ public class UserController {
     }
     */
 
-    @GetMapping("/api/users-search")
+    @GetMapping("/users-search")
     public Map<String, List<UserDto>> getAllUsers(@RequestParam(name = "mc") String mc) {
         log.debug("REST request to get Users");
         Map<String, List<UserDto>> map = new HashMap<>();
@@ -152,7 +153,7 @@ public class UserController {
      * @param id the id of the user to retrieve
      * @return the ResponseEntity with status 200 (OK) and with body the user, or with status 404 (Not Found)
      */
-    @GetMapping("/api/users/{id}")
+    @GetMapping("/users/{id}")
     public ResponseEntity<UserDto> getUser(@PathVariable Long id) {
         log.debug("REST request to get User : {}", id);
         return userService.findOne(id);
@@ -164,7 +165,7 @@ public class UserController {
      * @param id the id of the user to delete
      * @return the ResponseEntity with status 200 (OK)
      */
-    @DeleteMapping("/api/users/{id}")
+    @DeleteMapping("/users/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable Long id) {
         log.debug("REST request to delete User : {}", id);
         userService.delete(id);

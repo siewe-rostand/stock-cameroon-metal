@@ -309,8 +309,7 @@ public class UserService {
 
         Page<User> users = userRepository.findAll("%"+login+"%", roles, pageable);
 
-        Page<UserDto> userDtos = users.map(user -> new UserDto().createDTO(user));
-        return userDtos;
+        return users.map(user -> new UserDto().createDTO(user));
     }
 
     public Page<UserDto> findSellers(Integer page, Integer size, String sortBy, String direction) {

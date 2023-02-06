@@ -4,6 +4,7 @@ myApp.config(function ($routeProvider,$locationProvider){
         templateUrl:'modules/home/home.html',
             controller:'homeController'
     }).when('/users',{
-        templateUrl:'modules/users/views/create.html'
+        templateUrl:'modules/users/views/create.html',
+        controller:'userController'
     })
 })

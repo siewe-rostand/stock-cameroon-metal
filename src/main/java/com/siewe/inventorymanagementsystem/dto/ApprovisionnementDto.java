@@ -14,6 +14,7 @@ public class ApprovisionnementDto {
     private Double coutTotal;
     private Long productId;
     private String productName;
+    private Long blId;
 
     public ApprovisionnementDto createDTO(Approvisionnement approvisionnement){
         ApprovisionnementDto approvisionnementDto = new ApprovisionnementDto();
@@ -26,6 +27,10 @@ public class ApprovisionnementDto {
             if(approvisionnement.getPrixEntree() != null){
                 approvisionnementDto.setPrixEntree((double) Math.round(approvisionnement.getPrixEntree() * 100.0) / 100.0);
                 approvisionnementDto.setCoutTotal((double) Math.round( (approvisionnement.getPrixEntree() * approvisionnement.getQuantity()) * 100.0)/100.0);
+            }
+
+            if(approvisionnement.getBl() != null){
+                approvisionnementDto.setBlId(approvisionnement.getBl().getId());
             }
 
             if(approvisionnement.getProduct() != null){
