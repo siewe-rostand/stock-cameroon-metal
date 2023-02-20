@@ -4,17 +4,28 @@ import com.siewe.inventorymanagementsystem.model.Role;
 import com.siewe.inventorymanagementsystem.model.User;
 import lombok.Data;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import java.util.Collection;
 import java.util.HashSet;
 
 @Data
 public class UserDto {
     private Long id;
-    private String login;
+    @NotBlank(message = "username required ->" +
+            "lastname must not be empty")
+    private String username;
+    @NotBlank(message = "lastname required ->" +
+            "lastname must not be empty")
     private String lastname;
+    @NotBlank(message = "firstname required ->" +
+            "firstname must not be empty")
     private String firstname;
     private String name;
-    private String address;
+    @Email(message = "Email format please")
+    private String email;
+    private String city;
+    private String quarter;
     private String phone;
     private String phone2;
     private String password;
@@ -57,11 +68,13 @@ public class UserDto {
             userDto.setResetKey(user.getResetKey());
             userDto.setPlayerId(user.getPlayerId());
 
-            userDto.setLogin(user.getUsername());
+            userDto.setUsername(user.getName());
             userDto.setLastname(user.getLastname());
             userDto.setFirstname(user.getFirstname());
             userDto.setName(user.getName());
-            userDto.setAddress(user.getAddress());
+            userDto.setEmail(user.getEmail());
+            userDto.setCity(user.getCity());
+            userDto.setQuarter(user.getQuarter());
 
             userDto.setPhone(user.getTelephone());
             userDto.setPhone2(user.getTelephoneAlt());

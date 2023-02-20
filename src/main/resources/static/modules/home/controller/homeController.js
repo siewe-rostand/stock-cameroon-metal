@@ -1,4 +1,4 @@
-myApp.controller('homeController',function ($scope,$http,config){
+myApp.controller('homeController',function ($scope,$http,config,toaster){
     update();
 
 
@@ -21,7 +21,7 @@ myApp.controller('homeController',function ($scope,$http,config){
     function update() {
         let data = $scope.users;
         console.log(config)
-        let url = config.base_url+'/api/users?roles=manager';
+        let url = config.base_url+'/users?roles=user';
         $http({
             url: url,
             method: 'GET',

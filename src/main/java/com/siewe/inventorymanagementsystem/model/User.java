@@ -16,10 +16,11 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class User implements Serializable {
+public class User{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Basic(optional = false)
     @Column(name = "id")
     private Long userId;
 
@@ -37,8 +38,11 @@ public class User implements Serializable {
     private String password;
 
     private String telephone;
-    @Column(name = "address")
-    private String address;
+    @Column(name = "city")
+    private String city;
+
+    @Column(name = "quarter")
+    private String quarter;
 
     @Column(name = "validated")
     private Boolean validated;
@@ -135,5 +139,24 @@ public class User implements Serializable {
         if(resetDate!=null)
             rd = LocalDateTime.parse(resetDate, formatter);
         this.resetDate = rd;
+    }
+
+    public String getName() {
+        String name = this.getLastname();
+        if(this.getFirstname() != null){
+            name += "_" + this.getFirstname();
+        }
+        return name;
+    }
+    public  String getFullName(){
+        String name = "";
+        if (this.firstname != null){
+            name += this.firstname;
+        }
+
+        if (this.lastname != null){
+            name += this.lastname;
+        }
+        return  name;
     }
 }

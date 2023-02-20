@@ -38,6 +38,7 @@ public interface UserRepository extends JpaRepository<User,Long> {
     Optional<User> findOneByUserId(Long userId);
 
     User deleteUserByUserId(Long id);
+    void deleteByUserId(Long id);
 
     @Query("select distinct u from User u JOIN u.roles r "
             + "where (u.lastname like ?1 or u.firstname like ?1 or ?1 is null) "

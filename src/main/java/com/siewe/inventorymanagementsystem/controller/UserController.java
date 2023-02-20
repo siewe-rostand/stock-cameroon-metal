@@ -51,7 +51,7 @@ public class UserController {
             return new ResponseEntity(new CustomErrorType("Unable to create. A user with id " +
                     userDto.getId() + " already exist."), HttpStatus.CONFLICT);
         }*/
-        if (userRepository.findByUsername(userDto.getLogin().toLowerCase()) != null) {
+        if (userRepository.findByUsername(userDto.getUsername().toLowerCase()) != null) {
             error.put("error", "username already in use");
             return new ResponseEntity(error, HttpStatus.BAD_REQUEST);
         }
@@ -77,7 +77,7 @@ public class UserController {
         log.debug("REST request to save User : {}", userDto);
         HashMap<String, String> error = new HashMap<>();
 
-        if (userRepository.findByUsername(userDto.getLogin().toLowerCase()) != null) {
+        if (userRepository.findByUsername(userDto.getUsername().toLowerCase()) != null) {
             error.put("error", "Ce nom d'utilisateur est déjà utilisé !");
             return new ResponseEntity(error, HttpStatus.BAD_REQUEST);
         }
@@ -105,9 +105,9 @@ public class UserController {
     }
 
     /**
-     * GET  /users : get all the users.
+     * GET  /users : get all the users by role.
      *
-     * @return the ResponseEntity with status 200 (OK) and the list of users in body
+     * @return the ResponseEntity with status 200 (OK) and the list of users with a given role in body
      */
     @GetMapping("/users")
     public Page<UserDto> getAllUsers(@RequestParam(name = "page", defaultValue = "0") Integer page,

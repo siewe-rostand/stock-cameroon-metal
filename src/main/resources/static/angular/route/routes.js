@@ -2,9 +2,19 @@ myApp.config(function ($routeProvider,$locationProvider){
     $routeProvider
         .when('/',{
         templateUrl:'modules/home/home.html',
-            controller:'homeController'
+            controller:'homeController',
+            controllerAs:'home'
     }).when('/users',{
         templateUrl:'modules/users/views/create.html',
-        controller:'userController'
+        controller:'userController',
+        controllerAs:'createUser'
+    }).when('/users/list',{
+        templateUrl:'modules/users/views/user-list.html',
+        controller:'userController',
+        controllerAs:'userList'
+    }).when('/users/:id/edit',{
+        templateUrl:'modules/users/views/update.html',
+        controller:'userController',
+        controllerAs:'updateUser'
     })
 })

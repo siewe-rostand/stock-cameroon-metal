@@ -8,6 +8,19 @@ myApp.factory('utils',function ($http){
         return base_url;
     }
 
+    obj.loadDatatable = function (tableId){
+        $(document).ready( function () {
+            $('#'+tableId).DataTable();
+        } );
+    }
+
+    obj.destroyDatatable = function(tableId){
+        $('#'+tableId).removeClass('initialized').DataTable().destroy();
+    }
+
+    obj.toast = function (trueorfalse, message){
+
+    }
 
     return obj;
 })

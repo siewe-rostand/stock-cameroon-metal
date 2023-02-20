@@ -104,12 +104,20 @@ public class UserService {
 
         User user = new User();
         user.setUserId(userDto.getId());
-        user.setUsername(userDto.getLogin());
-        //if(userDto.getEmail() != null)
-        //user.setEmail(userDto.getEmail().toLowerCase());
+        user.setUsername(userDto.getUsername());
+        if (userDto.getUsername().isEmpty()){
+            throw new RuntimeException("Username must not be null!");
+        }
+        if(userDto.getEmail() != null) {
+            user.setEmail(userDto.getEmail().toLowerCase());
+        }
         user.setLastname(userDto.getLastname());
         user.setFirstname(userDto.getFirstname());
+        user.setName(userDto.getName());
         user.setTelephone(userDto.getPhone());
+        user.setTelephoneAlt(userDto.getPhone2());
+        user.setCity(userDto.getCity());
+        user.setQuarter(userDto.getQuarter());
 
         user.setLangKey(userDto.getLangKey());
         user.setActivated(true);
@@ -120,7 +128,7 @@ public class UserService {
         LocalDate date = new LocalDate();
         user.setCreatedDate(date.toString(pattern));
 
-        //before saving a user we encrypt password and we can give roles
+        //before saving a user we encrypt password, and we can give roles
         user.setPassword(userDto.getPassword());
         //user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         //user.setRoles(new HashSet<>(roleRepository.findAll()));
@@ -133,6 +141,38 @@ public class UserService {
 
         User result =  userRepository.save(user);
         return new UserDto().createDTO(result);
+    }
+
+
+    public UserDto save(UserDto userDto){
+        log.debug("Request to save a new user {}",userDto);
+
+        User user = new User();
+        if (userRepository.findByUsername(userDto.getUsername()) != null){
+            throw new RuntimeException("Username already exist!");
+        }
+        user.setUserId(userDto.getId());
+        user.setFirstname(userDto.getFirstname());
+        user.setLastname(userDto.getLastname());
+        user.setUsername(userDto.getUsername());
+        user.setTelephone(userDto.getPhone());
+        user.setPassword(userDto.getPassword());
+
+        //set created date;
+        String pattern = "yyyy-MM-dd";
+        LocalDate date = new LocalDate(DateTimeZone.forOffsetHours(1));
+        user.setCreatedDate(date.toString(pattern));
+
+        HashSet<Role> roles = new HashSet<>();
+        if (user.getRoles() != null){
+            for (String role : userDto.getRoles())
+                roles.add(roleRepository.findByName(role));
+        }
+        user.setRoles(roles);
+        User result = userRepository.save(user);
+
+        return new UserDto().createDTO(result);
+
     }
 
     /**
@@ -150,7 +190,7 @@ public class UserService {
         customer.setName(customerDto.getName());
         customer.setTelephone(customerDto.getPhone());
         customer.setTelephoneAlt(customerDto.getPhone());
-        customer.setAddress(customerDto.getAddress());
+        customer.setCity(customerDto.getCity());
 
         String pattern = "yyyy-MM-dd";
         LocalDateTime datetime = new LocalDateTime(DateTimeZone.forOffsetHours(1));
@@ -164,7 +204,7 @@ public class UserService {
 
         User user = new User();
         user.setUserId(userDto.getId());
-        user.setUsername(userDto.getLogin());
+        user.setUsername(userDto.getUsername());
         user.setLastname(userDto.getLastname());
         user.setFirstname(userDto.getFirstname());
         user.setTelephone(userDto.getPhone());
@@ -320,8 +360,7 @@ public class UserService {
         //Page<User> users = userRepository.findByRole("USER", pageable);
         Page<User> users = userRepository.findByRole("USER", pageable);
 
-        Page<UserDto> userDtos = users.map(user -> new UserDto().createDTO(user));
-        return userDtos;
+        return users.map(user -> new UserDto().createDTO(user));
     }
        /*
     public List<UserDto> findSellersByStore(Long storeId) {
@@ -382,7 +421,7 @@ public class UserService {
                 user.setDeleted(true);
                 userRepository.save(user);
             }else {
-                userRepository.deleteUserByUserId(id);
+                userRepository.deleteByUserId(id);
             }
         }
     }
