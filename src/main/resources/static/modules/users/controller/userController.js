@@ -23,7 +23,7 @@ myApp.controller('userController', ['$scope', 'UserService', 'utils','toaster', 
          console.log($scope.clickedUser)
     }
     function fetchAllUsers() {
-        toastr.options.onclick = function() { console.log('clicked'); }
+        toaster.options.onclick = function() { console.log('clicked'); }
         UserService.fetchAllUsers('/users?roles=user')
             .then(
                 function (d) {
@@ -82,7 +82,6 @@ myApp.controller('userController', ['$scope', 'UserService', 'utils','toaster', 
     }
 
     function submit() {
-        $scope.user.username = $scope.user.firstname +'_'+$scope.user.lastname;
         console.log($scope.user)
         if ($scope.user.id === null) {
             console.log('Saving New User', $scope.user);

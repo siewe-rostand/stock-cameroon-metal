@@ -72,6 +72,19 @@ public class UserController {
         return new ResponseEntity<UserDto>(result, HttpStatus.CREATED);
     }
 
+    @PostMapping("/customers")
+    public ResponseEntity<UserDto> createCustomer(@Valid @RequestBody UserDto userDto, HttpServletRequest request) throws URISyntaxException {
+        log.debug("REST request to save User : {}", userDto);
+        HashMap<String, String> error = new HashMap<>();
+
+        if (userRepository.findByUsername(userDto.getUsername().toLowerCase()) != null) {
+            error.put("error", "Ce nom d'utilisateur est déjà utilisé !");
+            return new ResponseEntity(error, HttpStatus.BAD_REQUEST);
+        }
+        UserDto result = userService.saveCustomer(userDto, "CUSTOMER");
+        return new ResponseEntity<UserDto>(result, HttpStatus.CREATED);
+    }
+
     @PostMapping("/user-seller")
     public ResponseEntity<UserDto> createSeller(@Valid @RequestBody UserDto userDto, HttpServletRequest request) throws URISyntaxException {
         log.debug("REST request to save User : {}", userDto);

@@ -23,3 +23,9 @@ myApp.directive('userList',function (){
         templateUrl:'modules/users/views/directive/user_list.html'
     }
 });
+myApp.directive('customerList',function (){
+    return {
+        restrict:'E',
+        templateUrl:'modules/customers/views/directive/customer_list.html'
+    }
+});

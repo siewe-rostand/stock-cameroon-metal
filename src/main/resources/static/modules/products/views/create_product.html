@@ -1,0 +1,75 @@
+<section id="multiple-column-form">
+    <div class="row match-height">
+        <div class="col-12">
+            <div class="card shadow m-3 border-bottom-secondary border-left-secondary rounded">
+                <div class="card-header py-3">
+                    <h4 class="font-weight-bold text-primary">Nouveau Produit</h4>
+                </div>
+                <div class="card-body">
+                    <form class="form" ng-submit="submit()">
+                        <div class="row">
+                            <!--              name field-->
+                            <div class="col-md-6 col-12">
+                                <div class="form-group">
+                                    <label for="name">Nom</label>
+                                    <input type="text" id="name" class="form-control"
+                                           placeholder="Nom Produit" name="name"
+                                           ng-model="product.name">
+                                </div>
+                            </div>
+                            <!--              quantity field-->
+                            <div class="col-md-6 col-12">
+                                <div class="form-group">
+                                    <label for="quantity">Quantite</label>
+                                    <input type="text" id="quantity" class="form-control"
+                                           placeholder="Quantite" name="quantity" ng-model="product.quantity">
+                                </div>
+                            </div>
+                            <!--              price field-->
+                            <div class="col-md-6 col-12">
+                                <div class="form-group">
+                                    <label for="price">Prix</label>
+                                    <input type="text" id="price" class="form-control"
+                                           placeholder="Veuillez entrer le prix"
+                                           name="price" ng-model="product.price">
+                                </div>
+                            </div>
+                            <!--              quartier field-->
+                            <div class="col-md-6 col-12">
+                                <div class="form-group">
+                                    <label for="description">Description</label>
+                                    <input type="text" id="description" class="form-control"
+                                           name="description" placeholder="Veuillez choisir le quartier"
+                                           ng-model="product.description">
+                                </div>
+                            </div>
+                            <!--              category field-->
+                            <div class="col-md-6 col-12">
+                                <div class="form-group">
+                                    <label for="category">Categorie</label>
+                                    <input type="text" id="category" class="form-control"
+                                           name="category" placeholder="Selectionner la categorie"
+                                           ng-model="customer.phone">
+                                </div>
+                            </div>
+                            <!--              telephone 2 field-->
+                            <div class="col-md-6 col-12">
+                                <div class="form-group">
+                                    <label for="telephone_alt">Telephone 2</label>
+                                    <input type="text" id="telephone_alt" class="form-control"
+                                           name="telephone_alt" placeholder="autre numéro de téléphone"
+                                           ng-model="customer.phone2">
+                                </div>
+                            </div>
+
+                            <div class="col-12 d-flex justify-content-end">
+                                <button type="submit" class="btn btn-primary me-1 mb-1">Sauvegarder</button>
+                                <!--                  <button type="reset" class="btn btn-light-secondary me-1 mb-1">Reset</button>-->
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

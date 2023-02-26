@@ -16,5 +16,17 @@ myApp.config(function ($routeProvider,$locationProvider){
         templateUrl:'modules/users/views/update.html',
         controller:'userController',
         controllerAs:'updateUser'
+    }).when('/customers/save',{
+        templateUrl:'modules/customers/views/create.html',
+        controller:'customerController',
+        controllerAs:'createCustomer'
+    }).when('/customers',{
+        templateUrl:'modules/customers/views/customer-list.html',
+        controller:'customerController',
+        controllerAs:'customerList'
+    }).when('/customers/:id/edit',{
+        templateUrl:'modules/customers/views/update.html',
+        controller:'customerController',
+        controllerAs:'updateCustomer'
     })
 })

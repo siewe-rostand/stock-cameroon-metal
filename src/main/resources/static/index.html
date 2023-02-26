@@ -85,8 +85,8 @@
                      data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Gestion Client:</h6>
-                        <a class="collapse-item" >Nouveau Client</a>
-                        <a class="collapse-item" >Liste Clients</a>
+                        <a class="collapse-item" ng-href="#!customers/save" >Nouveau Client</a>
+                        <a class="collapse-item" ng-href="#!customers">Liste Clients</a>
                     </div>
                 </div>
             </li>
@@ -404,10 +404,11 @@
 
 <script src="angular/directive/directives.js"></script>
 <script src="angular/services/user-service.js"></script>
-<script src="angular/services/user-service.js"></script>
+<script src="angular/services/customer-service.js"></script>
 
 <script src="modules/home/controller/homeController.js"></script>
 <script src="modules/users/controller/userController.js"></script>
+<script src="modules/customers/controller/customerController.js"></script>
 </body>
 
 </html>

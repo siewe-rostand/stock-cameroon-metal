@@ -16,7 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class User{
+public class User implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -24,7 +24,7 @@ public class User{
     @Column(name = "id")
     private Long userId;
 
-    @Column(name = "name")
+    @Column(name = "fullname")
     private String name;
 
     private String username;
@@ -38,6 +38,9 @@ public class User{
     private String password;
 
     private String telephone;
+
+    @Column(name = "telephone_alt")
+    private String telephoneAlt;
     @Column(name = "city")
     private String city;
 
@@ -50,8 +53,6 @@ public class User{
     @Column(name = "deleted")
     private Boolean deleted;
 
-    @Column(name = "telephone_alt")
-    private String telephoneAlt;
 
     @Column(name = "activated")
     private Boolean activated;
@@ -151,11 +152,11 @@ public class User{
     public  String getFullName(){
         String name = "";
         if (this.firstname != null){
-            name += this.firstname;
+            name += " "+this.firstname;
         }
 
         if (this.lastname != null){
-            name += this.lastname;
+            name += " "+this.lastname;
         }
         return  name;
     }

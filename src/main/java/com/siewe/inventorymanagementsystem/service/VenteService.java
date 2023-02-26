@@ -103,11 +103,12 @@ public class VenteService {
         }
         else{
             //create new customer
+            /* 
             if(venteDto.getCustomer() != null){
                 User customer = customerService.saveCustomer(venteDto.getCustomer());
                 if(customer != null)
                     vente.setCustomer(customer);
-            }
+            }*/
         }
 
         //set created date;
