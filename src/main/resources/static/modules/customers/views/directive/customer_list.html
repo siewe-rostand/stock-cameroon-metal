@@ -1,8 +1,8 @@
 
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-      <h6 class="m-0 font-weight-bold text-primary float-left">Listes des Clients</h6>
-      <a ng-href="#!/customers/save" class="btn btn-primary float-right" >Nouveau Client</a>
+      <h6 class="m-0 font-weight-bold text-info float-left">Listes des Clients</h6>
+      <a ng-href="#!/customers/save" class="btn btn-outline-info float-right" >Nouveau Client</a>
     </div>
     <div class="card-body">
       <div class="table-responsive">
@@ -23,13 +23,19 @@
             <td>{{customer.fullname}}</td>
             <td>{{customer.city}}</td>
             <td>{{customer.quarter}}</td>
-            <td><i class="fas fa-file-alt"></i></td>
             <td>
-              <div class="row">
-                <a ng-href="#!/customers/{{customer.id}}/edit" class="btn btn-outline-secondary col-sm-4" ng-click="getClickUser(customer)"><i class="fas fa-user-edit"></i>Modifier</a>
-                <div class="col-sm-1"></div>
-                <a  data-toggle="modal" class="btn btn-outline-danger col-sm-4" data-target="#exampleModal" ng-click="getClickUser(customer)"><i class="fas fa-trash">Supprimer</i></a>
-  <!--              <button type="button" class="btn btn-outline-danger col-sm-5">Danger</button>-->
+              <span class="badge badge-pill"
+                             data-bgcolor="#e7ebf5"
+                             data-color="#265ed7"
+                             style="color: rgb(38, 94, 215); background-color: rgb(231, 235, 245);"
+                             >active
+                      </span>
+                  </td>
+            <td>
+              <div class="table-actions">
+                <a ng-href="#!/customers/{{customer.id}}/edit"  data-color="#265ed7" style="color: rgb(38, 94, 215);"  ng-click="getClickUser(customer)"><i class="icon-copy dw dw-edit2"></i></a>
+                
+                <a data-color="#e95959" style="color: rgb(233, 89, 89);"  ng-click="remove(customer)"><i class="icon-copy dw dw-delete-3"></i></a>
               </div>
             </td>
           </tr>

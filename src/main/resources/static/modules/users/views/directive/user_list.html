@@ -1,71 +1,123 @@
+<!--<div class="card shadow mb-4">-->
+<!--  <div class="card-header py-3">-->
+<!--    <h6 class="m-0 font-weight-bold text-primary float-left">Listes des utilisateurs</h6>-->
+<!--    <a ng-href="#!/users" class="btn btn-primary float-right" >Nouveau Utilisateur</a>-->
+<!--  </div>-->
+<!--  <div class="card-body">-->
+<!--    <div class="table-responsive">-->
+<!--      <table class="table table-bordered" id="user_table" >-->
+<!--        <thead class="thead-light">-->
+<!--        <tr>-->
+<!--          <th>Nom</th>-->
+<!--          <th>Nom Complete</th>-->
+<!--          <th>Ville</th>-->
+<!--          <th>Age</th>-->
+<!--          <th>Action</th>-->
+<!--          <th>Salary</th>-->
+<!--        </tr>-->
+<!--        </thead>-->
+<!--        <tfoot>-->
+<!--        <tr>-->
+<!--          <th>Name</th>-->
+<!--          <th>Position</th>-->
+<!--          <th>Office</th>-->
+<!--          <th>Age</th>-->
+<!--          <th>Start date</th>-->
+<!--          <th>Salary</th>-->
+<!--        </tr>-->
+<!--        </tfoot>-->
+<!--        <tbody>-->
+<!--        <tr ng-repeat="user in allUsers">-->
+<!--          <td>{{user.lastname}}</td>-->
+<!--          <td>{{user.username}}</td>-->
+<!--          <td>{{user.city}}</td>-->
+<!--          <td><a  ng-href="#!/users"><i class="fas fa-sd-card"></i></a></td>-->
+<!--          <td>-->
+<!--            <div class="row">-->
+<!--              <a ng-href="#!/users/{{user.id}}/edit" class="btn btn-outline-secondary col-sm-4" ng-click="getClickUser(user)"><i class="fas fa-user-edit"></i>Modifier</a>-->
+<!--              <div class="col-sm-1"></div>-->
+<!--              <a  data-toggle="modal" class="btn btn-outline-danger col-sm-4" data-target="#exampleModal" ng-click="getClickUser(user)"><i class="fas fa-trash">Supprimer</i></a>-->
+<!--&lt;!&ndash;              <button type="button" class="btn btn-outline-danger col-sm-5">Danger</button>&ndash;&gt;-->
+<!--            </div>-->
+<!--          </td>-->
+<!--          <td>$112,000</td>-->
+<!--        </tr>-->
+<!--        </tbody>-->
+<!--      </table>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->
 
-<div class="card shadow mb-4">
-  <div class="card-header py-3">
-    <h6 class="m-0 font-weight-bold text-primary float-left">Listes des utilisateurs</h6>
-    <a ng-href="#!/users" class="btn btn-primary float-right" >Nouveau Utilisateur</a>
-  </div>
-  <div class="card-body">
-    <div class="table-responsive">
-      <table class="table table-bordered" id="user_table" >
-        <thead class="thead-light">
+<!--&lt;!&ndash; Modal &ndash;&gt;-->
+<!--<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" ng-init="initView()">-->
+<!--  <div class="modal-dialog" role="document">-->
+<!--    <div class="modal-content">-->
+<!--      <div class="modal-header">-->
+<!--        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>-->
+<!--        <button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
+<!--          <span aria-hidden="true">&times;</span>-->
+<!--        </button>-->
+<!--      </div>-->
+<!--      <div class="modal-body">-->
+<!--        <p>Voulez-vous vraiment supprimer cet utilisateur ?</p>-->
+<!--      </div>-->
+<!--      <div class="modal-footer">-->
+<!--        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>-->
+<!--        <button type="button" class="btn btn-danger" ng-click="remove(clickedUser.id)"><i>&#x1F623</i>OK</button>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->
+
+<div class="card-box pb-10">
+    <div class="h5 pd-20 mb-0">Recent Patient</div>
+    <table class="data-table table nowrap">
+        <thead>
         <tr>
-          <th>Nom</th>
-          <th>Nom Complete</th>
-          <th>Ville</th>
-          <th>Age</th>
-          <th>Action</th>
-          <th>Salary</th>
+            <th class="table-plus">Nom</th>
+            <th>Gender</th>
+            <th>Ville</th>
+            <th>Quartier</th>
+            <th>Active</th>
+            <th class="datatable-nosort">Actions</th>
         </tr>
         </thead>
-        <tfoot>
-        <tr>
-          <th>Name</th>
-          <th>Position</th>
-          <th>Office</th>
-          <th>Age</th>
-          <th>Start date</th>
-          <th>Salary</th>
-        </tr>
-        </tfoot>
         <tbody>
         <tr ng-repeat="user in allUsers">
-          <td>{{user.lastname}}</td>
-          <td>{{user.username}}</td>
-          <td>{{user.city}}</td>
-          <td><a  ng-href="#!/users"><i class="fas fa-sd-card"></i></a></td>
-          <td>
-            <div class="row">
-              <a ng-href="#!/users/{{user.id}}/edit" class="btn btn-outline-secondary col-sm-4" ng-click="getClickUser(user)"><i class="fas fa-user-edit"></i>Modifier</a>
-              <div class="col-sm-1"></div>
-              <a  data-toggle="modal" class="btn btn-outline-danger col-sm-4" data-target="#exampleModal" ng-click="getClickUser(user)"><i class="fas fa-trash">Supprimer</i></a>
-<!--              <button type="button" class="btn btn-outline-danger col-sm-5">Danger</button>-->
-            </div>
-          </td>
-          <td>$112,000</td>
+            <td class="table-plus">
+                <div class="name-avatar d-flex align-items-center">
+                    <div class="avatar mr-2 flex-shrink-0">
+                        <img src="vendors/images/photo5.jpg"
+                                class="border-radius-100 shadow"
+                                width="40"
+                                height="40"
+                                alt=""/>
+                    </div>
+                    <div class="txt">
+                        <div class="weight-600">{{user.fullname}}</div>
+                    </div>
+                </div>
+            </td>
+            <td>Male</td>
+            <td>{{user.city}}</td>
+            <td>{{user.quarter}}</td>
+            <td>
+				<span class="badge badge-pill"
+                       data-bgcolor="#e7ebf5"
+                       data-color="#265ed7"
+                       style="color: rgb(38, 94, 215); background-color: rgb(231, 235, 245);"
+                       >active
+                </span>
+            </td>
+            <td>
+                <div class="table-actions">
+                    <a href="#!/users/{{user.id}}/edit" data-color="#265ed7" style="color: rgb(38, 94, 215);" ng-click="getClickUser(user)">
+                        <i class="icon-copy dw dw-edit2"></i></a>
+                    <a id="sa-params" data-color="#e95959" style="color: rgb(233, 89, 89);" ng-click="remove(user)">
+                        <i class="icon-copy dw dw-delete-3"></i></a>
+                </div>
+            </td>
         </tr>
         </tbody>
-      </table>
-    </div>
-  </div>
-</div>
-
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" ng-init="initView()">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <p>Voulez-vous vraiment supprimer cet utilisateur ?</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-danger" ng-click="remove(clickedUser.id)"><i>&#x1F623</i>OK</button>
-      </div>
-    </div>
-  </div>
+    </table>
 </div>

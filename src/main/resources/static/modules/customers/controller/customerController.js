@@ -1,4 +1,4 @@
-myApp.controller('customerController', ['$scope', 'customerControllerService','toaster', function ($scope, customerControllerService, toaster) {
+myApp.controller('customerController', ['$scope', 'customerControllerService', function ($scope, customerControllerService, ) {
 
 
     $scope.customer = {
@@ -7,7 +7,7 @@ myApp.controller('customerController', ['$scope', 'customerControllerService','t
     };
 
     $scope.submit = submit;
-    $scope.remove = remove;
+    $scope.remove = deleteUser;
     $scope.getClickUser = getClickUser;
 
     fetchAllCustomers();
@@ -21,7 +21,6 @@ myApp.controller('customerController', ['$scope', 'customerControllerService','t
    }
 
     function fetchAllCustomers() {
-        // toaster.options.onclick = function() { console.log('clicked'); }
         customerControllerService.fetchAllCustomers()
             .then(
                 function (d) {
@@ -41,10 +40,18 @@ myApp.controller('customerController', ['$scope', 'customerControllerService','t
         customerControllerService.createCustomers(customer)
         .then(
             function (res){
+                Toast.fire({
+                    icon:'success',
+                    title: 'Client enregistré avec success'
+                })
                 console.log("save new customer response",res);
                 fetchAllCustomers();
             },
             function (errResponse) {
+                Toast.fire({
+                    icon:'error',
+                    title: 'une erreur s\'est produite'
+                })
                 console.error(errResponse)
                 console.error('Error while creating User');
             }
@@ -63,18 +70,37 @@ myApp.controller('customerController', ['$scope', 'customerControllerService','t
             );
     }
 
-    function deleteUser(id) {
-        customerControllerService.deleteCustomer(id)
-            .then(
-                function (res){
-                    console.log(res);
-                    fetchAllCustomers();
-                },
-                function (errResponse) {
-                    console.log(errResponse);
-                    console.error('Error while deleting User');
-                }
-            );
+    function deleteUser(user) {
+        swalWithBootstrapButtons.fire({
+            title: 'Êtes-vous sûr?',
+            html: " de vouloir supprimer"+" <strong>"+ user.fullname + "</strong> " + "?cette action est irréversible",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Oui, Supprimer!',
+            cancelButtonText: 'Non, annuler!',
+            reverseButtons:true,
+            showLoaderOnConfirm: true,
+            allowOutsideClick: () => !Swal.isLoading(),
+            preConfirm: () => {     
+                return customerControllerService.deleteCustomer(user.id)
+                .then(
+                    function (res){
+                        swalWithBootstrapButtons.fire("Supprimmer!", "utilisateur supprimé avec succès.", "success");
+                          console.log(res);
+                        fetchAllCustomers();
+                    },
+                    function (errResponse) {
+                        swalWithBootstrapButtons.fire("OUPS!", "une erreur s'est produite lors de la suppression de cet utilisateur si le problème persiste, veuillez appeler la cellule informatique ", "error");
+                          console.error('Error while deleting customer',errResponse);
+                    }
+                );
+            },
+          }).then((result) => {
+            if (result.dismiss === Swal.DismissReason.cancel) {
+                swalWithBootstrapButtons.fire("Annuler", "L'utilisateur ne sera pas supprimer!!", "error");
+            }
+          })
+        
     }
 
     function submit() {

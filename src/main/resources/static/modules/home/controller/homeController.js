@@ -1,4 +1,4 @@
-myApp.controller('homeController',function ($scope,$http,config,toaster){
+myApp.controller('homeController',function ($scope,$http,config){
     update();
 
 

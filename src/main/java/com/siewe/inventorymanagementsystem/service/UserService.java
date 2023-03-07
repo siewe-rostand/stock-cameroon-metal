@@ -3,6 +3,7 @@ package com.siewe.inventorymanagementsystem.service;
 import com.siewe.inventorymanagementsystem.dto.UserDto;
 import com.siewe.inventorymanagementsystem.model.Role;
 import com.siewe.inventorymanagementsystem.model.User;
+import com.siewe.inventorymanagementsystem.model.error.EntityNotFoundException;
 import com.siewe.inventorymanagementsystem.repository.RoleRepository;
 import com.siewe.inventorymanagementsystem.repository.UserRepository;
 import com.siewe.inventorymanagementsystem.utils.RandomUtil;
@@ -151,7 +152,7 @@ public class UserService {
         user.setUserId(userDto.getId());
         user.setUsername(userDto.getUsername());
         if (userDto.getUsername().isEmpty()){
-            throw new RuntimeException("Username must not be null!");
+            throw new EntityNotFoundException(UserDto.class,"username",userDto.getUsername());
         }
         if(userDto.getEmail() != null) {
             user.setEmail(userDto.getEmail().toLowerCase());
@@ -199,8 +200,9 @@ public class UserService {
         customer.setLastname(customerDto.getLastname());
         customer.setFirstname(customerDto.getFirstname());
         customer.setUsername(customerDto.getFirstname() + "_" + customerDto.getLastname());
+
         if (customerDto.getUsername().isEmpty()){
-            throw new RuntimeException("Username must not be null!");
+            throw new EntityNotFoundException(UserDto.class,"Username must not be null!",customerDto.getUsername());
         }
         customer.setUserId(customerDto.getId());
         customer.setName(customerDto.getFirstname() + "  " + customerDto.getLastname());
@@ -346,10 +348,13 @@ public class UserService {
         log.debug("Request to get all Users");
         List<User> users = userRepository.findAll();
         List<UserDto> userDtos = new ArrayList<>();
-        if (users.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            // You many decide to return HttpStatus.NOT_FOUND
-        }
+        // if (users.isEmpty()){
+        //     throw new EntityNotFoundException(UserDto.class,"Username must not be null!",customerDto.getUsername());
+        // }
+        // if (users.isEmpty()) {
+        //     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        //     // You many decide to return HttpStatus.NOT_FOUND
+        // }
         for (User user : users)
             userDtos.add(new UserDto().createDTO(user));
         return new ResponseEntity<List<UserDto>>(userDtos, HttpStatus.OK);
@@ -399,6 +404,17 @@ public class UserService {
 
         return users.map(user -> new UserDto().createDTO(user));
     }
+
+    public Page<UserDto> findAll(Integer page, Integer size, String sortBy, String direction) {
+        log.debug("Request to get all Users");
+
+        Pageable pageable = PageRequest.of(page, size, Sort.Direction.fromString(direction), sortBy);
+
+        //Page<User> users = userRepository.findByRole("USER", pageable);
+        Page<User> users = userRepository.findAll( pageable);
+
+        return users.map(user -> new UserDto().createDTO(user));
+    }
        /*
     public List<UserDto> findSellersByStore(Long storeId) {
         log.debug("Request to get all Users");
@@ -440,7 +456,7 @@ public class UserService {
                 .map(result -> new ResponseEntity<>(
                         result,
                         HttpStatus.OK))
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+                .orElseThrow(()->new EntityNotFoundException(UserDto.class,"User not found with id",String.valueOf(userDto.getId())));
     }
 
 
@@ -453,6 +469,9 @@ public class UserService {
     public void delete(Long id) {
         log.debug("Request to delete User : {}", id);
         User user = userRepository.findByUserId(id);
+        if(user == null){
+            throw new EntityNotFoundException(User.class,"User not found with id",user.getUserId().toString());
+        }
         if(Optional.ofNullable(user).isPresent()){
             if(!user.getVentes().isEmpty()){
                 user.setDeleted(true);

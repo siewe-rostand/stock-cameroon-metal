@@ -1,5 +1,5 @@
 
-myApp.factory('utils',function ($http){
+myApp.factory('utils',function ($http,$q){
     let obj={};
     const base_url ='http://localhost:8080';
 
@@ -22,5 +22,21 @@ myApp.factory('utils',function ($http){
 
     }
 
+
+
     return obj;
+})
+
+myApp.factory('notifierService',function(toaster){
+    return{
+        notify: function(msg){
+                toaster.pop('success', 'Update Successful', 'The ' + msg + ' setting was updated');
+        },
+        notifyError: function(msg){
+                toaster.pop('error', 'Something Went Wrong', 'Please check with an administrator');
+        },
+        notifyInfo: function(msg){
+                toaster.pop('info', 'Information', 'The ' + msg + 'just happened' );
+        }
+    };
 })

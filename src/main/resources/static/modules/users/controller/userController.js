@@ -1,4 +1,4 @@
-myApp.controller('userController', ['$scope', 'UserService', 'utils','toaster', function ($scope, UserService, utils, toaster) {
+myApp.controller('userController', ['$scope', 'UserService', 'utils','SweetAlertService', function ($scope, UserService, utils,SweetAlertService) {
 
     let self = this;
     $scope.user = {
@@ -9,7 +9,7 @@ myApp.controller('userController', ['$scope', 'UserService', 'utils','toaster', 
 
     $scope.submit = submit;
     $scope.editUser = edit;
-    $scope.remove = remove;
+    $scope.remove = deleteUser;
     $scope.reset = reset;
     $scope.getClickUser = getClickUser;
 
@@ -23,8 +23,7 @@ myApp.controller('userController', ['$scope', 'UserService', 'utils','toaster', 
          console.log($scope.clickedUser)
     }
     function fetchAllUsers() {
-        toaster.options.onclick = function() { console.log('clicked'); }
-        UserService.fetchAllUsers('/users?roles=user')
+        UserService.fetchAllUsers('/all-users')
             .then(
                 function (d) {
                     // utils.destroyDatatable('user_table');
@@ -59,26 +58,55 @@ myApp.controller('userController', ['$scope', 'UserService', 'utils','toaster', 
     function updateUser(user) {
         UserService.updateUser('/users',user)
             .then(
-                fetchAllUsers,
+                function(res){
+                    Toast.fire({
+                        icon:'success',
+                        title: 'utilisateur modifié avec success'
+                    })
+                    fetchAllUsers();
+                },
                 function (errResponse) {
+                    Toast.fire({
+                        icon:'error',
+                        title: 'une erreur s\'est produite'
+                    })
                     console.log(errResponse);
                     console.error('Error while updating User');
                 }
             );
     }
 
-    function deleteUser(id) {
-        UserService.deleteUser('/users/',id)
-            .then(
-                function (res){
-                    console.log(res);
-                    fetchAllUsers();
-                },
-                function (errResponse) {
-                    console.log(errResponse);
-                    console.error('Error while deleting User');
-                }
-            );
+    function deleteUser(user) {
+        
+        swalWithBootstrapButtons.fire({
+            title: 'Êtes-vous sûr?',
+            html: " de vouloir supprimer"+" <strong>"+ user.fullname + "</strong> " + "?cette action est irréversible",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Oui, Supprimer!',
+            cancelButtonText: 'Non, annuler!',
+            reverseButtons:true,
+            showLoaderOnConfirm: true,
+            allowOutsideClick: () => !Swal.isLoading(),
+            preConfirm: (user) => {     
+                return UserService.deleteUser('/users/',user.id)
+              .then(
+                  function (res){
+                    swalWithBootstrapButtons.fire("Supprimmer!", "utilisateur supprimé avec succès.", "success");
+                      console.log(res);
+                      fetchAllUsers();
+                  },
+                  function (errResponse) {
+                    swalWithBootstrapButtons.fire("OUPS!", "une erreur s'est produite lors de la suppression de cet utilisateur si le problème persiste, veuillez appeler la cellule informatique ", "error");
+                      console.error('Error while deleting User',errResponse);
+                  }
+              );
+            },
+          }).then((result) => {
+            if (result.dismiss === Swal.DismissReason.cancel) {
+                swalWithBootstrapButtons.fire("Annuler", "L'utilisateur ne sera pas supprimer!!", "error");
+            }
+          })
     }
 
     function submit() {
@@ -87,7 +115,7 @@ myApp.controller('userController', ['$scope', 'UserService', 'utils','toaster', 
             console.log('Saving New User', $scope.user);
             createUser($scope.user);
         } else {
-            updateUser($scope.user);
+            updateUser();
             console.log('User updated with id ', $scope.user.id);
         }
         // reset();
@@ -98,12 +126,6 @@ myApp.controller('userController', ['$scope', 'UserService', 'utils','toaster', 
 
     }
 
-    function remove(id) {
-        console.log('id to be deleted', id);
-        if ($scope.user.id === id) {//clean form if the user to be deleted is shown there.
-            deleteUser(id);
-        }
-    }
 
     function reset() {
         $scope.user = {

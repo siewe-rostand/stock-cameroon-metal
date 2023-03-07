@@ -1,4 +1,4 @@
-myApp.config(function ($routeProvider,$locationProvider){
+myApp.config(function ($routeProvider){
     $routeProvider
         .when('/',{
         templateUrl:'modules/home/home.html',
@@ -29,4 +29,17 @@ myApp.config(function ($routeProvider,$locationProvider){
         controller:'customerController',
         controllerAs:'updateCustomer'
     })
+
+
+
+
+
+
+
+
+
+
+    .otherwise({
+        template : "<h1>400</h1><h3>Error: 400 PAGE NOT FOUND !</h3><p>Nothing has been selected</p>"
+      });
 })

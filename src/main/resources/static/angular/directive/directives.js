@@ -5,7 +5,7 @@ myApp.directive('sidebar',function (){
         templateUrl:'modules/pages/sidebar.html'
     }
 });
-myApp.directive('footer',function (){
+myApp.directive('homeFooter',function (){
     return {
         restrict:'E',
         templateUrl:'modules/pages/footer.html'
