@@ -39,9 +39,9 @@ public class StockService {
 
         String pattern = "yyyy-MM-dd";
         LocalDate date = new LocalDate(DateTimeZone.forOffsetHours(1));
-        Stock lastStock = productStockRepository.findFirstByProductOrderByDateDesc(approvisionnement.getProduct().getProductId());
+        Stock lastStock = productStockRepository.findFirstByProductOrderByDateDesc(approvisionnement.getProduct().getId());
 
-        Stock productStock = productStockRepository.findByProductAndDate(approvisionnement.getProduct().getProductId(), date);
+        Stock productStock = productStockRepository.findByProductAndDate(approvisionnement.getProduct().getId(), date);
 
         if(productStock == null)
             productStock = new Stock();
@@ -79,7 +79,7 @@ public class StockService {
     public void deleteStockAppro(Approvisionnement approvisionnement) throws InvalidActionException {
         DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm");
         LocalDate date = LocalDateTime.parse(approvisionnement.getCreatedDate(), formatter).toLocalDate();
-        List<Stock> productStocks = productStockRepository.findByProductAndDateAfter(approvisionnement.getProduct().getProductId(), date.minusDays(1));
+        List<Stock> productStocks = productStockRepository.findByProductAndDateAfter(approvisionnement.getProduct().getId(), date.minusDays(1));
 
         for(Stock productStock: productStocks){
             productStock.setCump(
@@ -95,7 +95,7 @@ public class StockService {
             productStockRepository.save(productStock);
         }
 
-        Stock lastStock = productStockRepository.findFirstByProductOrderByDateDesc(approvisionnement.getProduct().getProductId());
+        Stock lastStock = productStockRepository.findFirstByProductOrderByDateDesc(approvisionnement.getProduct().getId());
 
         approvisionnement.getProduct().setStock(lastStock.getQuantity());
         approvisionnement.getProduct().setCump(lastStock.getCump());
@@ -107,9 +107,9 @@ public class StockService {
 
         String pattern = "yyyy-MM-dd";
         LocalDate date = new LocalDate(DateTimeZone.forOffsetHours(1));
-        Stock lastStock = productStockRepository.findFirstByProductOrderByDateDesc(op.getProduct().getProductId());
+        Stock lastStock = productStockRepository.findFirstByProductOrderByDateDesc(op.getProduct().getId());
 
-        Stock productStock = productStockRepository.findByProductAndDate(op.getProduct().getProductId(), date);
+        Stock productStock = productStockRepository.findByProductAndDate(op.getProduct().getId(), date);
 
         if(productStock == null)
             productStock = new Stock();
@@ -135,14 +135,14 @@ public class StockService {
     public void restoreStockVente(OrderedProduct op) {
         DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm");
         LocalDate date = LocalDateTime.parse(op.getVente().getCreatedDate(), formatter).toLocalDate();
-        List<Stock> productStocks = productStockRepository.findByProductAndDateAfter(op.getProduct().getProductId(), date.minusDays(1));
+        List<Stock> productStocks = productStockRepository.findByProductAndDateAfter(op.getProduct().getId(), date.minusDays(1));
 
         for(Stock productStock: productStocks){
             productStock.setQuantity(productStock.getQuantity() + op.getQuantity());
             productStockRepository.save(productStock);
         }
 
-        Stock lastStock = productStockRepository.findFirstByProductOrderByDateDesc(op.getProduct().getProductId());
+        Stock lastStock = productStockRepository.findFirstByProductOrderByDateDesc(op.getProduct().getId());
 
         op.getProduct().setStock(lastStock.getQuantity());
         op.getProduct().setCump(lastStock.getCump());
@@ -154,14 +154,14 @@ public class StockService {
     public void restoreStockManquant(Manquant manquant) {
         DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm");
         LocalDate date = LocalDateTime.parse(manquant.getCreatedDate(), formatter).toLocalDate();
-        List<Stock> productStocks = productStockRepository.findByProductAndDateAfter(manquant.getProduct().getProductId(), date.minusDays(1));
+        List<Stock> productStocks = productStockRepository.findByProductAndDateAfter(manquant.getProduct().getId(), date.minusDays(1));
 
         for(Stock productStock: productStocks){
             productStock.setQuantity(productStock.getQuantity() + manquant.getQuantity());
             productStockRepository.save(productStock);
         }
 
-        Stock lastStock = productStockRepository.findFirstByProductOrderByDateDesc(manquant.getProduct().getProductId());
+        Stock lastStock = productStockRepository.findFirstByProductOrderByDateDesc(manquant.getProduct().getId());
 
         manquant.getProduct().setStock(lastStock.getQuantity());
         manquant.getProduct().setCump(lastStock.getCump());
@@ -173,9 +173,9 @@ public class StockService {
 
         String pattern = "yyyy-MM-dd";
         LocalDate date = new LocalDate(DateTimeZone.forOffsetHours(1));
-        Stock lastStock = productStockRepository.findFirstByProductOrderByDateDesc(manquant.getProduct().getProductId());
+        Stock lastStock = productStockRepository.findFirstByProductOrderByDateDesc(manquant.getProduct().getId());
 
-        Stock productStock = productStockRepository.findByProductAndDate(manquant.getProduct().getProductId(), date);
+        Stock productStock = productStockRepository.findByProductAndDate(manquant.getProduct().getId(), date);
 
         if(productStock == null)
             productStock = new Stock();
@@ -188,7 +188,7 @@ public class StockService {
             productStock.setCump(lastStock.getCump());
         }
         Stock result = productStockRepository.save(productStock);
-        if(result != null){
+        if(!result.toString().isEmpty()){
             manquant.getProduct().setStock(result.getQuantity());
             manquant.getProduct().setCump(result.getProduct().getCump());
             manquant.getProduct().setValeurStock(result.getQuantity() * result.getProduct().getCump());
@@ -197,7 +197,7 @@ public class StockService {
         return new StockDto().createDTO(result);
     }
 
-    public List<StockDto> findByProductIdAndDateRange(Long productId, String dateFrom, String dateTo) {
+    public List<StockDto> findOneAndDateRange(Long productId, String dateFrom, String dateTo) {
         DateTimeFormatter formatter = DateTimeFormat.forPattern("dd-MM-yyyy");
         LocalDate df = null;
         if(dateFrom!=null)
@@ -207,7 +207,7 @@ public class StockService {
         if(dateTo!=null)
             dt = formatter.parseLocalDate(dateTo);
 
-        List<Stock> productStocks = productStockRepository.findByProductIdAndDateRange(productId, df, dt);
+        List<Stock> productStocks = productStockRepository.findOneAndDateRange(productId, df, dt);
         List<StockDto> productStockDtos = new ArrayList<>();
         for(Stock productStock: productStocks){
             productStockDtos.add(new StockDto().createDTO(productStock));

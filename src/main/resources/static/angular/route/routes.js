@@ -28,6 +28,18 @@ myApp.config(function ($routeProvider){
         templateUrl:'modules/customers/views/update.html',
         controller:'customerController',
         controllerAs:'updateCustomer'
+    }).when('/products/save',{
+        templateUrl:'modules/products/views/create-product.html',
+        controller:'productController',
+        controllerAs:'saveProduct'
+    }).when('/products',{
+        templateUrl:'modules/products/views/product-list.html',
+        controller:'productController',
+        controllerAs:'productList'
+    }).when('/products/:id/edit',{
+        templateUrl:'modules/products/views/update_product.html',
+        controller:'productController',
+        controllerAs:'updateProduct'
     })
 
 

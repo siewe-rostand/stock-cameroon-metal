@@ -63,7 +63,7 @@ public class ProductController {
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @RequestMapping(value = "/products-with-image", method = RequestMethod.POST, consumes = {"multipart/form-data"})
+    @PostMapping(value = "/products-with-image", consumes = {"multipart/form-data"})
     @ResponseBody
     public ResponseEntity<ProductDto> createProductWithImage(@RequestPart("product") ProductDto productDto,
                                                              @RequestPart(name="file", required=false) MultipartFile file,

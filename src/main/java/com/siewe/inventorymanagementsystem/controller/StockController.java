@@ -28,7 +28,7 @@ public class StockController {
                                           @RequestParam(name = "dateFrom") String dateFrom,
                                           @RequestParam(name = "dateTo") String dateTo) {
         log.debug("REST request to get ProductStocks");
-        return productStockService.findByProductIdAndDateRange(productId, dateFrom, dateTo);
+        return productStockService.findOneAndDateRange(productId, dateFrom, dateTo);
     }
 }
 

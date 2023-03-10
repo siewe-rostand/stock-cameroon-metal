@@ -72,7 +72,7 @@ public class ProductService {
 
         Product product = new Product();
         if (productDto.getId() != null) {
-            product = productRepository.findByProductId(productDto.getId());
+            product = productRepository.findOne(productDto.getId());
         }
 
         product.setName(productDto.getName());
@@ -97,8 +97,8 @@ public class ProductService {
         LocalDate date = new LocalDate(DateTimeZone.forOffsetHours(1));
         product.setCreatedDate(date.toString(pattern));
 
-        if(productDto.getCategoryId() != null){
-            Category category = categoryRepository.findOne(productDto.getCategoryId());
+        if(productDto.getId() != null){
+            Category category = categoryRepository.findOne(productDto.getId());
             product.setCategory(category);
         }
 
@@ -109,7 +109,7 @@ public class ProductService {
                 ApprovisionnementDto approvisionnementDto = new ApprovisionnementDto();
                 approvisionnementDto.setQuantity(productDto.getStock());
                 approvisionnementDto.setPrixEntree(productDto.getCump());
-                approvisionnementDto.setProductId(result.getProductId());
+                approvisionnementDto.setProductId(result.getId());
                 approvisionnementService.save(approvisionnementDto);
             }
         }
@@ -123,7 +123,7 @@ public class ProductService {
 
         log.debug("Request to save Product : {}", productDto);
 
-        Product product = productRepository.findByProductId(productDto.getId());
+        Product product = productRepository.findOne(productDto.getId());
 
         product.setName(productDto.getName());
 //        product.setCip(productDto.getCip());
@@ -134,8 +134,8 @@ public class ProductService {
         product.setEnabled(productDto.getEnabled());
         product.setDeleted(false);
 
-        if(productDto.getCategoryId() != null){
-            Category category = categoryRepository.findOne(productDto.getCategoryId());
+        if(productDto.getId() != null){
+            Category category = categoryRepository.findOne(productDto.getId());
             product.setCategory(category);
         }
 
@@ -152,7 +152,7 @@ public class ProductService {
 
         Product product = new Product();
         if (productDto.getId() != null) {
-            product = productRepository.findByProductId(productDto.getId());
+            product = productRepository.findOne(productDto.getId());
         }
 
         product.setName(productDto.getName());
@@ -177,8 +177,8 @@ public class ProductService {
         LocalDate date = new LocalDate(DateTimeZone.forOffsetHours(1));
         product.setCreatedDate(date.toString(pattern));
 
-        if(productDto.getCategoryId() != null){
-            Category category = categoryRepository.findOne(productDto.getCategoryId());
+        if(productDto.getId() != null){
+            Category category = categoryRepository.findOne(productDto.getId());
             product.setCategory(category);
         }
 
@@ -189,7 +189,7 @@ public class ProductService {
                 ApprovisionnementDto approvisionnementDto = new ApprovisionnementDto();
                 approvisionnementDto.setQuantity(productDto.getStock());
                 approvisionnementDto.setPrixEntree(productDto.getCump());
-                approvisionnementDto.setProductId(result.getProductId());
+                approvisionnementDto.setProductId(result.getId());
                 approvisionnementService.save(approvisionnementDto);
             }
         }
@@ -205,8 +205,8 @@ public class ProductService {
 
                 if(!file.isEmpty()){
                     try {
-                        file.transferTo(new File(FOLDER + "products/" + result.getProductId()));
-                        thumb.transferTo(new File(FOLDER + "products/" + result.getProductId() + "_small"));
+                        file.transferTo(new File(FOLDER + "products/" + result.getId()));
+                        thumb.transferTo(new File(FOLDER + "products/" + result.getId() + "_small"));
                     }
                     catch (IOException e) {
                         e.printStackTrace();
@@ -224,7 +224,7 @@ public class ProductService {
 
         log.debug("Request to save Product : {}", productDto);
 
-        Product product = productRepository.findByProductId(productDto.getId());
+        Product product = productRepository.findOne(productDto.getId());
 
         product.setName(productDto.getName());
 //        product.setCip(productDto.getCip());
@@ -233,8 +233,8 @@ public class ProductService {
         product.setStockAlerte(productDto.getStockAlerte());
         product.setEnabled(productDto.getEnabled());
 
-        if(productDto.getCategoryId() != null){
-            Category category = categoryRepository.findOne(productDto.getCategoryId());
+        if(productDto.getId() != null){
+            Category category = categoryRepository.findOne(productDto.getId());
             product.setCategory(category);
         }
 
@@ -256,8 +256,8 @@ public class ProductService {
 
                 if(!file.isEmpty()){
                     try {
-                        file.transferTo(new File(FOLDER + "products/" + result.getProductId()));
-                        thumb.transferTo(new File(FOLDER + "products/" + result.getProductId() + "_small"));
+                        file.transferTo(new File(FOLDER + "products/" + result.getId()));
+                        thumb.transferTo(new File(FOLDER + "products/" + result.getId() + "_small"));
                     }
                     catch (IOException e) {
                         e.printStackTrace();
@@ -281,6 +281,7 @@ public class ProductService {
 
         Pageable pageable =  PageRequest.of(page, size, Sort.Direction.fromString(direction), sortBy);
         Page<Product> products = null;
+        products = productRepository.findAll("%"+name+"%", pageable);
 
         /*if(SecurityUtils.isCurrentUserInRole("ROLE_ADMIN") || SecurityUtils.isCurrentUserInRole("ROLE_USER")){
             if(stockBas)
@@ -392,7 +393,7 @@ public class ProductService {
     @Transactional(readOnly = true)
     public ProductDto findOne(Long id) {
         log.debug("Request to get Product : {}", id);
-        Product product = productRepository.findByProductId(id);
+        Product product = productRepository.findOne(id);
 
         /*ProductStock productStock = productStockRepository.findFirstByProductIdOrderByDateDesc(product.getId());
         if(productStock != null){
@@ -409,14 +410,14 @@ public class ProductService {
     //@Secured(value = {"ROLE_ADMIN", "ROLE_USER"})
     public void delete(Long id) {
         log.debug("Request to delete Product : {}", id);
-        Product product = productRepository.findByProductId(id);
+        Product product = productRepository.findOne(id);
 
         if(Optional.ofNullable(product).isPresent()){
             if(product.getApprovisionnements() != null){
                 product.setDeleted(true);
                 productRepository.save(product);
             }else {
-                productRepository.deleteByProductId(id);
+                productRepository.deleteById(id);
             }
         }
     }
@@ -428,7 +429,7 @@ public class ProductService {
                 product.setDeleted(true);
                 productRepository.save(product);
             }else {
-                productRepository.deleteByProductId(product.getProductId());
+                productRepository.deleteById(product.getId());
             }
         }
     }

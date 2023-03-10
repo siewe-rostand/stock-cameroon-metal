@@ -67,8 +67,8 @@ public class ManquantService {
             manquant.setUser(user);
         }*/
 
-        if(manquantDto.getProductId() != null){
-            Product product = productRepository.findByProductId(manquantDto.getProductId());
+        if(manquantDto.getId() != null){
+            Product product = productRepository.findOne(manquantDto.getId());
             manquant.setProduct(product);
             manquant.setCout(product.getCump());
         }
@@ -93,8 +93,8 @@ public class ManquantService {
             manquant.setUser(user);
         }*/
 
-        /*if(manquantDto.getProductId() != null){
-            Product product = productRepository.findOne(manquantDto.getProductId());
+        /*if(manquantDto.getId() != null){
+            Product product = productRepository.findOne(manquantDto.getId());
             manquant.setProduct(product);
         }*/
 

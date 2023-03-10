@@ -47,7 +47,7 @@ public class OrderedProductService {
     public OrderedProductDto save(OrderedProductDto orderedProductDto) throws InvalidOrderItemException {
         log.debug("Request to save OrderedProduct : {}", orderedProductDto);
 
-        OrderedProduct orderedProduct = orderedProductRepository.findByVenteAndProduct(orderedProductDto.getVenteId(), orderedProductDto.getProductId());
+        OrderedProduct orderedProduct = orderedProductRepository.findByVenteAndProduct(orderedProductDto.getVenteId(), orderedProductDto.getId());
         if(orderedProduct == null){
             orderedProduct = new OrderedProduct();
         }
@@ -55,7 +55,7 @@ public class OrderedProductService {
         Vente vente = venteRepository.findByVenteId(orderedProductDto.getVenteId());
         orderedProduct.setVente(vente);
 
-        Product product = productRepository.findByProductId(orderedProductDto.getProductId());
+        Product product = productRepository.findOne(orderedProductDto.getId());
         orderedProduct.setProduct(product);
 
         orderedProduct.setQuantity(orderedProductDto.getQuantity());

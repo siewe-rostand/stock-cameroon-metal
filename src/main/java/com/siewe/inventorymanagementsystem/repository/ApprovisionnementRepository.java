@@ -7,9 +7,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public interface ApprovisionnementRepository extends JpaRepository<Approvisionnement, Long> {
     default Approvisionnement findOne(Long id) {
         return (Approvisionnement) findById(id).orElse(null);
@@ -20,28 +22,28 @@ public interface ApprovisionnementRepository extends JpaRepository<Approvisionne
 
     @Query("SELECT approvisionnement FROM  Approvisionnement approvisionnement "
             + "WHERE approvisionnement.createdDate between ?1 and ?2 "
-            + "AND approvisionnement.product.productId = ?3 ")
-    Page<Approvisionnement> findByProductId(LocalDateTime cdf, LocalDateTime cdt, Long productId, Pageable pageable);
+            + "AND approvisionnement.product.id = ?3 ")
+    Page<Approvisionnement> findOne(LocalDateTime cdf, LocalDateTime cdt, Long productId, Pageable pageable);
 
 
     public interface ProductApprovisionnements {
-        Long getProductId();
+        Long getId();
         String getProductName();
         Double getTotalApprovisionnements();
     }
 
-    @Query("SELECT approvisionnement.product.productId as productId, approvisionnement.product.name as productName, "
+    @Query("SELECT approvisionnement.product.id as productId, approvisionnement.product.name as productName, "
             + "SUM(approvisionnement.quantity * approvisionnement.prixEntree) as totalApprovisionnements FROM Approvisionnement approvisionnement "
             + "WHERE approvisionnement.createdDate between ?1 and ?2 "
-            + "GROUP BY approvisionnement.product.productId")
+            + "GROUP BY approvisionnement.product.id")
     List<ProductApprovisionnements> findProductApprovisionnementsByDateRange(LocalDateTime cdf, LocalDateTime cdt);
 
 
-    @Query("SELECT approvisionnement.product.productId as productId, approvisionnement.product.name as productName, "
+    @Query("SELECT approvisionnement.product.id as productId, approvisionnement.product.name as productName, "
             + "SUM(approvisionnement.quantity * approvisionnement.prixEntree) as totalApprovisionnements FROM Approvisionnement approvisionnement "
             + "WHERE approvisionnement.createdDate between ?1 and ?2 "
-            + "AND approvisionnement.product.productId = ?3 "
-            + "GROUP BY approvisionnement.product.productId")
+            + "AND approvisionnement.product.id = ?3 "
+            + "GROUP BY approvisionnement.product.id")
     List<ProductApprovisionnements> findProductApprovisionnementsByDateRange(LocalDateTime cdf, LocalDateTime cdt, Long productId);
 
 }

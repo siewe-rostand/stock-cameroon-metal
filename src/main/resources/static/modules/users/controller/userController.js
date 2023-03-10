@@ -1,4 +1,4 @@
-myApp.controller('userController', ['$scope', 'UserService', 'utils','SweetAlertService', function ($scope, UserService, utils,SweetAlertService) {
+myApp.controller('userController', ['$scope', 'UserService', 'utils', function ($scope, UserService, utils) {
 
     let self = this;
     $scope.user = {

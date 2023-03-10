@@ -41,8 +41,8 @@ public class LigneProductService {
         ligneProduct.setStockTheorique(ligneProductDto.getStockTheorique());
         ligneProduct.setStockPhysique(ligneProductDto.getStockPhysique());
 
-        if(ligneProductDto.getProductId() != null){
-            Product product = productRepository.findByProductId(ligneProductDto.getProductId());
+        if(ligneProductDto.getId() != null){
+            Product product = productRepository.findOne(ligneProductDto.getId());
             ligneProduct.setProduct(product);
         }
 

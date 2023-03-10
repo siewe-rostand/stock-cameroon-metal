@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
@@ -20,14 +21,14 @@ public interface ManquantRepository extends JpaRepository<Manquant,Long> {
 
 
     public interface ProductManquants {
-        Long getProductId();
+        Long getId();
         String getProductName();
         Double getTotalManquants();
     }
 
-    @Query("SELECT manquant.product.productId as productId, manquant.product.name as productName, "
+    @Query("SELECT manquant.product.id as productId, manquant.product.name as productName, "
             + "SUM(manquant.quantity * manquant.cout) as totalManquants FROM Manquant manquant "
             + "WHERE manquant.createdDate between ?1 and ?2 "
-            + "GROUP BY manquant.product.productId")
+            + "GROUP BY manquant.product.id")
     List<ProductManquants> findProductManquantsByDateRange(LocalDateTime cdf, LocalDateTime cdt);
 }

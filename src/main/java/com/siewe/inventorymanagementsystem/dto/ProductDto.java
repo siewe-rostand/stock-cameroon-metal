@@ -29,9 +29,10 @@ public class ProductDto {
         ProductDto productDto = new ProductDto();
 
         if(product != null){
-            productDto.setId(product.getProductId());
+            productDto.setId(product.getId());
             productDto.setCreatedDate(product.getCreatedDate());
             productDto.setName(product.getName());
+            productDto.setCip(product.getCip());
             productDto.setDescription(product.getDescription());
             productDto.setPrice(product.getPrice());
             productDto.setEnabled(product.getEnabled());
@@ -57,7 +58,7 @@ public class ProductDto {
             }
 
             if(product.getCategory() != null){
-                productDto.setCategoryId(product.getCategory().getCategoryId());
+                productDto.setCategoryId(product.getCategory().getId());
                 productDto.setCategoryName(product.getCategory().getName());
             }
 

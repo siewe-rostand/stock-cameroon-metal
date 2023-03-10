@@ -623,9 +623,9 @@ public class VenteService {
         for (int i=0; i < days; i++) {
             LocalDateTime d = cdf.withFieldAdded(DurationFieldType.days(), i);
             if(sellerId == 0)
-                orderedProducts = orderedProductRepository.findByProductIdAndCreatedDateBetween(productId, d, d.plusHours(23).plusMinutes(59));
+                orderedProducts = orderedProductRepository.findOneAndCreatedDateBetween(productId, d, d.plusHours(23).plusMinutes(59));
             else
-                orderedProducts = orderedProductRepository.findByProductIdAndSellerIdCreatedDateBetween(productId, sellerId, d, d.plusHours(23).plusMinutes(59));
+                orderedProducts = orderedProductRepository.findOneAndSellerIdCreatedDateBetween(productId, sellerId, d, d.plusHours(23).plusMinutes(59));
 
             double totalVentes = 0;
             double benefice = 0;

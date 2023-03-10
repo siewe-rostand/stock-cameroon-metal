@@ -1,8 +1,6 @@
 package com.siewe.inventorymanagementsystem.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -18,32 +16,29 @@ import javax.validation.constraints.Min;
 public class Stock extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long refId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "id")
+    private Long id;
 
-    private double quantity;
+    @Column(name = "date")
+    @Basic(optional = false)
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
+    private LocalDate date;
 
-    @Column(name = "branch_id")
-    private String branchId;
-
-    @Column(name = "product_buying_price")
-    private double productBuyingPrice;
+    @Min(value = 0)
+    @Column(name = "stock")
+    private Double quantity;
 
     @Min(value = 0)
     @Column(name = "cump")
     private Double cump;
 
-
-    @Column(name = "date_stock")
-    private LocalDate date;
-
-    @ManyToOne
     @JoinColumn(name = "product_id", referencedColumnName = "id")
+    @ManyToOne(optional = false)
     private Product product;
 
-    @ManyToOne
-    @JoinColumn(name="categoryId",referencedColumnName = "id")
-    private Category category;
 
     public String getDate() {
         String pattern = "yyyy-MM-dd";
@@ -59,5 +54,15 @@ public class Stock extends BaseEntity {
         if(date!=null)
             ld = formatter.parseLocalDate(date);
         this.date = ld;
+    }
+
+    @Override
+    public String toString() {
+        return "ProductStock{" +
+                "id=" + id +
+                ", date=" + date +
+                ", stock=" + quantity +
+                ", cump=" + cump +
+                '}';
     }
 }

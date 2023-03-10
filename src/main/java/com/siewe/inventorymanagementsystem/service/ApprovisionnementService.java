@@ -65,8 +65,8 @@ public class ApprovisionnementService {
         approvisionnement.setCreatedDate(datetime.toString(pattern));
 
 
-        if(approvisionnementDto.getProductId() != null){
-            Product product = productRepository.findByProductId(approvisionnementDto.getProductId());
+        if(approvisionnementDto.getId() != null){
+            Product product = productRepository.findOne(approvisionnementDto.getId());
             approvisionnement.setProduct(product);
         }
 
@@ -103,8 +103,8 @@ public class ApprovisionnementService {
             approvisionnement.setUser(user);
         }*/
 
-        if(approvisionnementDto.getProductId() != null){
-            Product product = productRepository.findByProductId(approvisionnementDto.getProductId());
+        if(approvisionnementDto.getId() != null){
+            Product product = productRepository.findOne(approvisionnementDto.getId());
             approvisionnement.setProduct(product);
         }
 
@@ -145,7 +145,7 @@ public class ApprovisionnementService {
         if(productId == 0)
             approvisionnements = approvisionnementRepository.findByCreatedDateBetween(cdf, cdt, pageable);
         else
-            approvisionnements = approvisionnementRepository.findByProductId(cdf, cdt, productId, pageable);
+            approvisionnements = approvisionnementRepository.findOne(cdf, cdt, productId, pageable);
 
         Page<ApprovisionnementDto> approvisionnementDtos = approvisionnements.map(approvisionnement -> new ApprovisionnementDto().createDTO(approvisionnement));
         return approvisionnementDtos;

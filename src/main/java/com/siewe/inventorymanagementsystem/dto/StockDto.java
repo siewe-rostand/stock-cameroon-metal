@@ -17,13 +17,13 @@ public class StockDto {
         StockDto productStockDto = new StockDto();
 
         if(productStock != null){
-            productStockDto.setId(productStock.getRefId());
+            productStockDto.setId(productStock.getId());
             productStockDto.setDate(productStock.getCreatedDate());
             productStockDto.setStock(productStock.getQuantity());
-            productStockDto.setCump(productStock.getProductBuyingPrice());
+            productStockDto.setCump(productStock.getProduct().getPrice());
 
             if(productStock.getProduct() != null)
-                productStockDto.setProductId(productStock.getProduct().getProductId());
+                productStockDto.setProductId(productStock.getProduct().getId());
         }
         return productStockDto;
     }

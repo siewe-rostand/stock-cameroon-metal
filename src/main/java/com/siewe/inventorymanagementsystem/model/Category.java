@@ -14,13 +14,13 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class Category extends BaseEntity {
+public class Category {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id")
-    private Long categoryId;
+    private Long id;
 
     @Column(nullable = false, unique = true)
     private String name;
@@ -28,14 +28,11 @@ public class Category extends BaseEntity {
     @Column(name = "enabled")
     private Boolean enabled;
 
-    @OneToMany(mappedBy="category")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "category")
     private List<Product> products;
-
-    //bidirectional many-to-one association to Stock
-    @OneToMany(mappedBy="category")
-    private List<Stock> stocks;
 
     public Category(String name) {
         this.name = name;
+        this.enabled = true;
     }
 }

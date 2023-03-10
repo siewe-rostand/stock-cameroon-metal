@@ -1,10 +1,12 @@
 package com.siewe.inventorymanagementsystem.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.joda.time.LocalDate;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 import java.util.List;
 
 @Entity
@@ -13,65 +15,61 @@ import java.util.List;
 @Data
 @Table(name = "product")
 public class Product extends BaseEntity {
-    private static final long serialVersionUID = 1L;
-
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
     @Column(name = "id")
-    private Long productId;
+    private Long id;
 
     @Column(name="name")
     private String name;
 
-//    @Min(value = 0)0
-    @Basic(optional = false)
-    @Column(name = "price")
-    private double price;
+    @Column(name="cip")
+    private String cip;
 
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
+    @Column(name = "created_date")
+    private LocalDate createdDate;
+
     @Column(name = "enabled")
     private Boolean enabled;
 
-//    @Min(value = 0)
-    @Column(name = "cump")
-    private double cump;
+    @Column(name = "deleted")
+    private Boolean deleted;
 
-    @Column(name="cip")
-    private String cip;
+    @Min(value = 0)
+    @Basic(optional = false)
+    @Column(name = "price")
+    private double price;
 
+    @Min(value = 0)
     @Column(name = "stock")
     private double stock;
 
     @Column(name = "stockAlerte")
     private Double stockAlerte;
 
-//    @Min(value = 0)
+    @Min(value = 0)
+    @Column(name = "cump")
+    private double cump;
+
+    @Min(value = 0)
     @Column(name = "valeurStock")
     private double valeurStock;
 
-    @Column(name = "deleted")
-    private Boolean deleted;
-
-    @Column(name = "product_selling_price")
-    private double productSellingPrice;
-
+    @JoinColumn(name = "category_id", referencedColumnName = "id")
     @ManyToOne
-    @JoinColumn(name="category_id",referencedColumnName = "id")
     private Category category;
 
-    //bidirectional many-to-one association to ProductInvoice
-    @OneToMany(mappedBy="product")
-    private List<ProductInvoice> productInvoices;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
+    private List<Stock> productStocks;
 
-    //bidirectional many-to-one association to ProductPricing
-    @OneToMany(mappedBy="product")
-    private List<ProductPricing> productPricings;
-
-    //bidirectional many-to-one association to Stock
-    @OneToMany(mappedBy="product")
-    private List<Stock> stocks;
+    /*@OneToMany(mappedBy = "product")
+    private List<Vente> ventes;*/
 
     @OneToMany(mappedBy = "product")
     private List<Manquant> manquants;
@@ -83,25 +81,19 @@ public class Product extends BaseEntity {
         this.name = name;
     }
 
-    public List<Stock> getStocks() {
-        return this.stocks;
+    public String getCreatedDate() {
+        String pattern = "yyyy-MM-dd";
+        if(createdDate != null) {
+            return createdDate.toString(pattern);
+        }
+        return null;
     }
 
-    public void setStocks(List<Stock> stocks) {
-        this.stocks = stocks;
-    }
-
-    public Stock addStock(Stock stock) {
-        getStocks().add(stock);
-        stock.setProduct(this);
-
-        return stock;
-    }
-
-    public Stock removeStock(Stock stock) {
-        getStocks().remove(stock);
-        stock.setProduct(null);
-
-        return stock;
+    public void setCreatedDate(String createdDate) {
+        DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
+        LocalDate cd = null;
+        if(createdDate!=null)
+            cd = formatter.parseLocalDate(createdDate);
+        this.createdDate = cd;
     }
 }
