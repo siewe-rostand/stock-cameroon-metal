@@ -7,16 +7,25 @@ import com.siewe.inventorymanagementsystem.utils.CustomErrorType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +43,8 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
+    @Value("${upload.path}")
+    private String uploadPath;
     /**
      * POST  /products : Create a new product.
      *
@@ -85,7 +96,7 @@ public class ProductController {
      * @param productDto the product to update
      * @return the ResponseEntity with status 200 (OK) and with body the updated product,
      * or with status 400 (Bad Request) if the product is not valid,
-     * or with status 500 (Internal Server Error) if the product couldnt be updated
+     * or with status 500 (Internal Server Error) if the product couldn't be updated
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @RequestMapping(value = "/products-with-image", method = RequestMethod.PUT, consumes = {"multipart/form-data"})
@@ -140,7 +151,7 @@ public class ProductController {
         return productService.findByEnabledTrue(page, size, sortBy, direction);
     }
 
-    @GetMapping("/api/products-search")
+    @GetMapping("/products-search")
     public Map<String, List<ProductDto>> getProductsByMc(@RequestParam(name = "mc") String mc) {
         log.debug("REST request to get Products");
         Map<String, List<ProductDto>> map = new HashMap<>();
@@ -176,16 +187,6 @@ public class ProductController {
 
     }
 
-    @RequestMapping(value="/product-image/{id}", produces = MediaType.IMAGE_JPEG_VALUE)
-    @ResponseBody
-    public byte[] getProductImage(@PathVariable("id") Long productId) throws IOException {
-        return productService.getProductImage(productId);
-    }
-
-    @RequestMapping(value = "/product-image-thumb/{id}", produces = MediaType.IMAGE_JPEG_VALUE)
-    public byte[] getProductImageThumb(@PathVariable("id") Long id) throws IOException {
-        return productService.findThumbById(id);
-    }
 
 
     /**
@@ -209,5 +210,28 @@ public class ProductController {
     }
 
 
+    @GetMapping(value = "/product-image/{fileName:.+}",produces = MediaType.IMAGE_JPEG_VALUE)
+    public ResponseEntity<Resource> downloadFile(@PathVariable String fileName, HttpServletRequest request) {
+        // Load file as Resource
+        Resource resource = productService.loadFileAsResource(fileName);
+
+        // Try to determine file's content type
+        String contentType = null;
+        try {
+            contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
+        } catch (IOException ex) {
+            log.info("Could not determine file type.");
+        }
+
+        // Fallback to the default content type if type could not be determined
+        if(contentType == null) {
+            contentType = "application/octet-stream";
+        }
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(contentType))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+                .body(resource);
+    }
 }
 

@@ -6,7 +6,7 @@ import com.siewe.inventorymanagementsystem.model.Category;
 import com.siewe.inventorymanagementsystem.model.Product;
 import com.siewe.inventorymanagementsystem.repository.CategoryRepository;
 import com.siewe.inventorymanagementsystem.repository.ProductRepository;
-import com.siewe.inventorymanagementsystem.repository.StockRepository;
+import com.siewe.inventorymanagementsystem.repository.ProductStockRepository;
 import com.siewe.inventorymanagementsystem.repository.UserRepository;
 import com.siewe.inventorymanagementsystem.utils.CustomErrorType;
 import org.apache.commons.io.IOUtils;
@@ -16,6 +16,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.PathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,15 +27,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import javax.annotation.PostConstruct;
+import java.io.*;
+import java.net.MalformedURLException;
+import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -45,7 +49,7 @@ public class ProductService {
     private ProductRepository productRepository;
 
     @Autowired
-    private StockRepository productStockRepository;
+    private ProductStockRepository productStockRepository;
 
     @Autowired
     private CategoryRepository categoryRepository;
@@ -56,9 +60,31 @@ public class ProductService {
     @Autowired
     private ApprovisionnementService approvisionnementService;
 
-    @Value("${dir.pharma}")
+    @Value("${upload.path}")
     private String FOLDER;
 
+    String dir = "asset/img";
+    private  final Path root = Paths.get(dir);
+    private final Path rootLocation;
+
+    public ProductService(@Value("${upload.path}") Path rootLocation,ProductRepository productRepository) {
+        this.rootLocation = rootLocation;
+        this.productRepository=productRepository;
+    }
+
+    @PostConstruct
+    public void ensureDirectoryExists() throws IOException {
+        if (!Files.exists(this.rootLocation)) {
+            Files.createDirectories(this.rootLocation);
+        }
+    }
+    public void init() {
+        try {
+            Files.createDirectories(root);
+        } catch (IOException e) {
+            throw new RuntimeException("Could not initialize folder for upload!");
+        }
+    }
     /**
      * Save a product.
      *
@@ -79,9 +105,11 @@ public class ProductService {
         product.setCip(productDto.getCip());
         product.setDescription(productDto.getDescription());
 
-        product.setPrice(0);
-        if(productDto.getPrice() != null)
-            product.setPrice(productDto.getPrice());
+        product.setPrice(productDto.getPrice());
+
+ //        product.setPrice(0);
+//        if(productDto.getPrice() != null)
+//            product.setPrice(productDto.getPrice());
 
         product.setStockAlerte(productDto.getStockAlerte());
 
@@ -91,6 +119,7 @@ public class ProductService {
         }
 
         product.setEnabled(true);
+        product.setAvailable(true);
 
         //set created date;
         String pattern = "yyyy-MM-dd";
@@ -132,6 +161,7 @@ public class ProductService {
         product.setStockAlerte(productDto.getStockAlerte());
 
         product.setEnabled(productDto.getEnabled());
+        product.setAvailable(productDto.getAvailable());
         product.setDeleted(false);
 
         if(productDto.getId() != null){
@@ -148,7 +178,7 @@ public class ProductService {
     public ResponseEntity<ProductDto> save(ProductDto productDto,
                                            MultipartFile file, MultipartFile thumb) throws IOException {
 
-        log.debug("Request to save Product : {}", productDto);
+        log.debug("Request to save Product with image : {}", productDto);
 
         Product product = new Product();
         if (productDto.getId() != null) {
@@ -171,6 +201,7 @@ public class ProductService {
         }
 
         product.setEnabled(true);
+        product.setAvailable(true);
 
         //set created date;
         String pattern = "yyyy-MM-dd";
@@ -194,29 +225,38 @@ public class ProductService {
             }
         }
 
-        if(file != null && thumb != null){
-            if(result != null){
-                if (!Files.exists(Paths.get(FOLDER + "products/"))) {
-                    File products = new File(FOLDER + "products/");
-                    if(! products.mkdirs()) {
-                        return new ResponseEntity(new CustomErrorType("Unable to create folder ${dir.images}"), HttpStatus.CONFLICT);
-                    }
-                }
 
-                if(!file.isEmpty()){
-                    try {
-                        file.transferTo(new File(FOLDER + "products/" + result.getId()));
-                        thumb.transferTo(new File(FOLDER + "products/" + result.getId() + "_small"));
-                    }
-                    catch (IOException e) {
-                        e.printStackTrace();
-                        return new ResponseEntity(new CustomErrorType("Error while saving product image"), HttpStatus.NO_CONTENT);
+        if (file !=null ) {
+            if (result != null) {
+//                rootLocation = Paths.get(uploadPath+"/");
+                String originalFileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
+                String fileName = "";
+                if (originalFileName.contains("..")) {
+                    throw new RuntimeException("Sorry! Filename contains invalid path sequence " + originalFileName);
+                }
+                String fileExtension = "";
+                try {
+                    fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
+                } catch (Exception e) {
+                    fileExtension = "";
+                }
+                StringBuffer fullFilePath = new StringBuffer(FOLDER).append(File.separator).append(fileName);
+                fileName ="product-" + result.getId() + fileExtension;
+                product.setImageUrl(String.valueOf(fullFilePath));
+                final Path targetPath = this.rootLocation.resolve(fileName);
+                System.out.println(fullFilePath);
+
+                try (InputStream in = file.getInputStream()) {
+                    try (OutputStream out = Files.newOutputStream(targetPath, StandardOpenOption.CREATE)) {
+                        in.transferTo(out);
                     }
                 }
             }
         }
         return new ResponseEntity<ProductDto>(new ProductDto().createDTO(result), HttpStatus.CREATED);
     }
+
+
 
     //@Secured(value = {"ROLE_ADMIN"})
     public ResponseEntity<ProductDto> update(ProductDto productDto,
@@ -434,32 +474,23 @@ public class ProductService {
         }
     }
 
-    public byte[] getProductImage(Long productId) throws IOException {
-        File f = new File(FOLDER + "products/" + productId);
-        if(f.exists() && !f.isDirectory()) {
-            return IOUtils.toByteArray(new FileInputStream(f));
-        }
-        f = new File(FOLDER + "products/" + "no_image.png");
-        if(f.exists() && !f.isDirectory()) {
-            return IOUtils.toByteArray(new FileInputStream(f));
-        }
-        return null;
-    }
-
-    public byte[] findThumbById(Long productId) throws IOException {
-        File f = new File(FOLDER + "products/" + productId + "_small");
-        if(f.exists() && !f.isDirectory()) {
-            return IOUtils.toByteArray(new FileInputStream(f));
-        }
-        f = new File(FOLDER + "products/" + "no_image.png");
-        if(f.exists() && !f.isDirectory()) {
-            return IOUtils.toByteArray(new FileInputStream(f));
-        }
-        return null;
-    }
-
 
     public Product findByName(String name) {
         return productRepository.findByName(name);
+    }
+
+
+    public Resource loadFileAsResource(String fileName) {
+        try {
+            Path filePath = this.rootLocation.resolve("product-" + fileName + ".jpeg").normalize();
+            Resource resource = new UrlResource(filePath.toUri());
+            if(resource.exists()) {
+                return resource;
+            } else {
+                throw new RuntimeException("File not found " + filePath);
+            }
+        } catch (MalformedURLException ex) {
+            throw new RuntimeException("File not found " + fileName, ex);
+        }
     }
 }

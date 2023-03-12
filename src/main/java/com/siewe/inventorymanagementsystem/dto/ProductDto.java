@@ -3,23 +3,31 @@ package com.siewe.inventorymanagementsystem.dto;
 import com.siewe.inventorymanagementsystem.model.Product;
 import lombok.Data;
 
+import javax.validation.constraints.NotBlank;
+
 @Data
 public class ProductDto {
 
     private Long id;
+    @NotBlank(message = "product name need to be provided")
     private String name;
     private String cip;
     private String description;
+    @NotBlank(message = "product price is not given")
     private Double price;
     private String createdDate;
 
     private Long categoryId;
     private String categoryName;
     private Boolean enabled;
+    private Boolean available;
     private Boolean deleted;
 
+    @NotBlank(message = "quantity not given")
     private Double stock;
     private Double stockAlerte;
+
+    //cout unitaire moyen pondéré or weighted average cost(anglais)
     private Double cump;
     private Double valeurStock;
 
@@ -36,6 +44,7 @@ public class ProductDto {
             productDto.setDescription(product.getDescription());
             productDto.setPrice(product.getPrice());
             productDto.setEnabled(product.getEnabled());
+            productDto.setAvailable(product.getAvailable());
             productDto.setDeleted(product.getDeleted());
 
             productDto.setStock(product.getStock());

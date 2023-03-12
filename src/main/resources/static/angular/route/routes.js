@@ -29,7 +29,7 @@ myApp.config(function ($routeProvider){
         controller:'customerController',
         controllerAs:'updateCustomer'
     }).when('/products/save',{
-        templateUrl:'modules/products/views/create-product.html',
+        templateUrl:'modules/products/views/create_product.html',
         controller:'productController',
         controllerAs:'saveProduct'
     }).when('/products',{

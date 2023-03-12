@@ -13,7 +13,8 @@ import javax.validation.constraints.Min;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class Stock extends BaseEntity {
+@Table(name = "product_stock")
+public class ProductStock {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,7 +30,7 @@ public class Stock extends BaseEntity {
 
     @Min(value = 0)
     @Column(name = "stock")
-    private Double quantity;
+    private Double stock;
 
     @Min(value = 0)
     @Column(name = "cump")
@@ -61,7 +62,7 @@ public class Stock extends BaseEntity {
         return "ProductStock{" +
                 "id=" + id +
                 ", date=" + date +
-                ", stock=" + quantity +
+                ", stock=" + stock +
                 ", cump=" + cump +
                 '}';
     }

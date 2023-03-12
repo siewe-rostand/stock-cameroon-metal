@@ -1,6 +1,6 @@
 'use strict';
 
-myApp.factory('productservice',['$http','$q','config',function($http,$q,config){
+myApp.factory('productService',['$http','$q','config',function($http,$q,config){
     let base_url = config.base_url;
 
     return {
@@ -18,7 +18,7 @@ myApp.factory('productservice',['$http','$q','config',function($http,$q,config){
                     deferred.resolve(response.data);
                 },
                 function (errResponse) {
-                    console.error('Error while fetching Users');
+                    console.error('Service: Error while fetching product');
                     deferred.reject(errResponse);
                 }
             );

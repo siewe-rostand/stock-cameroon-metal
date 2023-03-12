@@ -1,7 +1,6 @@
 package com.siewe.inventorymanagementsystem.dto;
 
 import com.siewe.inventorymanagementsystem.model.Invoice;
-import com.siewe.inventorymanagementsystem.model.Stock;
 import lombok.Data;
 
 @Data

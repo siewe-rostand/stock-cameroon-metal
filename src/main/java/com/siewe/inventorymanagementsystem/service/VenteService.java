@@ -40,7 +40,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.AccessDeniedException;
 import java.util.*;
 
 @Service
@@ -74,7 +73,7 @@ public class VenteService {
     private OrderedProductRepository orderedProductRepository;
 
     @Autowired
-    private StockService productStockService;
+    private ProductStockService productStockService;
 
     @Value("${dir.pharma}")
     private String FOLDER;

@@ -38,7 +38,7 @@ public class ApprovisionnementService {
     private ProductRepository productRepository;
 
     @Autowired
-    private StockService productStockService;
+    private ProductStockService productStockService;
 
     /**
      * Save a approvisionnement.

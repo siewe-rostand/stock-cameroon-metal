@@ -41,7 +41,7 @@ public class ManquantService {
     private ProductRepository productRepository;
 
     @Autowired
-    private StockService productStockService;
+    private ProductStockService productStockService;
 
     /**
      * Save a manquant.

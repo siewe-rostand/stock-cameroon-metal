@@ -24,10 +24,12 @@ public class Product extends BaseEntity {
     @Column(name="name")
     private String name;
 
+    @Column(name = "image_url")
+    private String imageUrl;
     @Column(name="cip")
     private String cip;
 
-    @Column(name = "description", columnDefinition = "TEXT")
+    @Column(name = "description")
     private String description;
 
     @Getter(AccessLevel.NONE)
@@ -35,8 +37,11 @@ public class Product extends BaseEntity {
     @Column(name = "created_date")
     private LocalDate createdDate;
 
-    @Column(name = "enabled")
+    @Column(name = "enable")
     private Boolean enabled;
+
+    @Column(name = "available")
+    private Boolean available;
 
     @Column(name = "deleted")
     private Boolean deleted;
@@ -53,6 +58,7 @@ public class Product extends BaseEntity {
     @Column(name = "stockAlerte")
     private Double stockAlerte;
 
+    //cout unitaire moyen pondéré or weighted average cost(anglais)
     @Min(value = 0)
     @Column(name = "cump")
     private double cump;
@@ -66,7 +72,7 @@ public class Product extends BaseEntity {
     private Category category;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
-    private List<Stock> productStocks;
+    private List<ProductStock> productProductStocks;
 
     /*@OneToMany(mappedBy = "product")
     private List<Vente> ventes;*/
@@ -95,5 +101,11 @@ public class Product extends BaseEntity {
         if(createdDate!=null)
             cd = formatter.parseLocalDate(createdDate);
         this.createdDate = cd;
+    }
+    @Transient
+    public String getPhotosImagePath() {
+        if (imageUrl == null || id == null) return null;
+
+        return "/user-photos/" + id + "/" + imageUrl;
     }
 }

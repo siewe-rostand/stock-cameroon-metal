@@ -35,7 +35,7 @@ public class OrderedProductService {
     private OrderedProductRepository orderedProductRepository;
 
     @Autowired
-    private StockService productStockService;
+    private ProductStockService productStockService;
 
     /**
      * Save a orderedProduct.
