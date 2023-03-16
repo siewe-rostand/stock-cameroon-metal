@@ -1,12 +1,14 @@
 package com.siewe.inventorymanagementsystem.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
-import org.joda.time.LocalDate;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
 import javax.persistence.*;
+import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Entity
@@ -14,13 +16,14 @@ import java.util.List;
 @AllArgsConstructor
 @Data
 @Table(name = "product")
-public class Product extends BaseEntity {
+public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id")
     private Long id;
 
+    @NotBlank(message = "product name need to be provided")
     @Column(name="name")
     private String name;
 
@@ -32,10 +35,14 @@ public class Product extends BaseEntity {
     @Column(name = "description")
     private String description;
 
-    @Getter(AccessLevel.NONE)
-    @Setter(AccessLevel.NONE)
-    @Column(name = "created_date")
-    private LocalDate createdDate;
+    // @Getter(AccessLevel.NONE)
+    // @Setter(AccessLevel.NONE)
+    // @Column(name = "created_date")
+    // private LocalDate createdDate;
+
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
+    private LocalDateTime createdDate;
 
     @Column(name = "enable")
     private Boolean enabled;
@@ -46,12 +53,16 @@ public class Product extends BaseEntity {
     @Column(name = "deleted")
     private Boolean deleted;
 
-    @Min(value = 0)
+    @DecimalMin(value = "1.0", message = "Product price is empty")
     @Basic(optional = false)
     @Column(name = "price")
     private double price;
 
-    @Min(value = 0)
+    @DecimalMin(value = "1.0", message = "Product quantity is empty")
+    @Basic(optional = false)
+    @Column(name = "quantity")
+    private double quantity;
+    @Min(0)
     @Column(name = "stock")
     private double stock;
 
@@ -88,20 +99,22 @@ public class Product extends BaseEntity {
     }
 
     public String getCreatedDate() {
-        String pattern = "yyyy-MM-dd";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         if(createdDate != null) {
-            return createdDate.toString(pattern);
+            return createdDate.format(formatter);
         }
         return null;
     }
 
     public void setCreatedDate(String createdDate) {
-        DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
-        LocalDate cd = null;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime cd = null;
         if(createdDate!=null)
-            cd = formatter.parseLocalDate(createdDate);
+            cd = LocalDateTime.parse(createdDate,formatter);
         this.createdDate = cd;
     }
+
+
     @Transient
     public String getPhotosImagePath() {
         if (imageUrl == null || id == null) return null;

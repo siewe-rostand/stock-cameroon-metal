@@ -470,15 +470,13 @@ public class UserService {
         log.debug("Request to delete User : {}", id);
         User user = userRepository.findByUserId(id);
         if(user == null){
-            throw new EntityNotFoundException(User.class,"User not found with id",user.getUserId().toString());
+            throw new EntityNotFoundException(User.class,"id",id.toString());
         }
-        if(Optional.ofNullable(user).isPresent()){
-            if(!user.getVentes().isEmpty()){
-                user.setDeleted(true);
-                userRepository.save(user);
-            }else {
-                userRepository.deleteByUserId(id);
-            }
+        if (!user.getVentes().isEmpty()) {
+            user.setDeleted(true);
+            userRepository.save(user);
+        } else {
+            userRepository.deleteByUserId(id);
         }
     }
 

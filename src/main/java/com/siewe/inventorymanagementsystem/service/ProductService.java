@@ -4,19 +4,19 @@ import com.siewe.inventorymanagementsystem.dto.ApprovisionnementDto;
 import com.siewe.inventorymanagementsystem.dto.ProductDto;
 import com.siewe.inventorymanagementsystem.model.Category;
 import com.siewe.inventorymanagementsystem.model.Product;
+import com.siewe.inventorymanagementsystem.model.User;
+import com.siewe.inventorymanagementsystem.model.error.EntityNotFoundException;
 import com.siewe.inventorymanagementsystem.repository.CategoryRepository;
 import com.siewe.inventorymanagementsystem.repository.ProductRepository;
 import com.siewe.inventorymanagementsystem.repository.ProductStockRepository;
 import com.siewe.inventorymanagementsystem.repository.UserRepository;
 import com.siewe.inventorymanagementsystem.utils.CustomErrorType;
-import org.apache.commons.io.IOUtils;
 import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.PathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
@@ -34,6 +34,8 @@ import javax.annotation.PostConstruct;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.nio.file.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -113,7 +115,8 @@ public class ProductService {
 
         product.setStockAlerte(productDto.getStockAlerte());
 
-        if(productDto.getStock() != null && productDto.getCump() != null){
+        product.setQuantity(productDto.getQuantity());
+        if(productDto.getQuantity() != null && productDto.getCump() != null){
             product.setStock(productDto.getStock());
             product.setCump(productDto.getCump());
         }
@@ -121,10 +124,10 @@ public class ProductService {
         product.setEnabled(true);
         product.setAvailable(true);
 
-        //set created date;
-        String pattern = "yyyy-MM-dd";
-        LocalDate date = new LocalDate(DateTimeZone.forOffsetHours(1));
-        product.setCreatedDate(date.toString(pattern));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime date = LocalDateTime.now();
+        product.setCreatedDate(date.format(formatter));
+//        product.setCreatedDate(LocalDateTime.now());
 
         if(productDto.getId() != null){
             Category category = categoryRepository.findOne(productDto.getId());
@@ -133,10 +136,10 @@ public class ProductService {
 
         Product result = productRepository.save(product);
 
-        if(productDto.getStock() != null && productDto.getCump() != null) {
-            if(productDto.getCump() != 0 && productDto.getStock() != 0){
+        if(productDto.getQuantity() != null && productDto.getCump() != null) {
+            if(productDto.getCump() != 0 && productDto.getQuantity() != 0){
                 ApprovisionnementDto approvisionnementDto = new ApprovisionnementDto();
-                approvisionnementDto.setQuantity(productDto.getStock());
+                approvisionnementDto.setQuantity(productDto.getQuantity());
                 approvisionnementDto.setPrixEntree(productDto.getCump());
                 approvisionnementDto.setProductId(result.getId());
                 approvisionnementService.save(approvisionnementDto);
@@ -195,30 +198,34 @@ public class ProductService {
 
         product.setStockAlerte(productDto.getStockAlerte());
 
-        if(productDto.getStock() != null && productDto.getCump() != null){
-            product.setStock(productDto.getStock());
-            product.setCump(productDto.getCump());
-        }
+        product.setQuantity(productDto.getQuantity());
+
+//        if(productDto.getQuantity() != null && productDto.getCump() != null){
+//            product.setQuantity(productDto.getQuantity());
+//            product.setCump(productDto.getCump());
+//        }
 
         product.setEnabled(true);
         product.setAvailable(true);
 
         //set created date;
-        String pattern = "yyyy-MM-dd";
-        LocalDate date = new LocalDate(DateTimeZone.forOffsetHours(1));
-        product.setCreatedDate(date.toString(pattern));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime date = LocalDateTime.now();
+        product.setCreatedDate(date.format(formatter));
+
+//        product.setCreatedDate(LocalDateTime.now());
 
         if(productDto.getId() != null){
             Category category = categoryRepository.findOne(productDto.getId());
             product.setCategory(category);
         }
 
-        Product result = productRepository.save(product);
+     Product result = productRepository.save(product);
 
-        if(productDto.getStock() != null && productDto.getCump() != null) {
-            if(productDto.getCump() != 0 && productDto.getStock() != 0){
+        if(productDto.getQuantity() != null && productDto.getCump() != null) {
+            if(productDto.getCump() != 0 && productDto.getQuantity() != 0){
                 ApprovisionnementDto approvisionnementDto = new ApprovisionnementDto();
-                approvisionnementDto.setQuantity(productDto.getStock());
+                approvisionnementDto.setQuantity(productDto.getQuantity());
                 approvisionnementDto.setPrixEntree(productDto.getCump());
                 approvisionnementDto.setProductId(result.getId());
                 approvisionnementService.save(approvisionnementDto);
@@ -253,6 +260,7 @@ public class ProductService {
                 }
             }
         }
+        System.out.println(result);
         return new ResponseEntity<ProductDto>(new ProductDto().createDTO(result), HttpStatus.CREATED);
     }
 
@@ -278,10 +286,10 @@ public class ProductService {
             product.setCategory(category);
         }
 
-        //set created date;
-        String pattern = "yyyy-MM-dd";
-        LocalDate date = new LocalDate(DateTimeZone.forOffsetHours(1));
-        product.setCreatedDate(date.toString(pattern));
+//        //set created date;
+//        String pattern = "yyyy-MM-dd";
+//        LocalDate date = new LocalDate(DateTimeZone.forOffsetHours(1));
+        product.setCreatedDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")));
 
         Product result = productRepository.save(product);
 
@@ -451,7 +459,9 @@ public class ProductService {
     public void delete(Long id) {
         log.debug("Request to delete Product : {}", id);
         Product product = productRepository.findOne(id);
-
+        if(product == null){
+            throw new EntityNotFoundException(User.class,"id",id.toString());
+        }
         if(Optional.ofNullable(product).isPresent()){
             if(product.getApprovisionnements() != null){
                 product.setDeleted(true);

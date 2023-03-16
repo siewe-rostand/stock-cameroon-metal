@@ -43,8 +43,6 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-    @Value("${upload.path}")
-    private String uploadPath;
     /**
      * POST  /products : Create a new product.
      *
@@ -73,6 +71,14 @@ public class ProductController {
         return productService.update(productDto);
     }
 
+    /**
+     * post a product with image
+     * @param productDto
+     * @param file
+     * @param thumb
+     * @return
+     * @throws IOException
+     */
     @ResponseStatus(HttpStatus.OK)
     @PostMapping(value = "/products-with-image", consumes = {"multipart/form-data"})
     @ResponseBody
@@ -80,7 +86,7 @@ public class ProductController {
                                                              @RequestPart(name="file", required=false) MultipartFile file,
                                                              @RequestParam(name="thumb", required=false) MultipartFile thumb) throws IOException {
 
-        log.debug("REST request to save Product : {}", productDto);
+        log.debug("REST request to save Product with image : {}", productDto);
         if (productDto.getId() != null) {
             return new ResponseEntity(new CustomErrorType("Unable to create. A product with id " +
                     productDto.getId() + " already exist."), HttpStatus.CONFLICT);
@@ -104,7 +110,7 @@ public class ProductController {
     public ResponseEntity<ProductDto> updateProduct(@RequestPart("product") ProductDto productDto,
                                                     @RequestParam(name="file", required=false) MultipartFile file,
                                                     @RequestParam(name="thumb", required=false) MultipartFile thumb) throws URISyntaxException, IOException {
-        log.debug("REST request to update Product : {}", productDto);
+        log.debug("REST request to update Product with image : {}", productDto);
         if(productDto.getId() != null)
             return productService.update(productDto, file, thumb);
         else
@@ -120,7 +126,7 @@ public class ProductController {
     @GetMapping("/products")
     public Page<ProductDto> getAllProducts(
             @RequestParam(name = "page", defaultValue = "0") Integer page,
-            @RequestParam(name = "size", defaultValue = "5") Integer size,
+            @RequestParam(name = "size", defaultValue = "50") Integer size,
             @RequestParam(name = "sortBy", defaultValue = "name") String sortBy,
             @RequestParam(name = "direction", defaultValue = "asc") String direction,
             @RequestParam(name = "product", defaultValue = "") String product,
@@ -210,6 +216,12 @@ public class ProductController {
     }
 
 
+    /**
+     * get a particular product photo
+     * @param fileName
+     * @param request
+     * @return
+     */
     @GetMapping(value = "/product-image/{fileName:.+}",produces = MediaType.IMAGE_JPEG_VALUE)
     public ResponseEntity<Resource> downloadFile(@PathVariable String fileName, HttpServletRequest request) {
         // Load file as Resource

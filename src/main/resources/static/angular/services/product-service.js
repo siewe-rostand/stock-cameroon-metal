@@ -12,7 +12,7 @@ myApp.factory('productService',['$http','$q','config',function($http,$q,config){
 
     function fetchAllProducts() {
         let deferred = $q.defer();
-        $http.get(base_url+'/products')
+        $http.get(base_url+'/products?stockBas=1')
             .then(
                 function (response) {
                     deferred.resolve(response.data);
@@ -56,7 +56,7 @@ myApp.factory('productService',['$http','$q','config',function($http,$q,config){
 
     function deleteProduct(id) {
         let deferred = $q.defer();
-        $http.delete(base_url+ '/users/' + id)
+        $http.delete(base_url+ '/products/' + id)
             .then(
                 function (response) {
                     deferred.resolve(response.data);

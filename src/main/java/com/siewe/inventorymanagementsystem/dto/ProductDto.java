@@ -3,17 +3,16 @@ package com.siewe.inventorymanagementsystem.dto;
 import com.siewe.inventorymanagementsystem.model.Product;
 import lombok.Data;
 
-import javax.validation.constraints.NotBlank;
+import java.time.LocalDateTime;
 
 @Data
 public class ProductDto {
 
     private Long id;
-    @NotBlank(message = "product name need to be provided")
     private String name;
     private String cip;
     private String description;
-    @NotBlank(message = "product price is not given")
+//    @NotBlank(message = "product price is not given")
     private Double price;
     private String createdDate;
 
@@ -23,7 +22,8 @@ public class ProductDto {
     private Boolean available;
     private Boolean deleted;
 
-    @NotBlank(message = "quantity not given")
+//    @NotBlank(message = "quantity not given")
+    private Double quantity;
     private Double stock;
     private Double stockAlerte;
 
@@ -47,9 +47,9 @@ public class ProductDto {
             productDto.setAvailable(product.getAvailable());
             productDto.setDeleted(product.getDeleted());
 
-            productDto.setStock(product.getStock());
+            productDto.setQuantity(product.getQuantity());
             //if(product.getStock() != null)
-            productDto.setStock(Math.round(product.getStock() * 100.00) / 100.00);
+//            productDto.setStock(Math.round(product.getStock() * 100.00) / 100.00);
 
 
             productDto.setStockAlerte((double) 0);
@@ -62,7 +62,7 @@ public class ProductDto {
             productDto.setValeurStock(Math.round(product.getValeurStock() * 100.0) / 100.0);
 
             if(product.getStockAlerte() != null){
-                if(product.getStock() <= product.getStockAlerte())
+                if(product.getQuantity() <= product.getStockAlerte())
                     productDto.setStockBas(true);
             }
 

@@ -65,7 +65,7 @@ public class ProductStockService {
 
         ProductStock result = productStockRepository.save(productStock);
         if(result != null){
-            approvisionnement.getProduct().setStock(result.getStock());
+            approvisionnement.getProduct().setQuantity(result.getStock());
             System.out.println(approvisionnement.getProduct().getName());
             approvisionnement.getProduct().setCump(result.getCump());
             approvisionnement.getProduct().setValeurStock(result.getStock() * result.getCump());
@@ -97,7 +97,7 @@ public class ProductStockService {
 
         ProductStock lastProductStock = productStockRepository.findFirstByProductIdOrderByDateDesc(approvisionnement.getProduct().getId());
 
-        approvisionnement.getProduct().setStock(lastProductStock.getStock());
+        approvisionnement.getProduct().setQuantity(lastProductStock.getStock());
         approvisionnement.getProduct().setCump(lastProductStock.getCump());
         approvisionnement.getProduct().setValeurStock(lastProductStock.getStock() * lastProductStock.getCump());
         productRepository.save(approvisionnement.getProduct());
@@ -123,7 +123,7 @@ public class ProductStockService {
         }
         ProductStock result = productStockRepository.save(productStock);
         if(result != null){
-            op.getProduct().setStock(result.getStock());
+            op.getProduct().setQuantity(result.getStock());
             op.getProduct().setCump(result.getProduct().getCump());
             op.getProduct().setValeurStock(result.getStock() * result.getProduct().getCump());
             productRepository.save(op.getProduct());
@@ -144,7 +144,7 @@ public class ProductStockService {
 
         ProductStock lastProductStock = productStockRepository.findFirstByProductIdOrderByDateDesc(op.getProduct().getId());
 
-        op.getProduct().setStock(lastProductStock.getStock());
+        op.getProduct().setQuantity(lastProductStock.getStock());
         op.getProduct().setCump(lastProductStock.getCump());
         op.getProduct().setValeurStock(lastProductStock.getStock() * lastProductStock.getCump());
         productRepository.save(op.getProduct());
@@ -163,7 +163,7 @@ public class ProductStockService {
 
         ProductStock lastProductStock = productStockRepository.findFirstByProductIdOrderByDateDesc(manquant.getProduct().getId());
 
-        manquant.getProduct().setStock(lastProductStock.getStock());
+        manquant.getProduct().setQuantity(lastProductStock.getStock());
         manquant.getProduct().setCump(lastProductStock.getCump());
         manquant.getProduct().setValeurStock(lastProductStock.getStock() * lastProductStock.getCump());
         productRepository.save(manquant.getProduct());
@@ -189,7 +189,7 @@ public class ProductStockService {
         }
         ProductStock result = productStockRepository.save(productStock);
         if(result != null){
-            manquant.getProduct().setStock(result.getStock());
+            manquant.getProduct().setQuantity(result.getStock());
             manquant.getProduct().setCump(result.getProduct().getCump());
             manquant.getProduct().setValeurStock(result.getStock() * result.getProduct().getCump());
             productRepository.save(manquant.getProduct());

@@ -1,11 +1,11 @@
 
 <div class="card-box pb-10">
-    <div class="h5 pd-20 mb-0">Recent Patient</div>
+    <div class="h5 pd-20 mb-0">Liste des Produits</div>
     <table class="data-table table nowrap">
         <thead>
         <tr>
             <th class="table-plus">Nom</th>
-            <th>Gender</th>
+            <th>Description</th>
             <th>Prix</th>
             <th>Quantite</th>
             <th>Active</th>
@@ -13,7 +13,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr ng-repeat="user in allUsers">
+        <tr ng-repeat="product in products">
             <td class="table-plus">
                 <div class="name-avatar d-flex align-items-center">
                     <div class="avatar mr-2 flex-shrink-0">
@@ -24,13 +24,13 @@
                                 alt=""/>
                     </div>
                     <div class="txt">
-                        <div class="weight-600">{{user.fullname}}</div>
+                        <div class="weight-600">{{product.name}}</div>
                     </div>
                 </div>
             </td>
-            <td>Male</td>
-            <td>{{user.city}}</td>
-            <td>{{user.quarter}}</td>
+            <td>{{product.description}}</td>
+            <td>{{product.price}}</td>
+            <td>{{product.stock}}</td>
             <td>
 				<span class="badge badge-pill"
                        data-bgcolor="#e7ebf5"
@@ -41,9 +41,9 @@
             </td>
             <td>
                 <div class="table-actions">
-                    <a href="#!/users/{{user.id}}/edit" data-color="#265ed7" style="color: rgb(38, 94, 215);" ng-click="getClickUser(user)">
+                    <a href="#!/products/{{product.id}}/edit" data-color="#265ed7" style="color: rgb(38, 94, 215);" ng-click="getClickProduct(product)">
                         <i class="icon-copy dw dw-edit2"></i></a>
-                    <a id="sa-params" data-color="#e95959" style="color: rgb(233, 89, 89);" ng-click="remove(user)">
+                    <a id="sa-params" data-color="#e95959" style="color: rgb(233, 89, 89);" ng-click="remove(product)">
                         <i class="icon-copy dw dw-delete-3"></i></a>
                 </div>
             </td>

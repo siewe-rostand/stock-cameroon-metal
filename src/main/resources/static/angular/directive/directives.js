@@ -29,3 +29,9 @@ myApp.directive('customerList',function (){
         templateUrl:'modules/customers/views/directive/customer_list.html'
     }
 });
+myApp.directive('productList',function (){
+    return {
+        restrict:'E',
+        templateUrl:'modules/products/views/directive/product_list.html'
+    }
+});
