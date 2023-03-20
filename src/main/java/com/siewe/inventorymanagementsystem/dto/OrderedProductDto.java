@@ -20,7 +20,7 @@ public class OrderedProductDto {
             orderedProductDto.setQuantity(orderedProduct.getQuantity());
             orderedProductDto.setPrixVente(orderedProduct.getPrixVente());
             if(orderedProduct.getProduct() != null){
-                orderedProductDto.setProductId(orderedProduct.getProduct().getProductId());
+                orderedProductDto.setProductId(orderedProduct.getProduct().getId());
                 orderedProductDto.setName(orderedProduct.getProduct().getName());
             }
             if(orderedProduct.getVente() != null)

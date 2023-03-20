@@ -35,7 +35,7 @@ public class OrderedProductService {
     private OrderedProductRepository orderedProductRepository;
 
     @Autowired
-    private StockService productStockService;
+    private ProductStockService productStockService;
 
     /**
      * Save a orderedProduct.
@@ -47,7 +47,7 @@ public class OrderedProductService {
     public OrderedProductDto save(OrderedProductDto orderedProductDto) throws InvalidOrderItemException {
         log.debug("Request to save OrderedProduct : {}", orderedProductDto);
 
-        OrderedProduct orderedProduct = orderedProductRepository.findByVenteAndProduct(orderedProductDto.getVenteId(), orderedProductDto.getProductId());
+        OrderedProduct orderedProduct = orderedProductRepository.findByVenteAndProduct(orderedProductDto.getVenteId(), orderedProductDto.getId());
         if(orderedProduct == null){
             orderedProduct = new OrderedProduct();
         }
@@ -55,13 +55,13 @@ public class OrderedProductService {
         Vente vente = venteRepository.findByVenteId(orderedProductDto.getVenteId());
         orderedProduct.setVente(vente);
 
-        Product product = productRepository.findByProductId(orderedProductDto.getProductId());
+        Product product = productRepository.findOne(orderedProductDto.getId());
         orderedProduct.setProduct(product);
 
         orderedProduct.setQuantity(orderedProductDto.getQuantity());
         orderedProduct.setPrixVente(orderedProductDto.getPrixVente());
 
-        if(product.getStock() - orderedProductDto.getQuantity() < 0){
+        if(product.getQuantity() - orderedProductDto.getQuantity() < 0){
             throw new InvalidOrderItemException("Stock " + orderedProductDto.getName() + " insuffisant !");
         }
 

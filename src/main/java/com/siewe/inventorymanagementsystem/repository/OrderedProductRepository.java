@@ -17,13 +17,13 @@ public interface OrderedProductRepository extends JpaRepository<OrderedProduct, 
     List<OrderedProduct> findByVente(Long id);
 
     @Query("SELECT op FROM  OrderedProduct op "
-            + "WHERE op.product.productId = ?1 "
+            + "WHERE op.product.id = ?1 "
             + "AND op.vente.createdDate between ?2 and ?3 ")
-    List<OrderedProduct> findByProductIdAndCreatedDateBetween(Long productId, LocalDateTime df, LocalDateTime dt);
+    List<OrderedProduct> findOneAndCreatedDateBetween(Long productId, LocalDateTime df, LocalDateTime dt);
 
     @Query("SELECT op FROM  OrderedProduct op "
-            + "WHERE op.product.productId = ?1 "
+            + "WHERE op.product.id = ?1 "
             + "AND op.vente.user.userId = ?2 "
             + "AND op.vente.createdDate between ?3 and ?4 ")
-    List<OrderedProduct> findByProductIdAndSellerIdCreatedDateBetween(Long productId, Long sellerId, LocalDateTime d, LocalDateTime localDateTime);
+    List<OrderedProduct> findOneAndSellerIdCreatedDateBetween(Long productId, Long sellerId, LocalDateTime d, LocalDateTime localDateTime);
 }

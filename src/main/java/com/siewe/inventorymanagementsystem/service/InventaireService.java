@@ -116,7 +116,7 @@ public class InventaireService {
                 if(ligneProduct.getStockTheorique() - ligneProduct.getStockPhysique() > 0){
                     ManquantDto manquantDto = new ManquantDto();
                     manquantDto.setQuantity(ligneProduct.getStockTheorique() - ligneProduct.getStockPhysique());
-                    manquantDto.setProductId(ligneProduct.getProduct().getProductId());
+                    manquantDto.setProductId(ligneProduct.getProduct().getId());
                     manquantDto.setCout(ligneProduct.getStockTheorique() - ligneProduct.getStockPhysique() * ligneProduct.getProduct().getCump());
                     manquantService.save(manquantDto);
                 }

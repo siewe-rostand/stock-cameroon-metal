@@ -1,24 +1,24 @@
 package com.siewe.inventorymanagementsystem.repository;
 
-import com.siewe.inventorymanagementsystem.model.Category;
 import com.siewe.inventorymanagementsystem.model.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
-//    default Product findOne(Long id) {
-//        return (Product) findById(id).orElse(null);
-//    }
+    default Product findOne(Long id) {
+        return (Product) findById(id).orElse(null);
+    }
 
 
-    Product findByProductId(Long id);
     Product findByName(String name);
-    Product deleteByProductId(Long id);
+
 
     @Query("SELECT  p FROM  Product p "
             + "WHERE  ( p.name like ?1 or p.cip like ?1 )"
@@ -66,13 +66,13 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query("SELECT  p FROM  Product p "
             + "WHERE  ( p.name like ?1 or p.cip like ?1 )"
             + "AND (p.deleted is null or p.deleted = false) "
-            + "AND (p.category.categoryId = ?2 ) "
+            + "AND (p.category.id = ?2 ) "
             + "AND p.stock <= p.stockAlerte ")
     Page<Product> findAllByCategoryIdWithStockBas(String s, Long id, Pageable pageable);
 
     @Query("SELECT  p FROM  Product p "
             + "WHERE  ( p.name like ?1 or p.cip like ?1 )"
-            + "AND (p.category.categoryId = ?2 ) "
+            + "AND (p.category.id = ?2 ) "
             + "AND (p.deleted is null or p.deleted = false)")
     Page<Product> findAllByCategoryId(String s, Long id, Pageable pageable);
 }

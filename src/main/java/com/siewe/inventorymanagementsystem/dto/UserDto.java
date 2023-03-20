@@ -12,22 +12,19 @@ import java.util.HashSet;
 @Data
 public class UserDto {
     private Long id;
-    @NotBlank(message = "username required ->" +
-            "lastname must not be empty")
-    private String username;
-    @NotBlank(message = "lastname required ->" +
-            "lastname must not be empty")
+    @NotBlank(message = "lastname required" )
     private String lastname;
-    @NotBlank(message = "firstname required ->" +
-            "firstname must not be empty")
+    @NotBlank(message = "firstname required" )
     private String firstname;
-    private String name;
+    @NotBlank(message = "username required")
+    private String username;
+    private String fullname;
     @Email(message = "Email format please")
     private String email;
     private String city;
     private String quarter;
-    private String phone;
-    private String phone2;
+    private String telephone;
+    private String telephone_alt;
     private String password;
     private Boolean activated;
     private String langKey;
@@ -47,7 +44,7 @@ public class UserDto {
     private int nbStores;
 
     public UserDto(String phone, String password) {
-        this.phone = phone;
+        this.telephone = phone;
         this.password = password;
         this.activated = true;
     }
@@ -68,16 +65,16 @@ public class UserDto {
             userDto.setResetKey(user.getResetKey());
             userDto.setPlayerId(user.getPlayerId());
 
-            userDto.setUsername(user.getName());
             userDto.setLastname(user.getLastname());
             userDto.setFirstname(user.getFirstname());
-            userDto.setName(user.getName());
+            userDto.setUsername(user.getUsername());
+            userDto.setFullname(user.getFullName());
             userDto.setEmail(user.getEmail());
             userDto.setCity(user.getCity());
             userDto.setQuarter(user.getQuarter());
 
-            userDto.setPhone(user.getTelephone());
-            userDto.setPhone2(user.getTelephoneAlt());
+            userDto.setTelephone(user.getTelephone());
+            userDto.setTelephone_alt(user.getTelephoneAlt());
             userDto.setValidated(user.getValidated());
             userDto.setDeleted(user.getDeleted());
 

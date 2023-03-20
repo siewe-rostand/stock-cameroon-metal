@@ -16,7 +16,7 @@ public class ProductPricingDto {
 
         if (userRole != null){
             userRoleDto.setRefId(userRole.getRefId());
-            userRoleDto.setProductId(userRole.getProduct().getProductId());
+            userRoleDto.setProductId(userRole.getProduct().getId());
             userRoleDto.setPricingId(userRole.getPricing().getPricingId());
         }
         return userRoleDto;

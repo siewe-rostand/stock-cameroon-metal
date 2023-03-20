@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
@@ -54,19 +55,19 @@ public interface VenteRepository extends JpaRepository<Vente, Long> {
     Page<Vente> findVentesDeletedBySellerId(Long sellerId, Pageable pageable);
 
     public interface ProductSales {
-        Long getProductId();
+        Long getId();
         String getProductName();
         Double getQuantity();
         Double getBenefice();
         Double getTotalVentes();
     }
 
-    @Query("SELECT op.product.productId as productId, op.product.name as productName, "
+    @Query("SELECT op.product.id as productId, op.product.name as productName, "
             + "SUM(op.quantity) as quantity, "
             + "SUM(op.quantity * (op.prixVente - op.product.cump)) as benefice, "
             + "SUM(op.quantity * op.prixVente) as totalVentes FROM OrderedProduct op "
             + "WHERE op.vente.createdDate between ?1 and ?2 "
-            + "GROUP BY op.product.productId ORDER BY totalVentes DESC")
+            + "GROUP BY op.product.id ORDER BY totalVentes DESC")
     List<ProductSales> findProductSalesByDateRange(LocalDateTime cdf, LocalDateTime cdt);
 
     /*
@@ -79,13 +80,13 @@ public interface VenteRepository extends JpaRepository<Vente, Long> {
     List<ProductSales> findProductSalesByDateRange(LocalDateTime cdf, LocalDateTime cdt);
     */
 
-    @Query("SELECT op.product.productId as productId, op.product.name as productName, "
+    @Query("SELECT op.product.id as productId, op.product.name as productName, "
             + "SUM(op.quantity) as quantity, "
             + "SUM(op.quantity * (op.prixVente - op.product.cump)) as benefice, "
             + "SUM(op.quantity * op.prixVente) as totalVentes FROM OrderedProduct op "
             + "WHERE op.vente.user.userId = ?1 "
             + "AND op.vente.createdDate between ?2 and ?3 "
-            + "GROUP BY op.product.productId ORDER BY totalVentes DESC")
+            + "GROUP BY op.product.id ORDER BY totalVentes DESC")
     List<ProductSales> findProductSalesBySellerIdAndDateRange(Long sellerId, LocalDateTime cdf, LocalDateTime cdt);
 
     /*public interface DailySales {

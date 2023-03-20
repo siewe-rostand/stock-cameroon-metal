@@ -22,7 +22,7 @@ public class ManquantDto {
             manquantDto.setCout(manquant.getCout());
 
             if(manquant.getProduct() != null){
-                manquantDto.setProductId(manquant.getProduct().getProductId());
+                manquantDto.setProductId(manquant.getProduct().getId());
                 manquantDto.setProductName(manquant.getProduct().getName());
             }
 

@@ -49,6 +49,8 @@ public interface UserRepository extends JpaRepository<User,Long> {
             + "where u.lastname like ?1 or u.firstname like ?1 or ?1 is null")
     Page<User> findAll(String name, Pageable pageable);
 
+    Page<User> findAll(Pageable pageable);
+
     User findByLastname(String lastname);
 
     @Query("SELECT u FROM User u JOIN u.roles r "

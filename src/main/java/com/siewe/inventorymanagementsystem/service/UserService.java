@@ -3,6 +3,7 @@ package com.siewe.inventorymanagementsystem.service;
 import com.siewe.inventorymanagementsystem.dto.UserDto;
 import com.siewe.inventorymanagementsystem.model.Role;
 import com.siewe.inventorymanagementsystem.model.User;
+import com.siewe.inventorymanagementsystem.model.error.EntityNotFoundException;
 import com.siewe.inventorymanagementsystem.repository.RoleRepository;
 import com.siewe.inventorymanagementsystem.repository.UserRepository;
 import com.siewe.inventorymanagementsystem.utils.RandomUtil;
@@ -113,9 +114,9 @@ public class UserService {
         }
         user.setLastname(userDto.getLastname());
         user.setFirstname(userDto.getFirstname());
-        user.setName(userDto.getName());
-        user.setTelephone(userDto.getPhone());
-        user.setTelephoneAlt(userDto.getPhone2());
+        user.setName(userDto.getFullname());
+        user.setTelephone(userDto.getTelephone());
+        user.setTelephoneAlt(userDto.getTelephone_alt());
         user.setCity(userDto.getCity());
         user.setQuarter(userDto.getQuarter());
 
@@ -148,19 +149,29 @@ public class UserService {
         log.debug("Request to save a new user {}",userDto);
 
         User user = new User();
-        if (userRepository.findByUsername(userDto.getUsername()) != null){
-            throw new RuntimeException("Username already exist!");
-        }
         user.setUserId(userDto.getId());
-        user.setFirstname(userDto.getFirstname());
-        user.setLastname(userDto.getLastname());
         user.setUsername(userDto.getUsername());
-        user.setTelephone(userDto.getPhone());
-        user.setPassword(userDto.getPassword());
+        if (userDto.getUsername().isEmpty()){
+            throw new EntityNotFoundException(UserDto.class,"username",userDto.getUsername());
+        }
+        if(userDto.getEmail() != null) {
+            user.setEmail(userDto.getEmail().toLowerCase());
+        }
+        user.setLastname(userDto.getLastname());
+        user.setFirstname(userDto.getFirstname());
+        user.setName(userDto.getFullname());
+        user.setTelephone(userDto.getTelephone());
+        user.setTelephoneAlt(userDto.getTelephone_alt());
+        user.setCity(userDto.getCity());
+        user.setQuarter(userDto.getQuarter());
+
+        user.setLangKey(userDto.getLangKey());
+        user.setActivated(true);
+        user.setDeleted(false);
 
         //set created date;
         String pattern = "yyyy-MM-dd";
-        LocalDate date = new LocalDate(DateTimeZone.forOffsetHours(1));
+        LocalDate date = new LocalDate();
         user.setCreatedDate(date.toString(pattern));
 
         HashSet<Role> roles = new HashSet<>();
@@ -181,22 +192,40 @@ public class UserService {
      * @param customerDto the entity to save
      * @return the persisted entity
      */
-    public User saveCustomer(UserDto customerDto) {
+    public UserDto saveCustomer(UserDto customerDto,String role) {
         log.debug("Request to save Customer : {}", customerDto);
 
         User customer = new User();
 
+        customer.setLastname(customerDto.getLastname());
+        customer.setFirstname(customerDto.getFirstname());
+        customer.setUsername(customerDto.getFirstname() + "_" + customerDto.getLastname());
+
+        if (customerDto.getUsername().isEmpty()){
+            throw new EntityNotFoundException(UserDto.class,"Username must not be null!",customerDto.getUsername());
+        }
         customer.setUserId(customerDto.getId());
-        customer.setName(customerDto.getName());
-        customer.setTelephone(customerDto.getPhone());
-        customer.setTelephoneAlt(customerDto.getPhone());
+        customer.setName(customerDto.getFirstname() + "  " + customerDto.getLastname());
+        customer.setTelephone(customerDto.getTelephone());
+        customer.setTelephoneAlt(customerDto.getTelephone_alt());
+        customer.setQuarter(customerDto.getQuarter());
         customer.setCity(customerDto.getCity());
+        customer.setActivated(true);
+        customer.setDeleted(false);
 
         String pattern = "yyyy-MM-dd";
         LocalDateTime datetime = new LocalDateTime(DateTimeZone.forOffsetHours(1));
         customer.setCreatedDate(datetime.toString(pattern));
 
-        return userRepository.save(customer);
+        customer.setRoles(new HashSet<>());
+        Role role1 = roleRepository.findByName(role);
+        if(role != null){
+            customer.getRoles().add(role1);
+        }
+
+
+        User result =  userRepository.save(customer);
+        return new UserDto().createDTO(result);
     }
 
     public UserDto save(UserDto userDto, String storeName, String role) {
@@ -207,10 +236,12 @@ public class UserService {
         user.setUsername(userDto.getUsername());
         user.setLastname(userDto.getLastname());
         user.setFirstname(userDto.getFirstname());
-        user.setTelephone(userDto.getPhone());
+        user.setTelephone(userDto.getTelephone());
+        user.setTelephoneAlt(userDto.getTelephone_alt());
 
         user.setLangKey(userDto.getLangKey());
         user.setActivated(true);
+        user.setDeleted(false);
 
         String pattern = "yyyy-MM-dd";
         LocalDate date = new LocalDate();
@@ -234,6 +265,7 @@ public class UserService {
 
     public UserDto update(UserDto userDto) {
         log.debug("Request to save User : {}", userDto);
+        String fullname = userDto.getFirstname() + "  " + userDto.getLastname();
 
         User user = userRepository.findByUserId(userDto.getId());
 
@@ -246,8 +278,15 @@ public class UserService {
 
         user.setLastname(userDto.getLastname());
         user.setFirstname(userDto.getFirstname());
-        user.setTelephone(userDto.getPhone());
+        user.setName(userDto.getFullname());
+        user.setTelephoneAlt(userDto.getTelephone_alt());
+        user.setTelephone(userDto.getTelephone());
         user.setValidated(userDto.getValidated());
+        
+        //set created date;
+        String pattern = "yyyy-MM-dd";
+        LocalDate date = new LocalDate();
+        user.setUpdatedDate(date.toString(pattern));
 
         //this is to ensure that only one user will be linked to a player id
         if(userDto.getPlayerId() != null){
@@ -309,10 +348,13 @@ public class UserService {
         log.debug("Request to get all Users");
         List<User> users = userRepository.findAll();
         List<UserDto> userDtos = new ArrayList<>();
-        if (users.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            // You many decide to return HttpStatus.NOT_FOUND
-        }
+        // if (users.isEmpty()){
+        //     throw new EntityNotFoundException(UserDto.class,"Username must not be null!",customerDto.getUsername());
+        // }
+        // if (users.isEmpty()) {
+        //     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        //     // You many decide to return HttpStatus.NOT_FOUND
+        // }
         for (User user : users)
             userDtos.add(new UserDto().createDTO(user));
         return new ResponseEntity<List<UserDto>>(userDtos, HttpStatus.OK);
@@ -362,6 +404,17 @@ public class UserService {
 
         return users.map(user -> new UserDto().createDTO(user));
     }
+
+    public Page<UserDto> findAll(Integer page, Integer size, String sortBy, String direction) {
+        log.debug("Request to get all Users");
+
+        Pageable pageable = PageRequest.of(page, size, Sort.Direction.fromString(direction), sortBy);
+
+        //Page<User> users = userRepository.findByRole("USER", pageable);
+        Page<User> users = userRepository.findAll( pageable);
+
+        return users.map(user -> new UserDto().createDTO(user));
+    }
        /*
     public List<UserDto> findSellersByStore(Long storeId) {
         log.debug("Request to get all Users");
@@ -403,7 +456,7 @@ public class UserService {
                 .map(result -> new ResponseEntity<>(
                         result,
                         HttpStatus.OK))
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+                .orElseThrow(()->new EntityNotFoundException(UserDto.class,"User not found with id",String.valueOf(userDto.getId())));
     }
 
 
@@ -416,13 +469,14 @@ public class UserService {
     public void delete(Long id) {
         log.debug("Request to delete User : {}", id);
         User user = userRepository.findByUserId(id);
-        if(Optional.ofNullable(user).isPresent()){
-            if(!user.getVentes().isEmpty()){
-                user.setDeleted(true);
-                userRepository.save(user);
-            }else {
-                userRepository.deleteByUserId(id);
-            }
+        if(user == null){
+            throw new EntityNotFoundException(User.class,"id",id.toString());
+        }
+        if (!user.getVentes().isEmpty()) {
+            user.setDeleted(true);
+            userRepository.save(user);
+        } else {
+            userRepository.deleteByUserId(id);
         }
     }
 

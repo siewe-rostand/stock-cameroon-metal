@@ -40,7 +40,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.AccessDeniedException;
 import java.util.*;
 
 @Service
@@ -74,7 +73,7 @@ public class VenteService {
     private OrderedProductRepository orderedProductRepository;
 
     @Autowired
-    private StockService productStockService;
+    private ProductStockService productStockService;
 
     @Value("${dir.pharma}")
     private String FOLDER;
@@ -103,11 +102,12 @@ public class VenteService {
         }
         else{
             //create new customer
+            /* 
             if(venteDto.getCustomer() != null){
                 User customer = customerService.saveCustomer(venteDto.getCustomer());
                 if(customer != null)
                     vente.setCustomer(customer);
-            }
+            }*/
         }
 
         //set created date;
@@ -622,9 +622,9 @@ public class VenteService {
         for (int i=0; i < days; i++) {
             LocalDateTime d = cdf.withFieldAdded(DurationFieldType.days(), i);
             if(sellerId == 0)
-                orderedProducts = orderedProductRepository.findByProductIdAndCreatedDateBetween(productId, d, d.plusHours(23).plusMinutes(59));
+                orderedProducts = orderedProductRepository.findOneAndCreatedDateBetween(productId, d, d.plusHours(23).plusMinutes(59));
             else
-                orderedProducts = orderedProductRepository.findByProductIdAndSellerIdCreatedDateBetween(productId, sellerId, d, d.plusHours(23).plusMinutes(59));
+                orderedProducts = orderedProductRepository.findOneAndSellerIdCreatedDateBetween(productId, sellerId, d, d.plusHours(23).plusMinutes(59));
 
             double totalVentes = 0;
             double benefice = 0;

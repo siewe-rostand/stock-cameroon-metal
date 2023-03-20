@@ -21,7 +21,7 @@ public class LigneProductDto {
             ligneProductDto.setStockPhysique(ligneProduct.getStockPhysique());
 
             if(ligneProduct.getProduct() != null){
-                ligneProductDto.setProductId(ligneProduct.getProduct().getProductId());
+                ligneProductDto.setProductId(ligneProduct.getProduct().getId());
                 ligneProductDto.setProduct(ligneProduct.getProduct().getName());
             }
             if(ligneProduct.getInventaire() != null){

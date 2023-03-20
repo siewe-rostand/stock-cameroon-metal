@@ -1,5 +1,5 @@
 
-myApp.factory('utils',function ($http){
+myApp.factory('utils',function ($http,$q){
     let obj={};
     const base_url ='http://localhost:8080';
 
@@ -21,6 +21,8 @@ myApp.factory('utils',function ($http){
     obj.toast = function (trueorfalse, message){
 
     }
+
+
 
     return obj;
 })

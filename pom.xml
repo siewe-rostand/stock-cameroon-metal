@@ -65,6 +65,12 @@
             <optional>true</optional>
         </dependency>
 
+        <!-- error handling -->
+        <dependency>
+   <groupId>com.fasterxml.jackson.datatype</groupId>
+   <artifactId>jackson-datatype-jsr310</artifactId>
+    </dependency>
+
         <!-- Joda time -->
         <dependency>
             <groupId>joda-time</groupId>

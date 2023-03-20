@@ -1,0 +1,67 @@
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+      <h6 class="m-0 font-weight-bold text-info float-left">Listes des Clients</h6>
+      <a ng-href="#!/customers/save" class="btn btn-outline-info float-right" >Nouveau Client</a>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-bordered" id="user_table" >
+          <thead class="thead-light">
+          <tr>
+            <th>Nom</th>
+            <th>Nom Complete</th>
+            <th>Ville</th>
+            <th>Quartier</th>
+            <th>Active</th>
+            <th>Action</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr ng-repeat="customer in allCustomers">
+            <td>{{customer.lastname}}</td>
+            <td>{{customer.fullname}}</td>
+            <td>{{customer.city}}</td>
+            <td>{{customer.quarter}}</td>
+            <td>
+              <span class="badge badge-pill"
+                             data-bgcolor="#e7ebf5"
+                             data-color="#265ed7"
+                             style="color: rgb(38, 94, 215); background-color: rgb(231, 235, 245);"
+                             >active
+                      </span>
+                  </td>
+            <td>
+              <div class="table-actions">
+                <a ng-href="#!/customers/{{customer.id}}/edit"  data-color="#265ed7" style="color: rgb(38, 94, 215);"  ng-click="getClickUser(customer)"><i class="icon-copy dw dw-edit2"></i></a>
+                
+                <a data-color="#e95959" style="color: rgb(233, 89, 89);"  ng-click="remove(customer)"><i class="icon-copy dw dw-delete-3"></i></a>
+              </div>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" ng-init="initView()">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title text-warning" id="exampleModalLabel">Alert</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>Voulez-vous vraiment supprimer cet utilisateur ?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-danger" ng-click="remove(clickedUser.id)"><i>&#x1F623</i>OK</button>
+        </div>
+      </div>
+    </div>
+  </div>

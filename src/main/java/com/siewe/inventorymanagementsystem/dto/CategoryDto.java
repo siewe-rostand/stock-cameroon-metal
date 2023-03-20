@@ -15,7 +15,7 @@ public class CategoryDto {
     public CategoryDto createDTO(Category category) {
         CategoryDto categoryDto = new CategoryDto();
         if(category != null){
-            categoryDto.setId(category.getCategoryId());
+            categoryDto.setId(category.getId());
             categoryDto.setName(category.getName());
             categoryDto.setEnabled(category.getEnabled());
 

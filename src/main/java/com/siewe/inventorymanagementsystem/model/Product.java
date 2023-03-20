@@ -1,77 +1,92 @@
 package com.siewe.inventorymanagementsystem.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Setter
+@Getter
 @Table(name = "product")
-public class Product extends BaseEntity {
-    private static final long serialVersionUID = 1L;
-
+public class Product {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
     @Column(name = "id")
-    private Long productId;
+    private Long id;
 
+    @NotBlank(message = "product name need to be provided")
     @Column(name="name")
     private String name;
 
-//    @Min(value = 0)0
+    @Column(name = "image_url")
+    private String imageUrl;
+    @Column(name="cip")
+    private String cip;
+
+    @Column(name = "description")
+    private String description;
+
+    // @Getter(AccessLevel.NONE)
+    // @Setter(AccessLevel.NONE)
+    // @Column(name = "created_date")
+    // private LocalDate createdDate;
+
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
+    private LocalDateTime createdDate;
+
+    @Column(name = "enable")
+    private Boolean enabled;
+
+    @Column(name = "available")
+    private Boolean available;
+
+    @Column(name = "deleted")
+    private Boolean deleted;
+
+    @Min(1)
     @Basic(optional = false)
     @Column(name = "price")
     private double price;
 
-    @Column(name = "description", columnDefinition = "TEXT")
-    private String description;
 
-    @Column(name = "enabled")
-    private Boolean enabled;
-
-//    @Min(value = 0)
-    @Column(name = "cump")
-    private double cump;
-
-    @Column(name="cip")
-    private String cip;
-
+    @Column(name = "quantity")
+    private double quantity;
+    @Min(0)
     @Column(name = "stock")
     private double stock;
 
     @Column(name = "stockAlerte")
     private Double stockAlerte;
 
-//    @Min(value = 0)
+    //cout unitaire moyen pondéré or weighted average cost(anglais)
+    @Min(value = 0)
+    @Column(name = "cump")
+    private double cump;
+
+    @Min(value = 0)
     @Column(name = "valeurStock")
     private double valeurStock;
 
-    @Column(name = "deleted")
-    private Boolean deleted;
-
-    @Column(name = "product_selling_price")
-    private double productSellingPrice;
-
+    @JoinColumn(name = "category_id", referencedColumnName = "id")
     @ManyToOne
-    @JoinColumn(name="category_id",referencedColumnName = "id")
     private Category category;
 
-    //bidirectional many-to-one association to ProductInvoice
-    @OneToMany(mappedBy="product")
-    private List<ProductInvoice> productInvoices;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
+    private List<ProductStock> productProductStocks;
 
-    //bidirectional many-to-one association to ProductPricing
-    @OneToMany(mappedBy="product")
-    private List<ProductPricing> productPricings;
-
-    //bidirectional many-to-one association to Stock
-    @OneToMany(mappedBy="product")
-    private List<Stock> stocks;
+    /*@OneToMany(mappedBy = "product")
+    private List<Vente> ventes;*/
 
     @OneToMany(mappedBy = "product")
     private List<Manquant> manquants;
@@ -83,25 +98,20 @@ public class Product extends BaseEntity {
         this.name = name;
     }
 
-    public List<Stock> getStocks() {
-        return this.stocks;
+    public String getCreatedDate() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        if(createdDate != null) {
+            return createdDate.format(formatter);
+        }
+        return null;
     }
 
-    public void setStocks(List<Stock> stocks) {
-        this.stocks = stocks;
+    public void setCreatedDate(String createdDate) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime cd = null;
+        if(createdDate!=null)
+            cd = LocalDateTime.parse(createdDate,formatter);
+        this.createdDate = cd;
     }
 
-    public Stock addStock(Stock stock) {
-        getStocks().add(stock);
-        stock.setProduct(this);
-
-        return stock;
-    }
-
-    public Stock removeStock(Stock stock) {
-        getStocks().remove(stock);
-        stock.setProduct(null);
-
-        return stock;
-    }
 }

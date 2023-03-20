@@ -1,0 +1,60 @@
+
+<div class="card card-box pb-10">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-info float-left">Liste des Produits</h6>
+        <a ng-href="#!/products/save" class="btn btn-outline-info float-right" >Nouveau Produit</a>
+      </div>
+    <div class="card-body">
+        <table class="data-table table nowrap" id="product_table">
+            <thead>
+            <tr>
+                <th class="table-plus">Nom</th>
+                <th>Description</th>
+                <th>Prix</th>
+                <th>Quantite</th>
+                <th>Categorie</th>
+                <th>Active</th>
+                <th class="datatable-nosort">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="product in products">
+                <td class="table-plus">
+                    <div class="name-avatar d-flex align-items-center">
+                        <div class="avatar mr-2 flex-shrink-0">
+                            <img src="vendors/images/photo5.jpg"
+                                    class="border-radius-100 shadow"
+                                    width="40"
+                                    height="40"
+                                    alt=""/>
+                        </div>
+                        <div class="txt">
+                            <div class="weight-600">{{product.name}}</div>
+                        </div>
+                    </div>
+                </td>
+                <td>{{product.description}}</td>
+                <td>{{product.price}}</td>
+                <td>{{product.quantity}}</td>
+                <td>{{product.categoryName}}</td>
+                <td>
+                    <span class="badge badge-pill"
+                           data-bgcolor="#e7ebf5"
+                           data-color="#265ed7"
+                           style="color: rgb(38, 94, 215); background-color: rgb(231, 235, 245);"
+                           >active
+                    </span>
+                </td>
+                <td>
+                    <div class="table-actions">
+                        <a href="#!/products/{{product.id}}/edit" data-color="#265ed7" style="color: rgb(38, 94, 215);" ng-click="getClickProduct(product)">
+                            <i class="icon-copy dw dw-edit2"></i></a>
+                        <a id="sa-params" data-color="#e95959" style="color: rgb(233, 89, 89);" ng-click="remove(product)">
+                            <i class="icon-copy dw dw-delete-3"></i></a>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

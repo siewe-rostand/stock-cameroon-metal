@@ -72,6 +72,19 @@ public class UserController {
         return new ResponseEntity<UserDto>(result, HttpStatus.CREATED);
     }
 
+    @PostMapping("/customers")
+    public ResponseEntity<UserDto> createCustomer(@Valid @RequestBody UserDto userDto, HttpServletRequest request) throws URISyntaxException {
+        log.debug("REST request to save User : {}", userDto);
+        HashMap<String, String> error = new HashMap<>();
+
+        if (userRepository.findByUsername(userDto.getUsername().toLowerCase()) != null) {
+            error.put("error", "Ce nom d'utilisateur est déjà utilisé !");
+            return new ResponseEntity(error, HttpStatus.BAD_REQUEST);
+        }
+        UserDto result = userService.saveCustomer(userDto, "CUSTOMER");
+        return new ResponseEntity<UserDto>(result, HttpStatus.CREATED);
+    }
+
     @PostMapping("/user-seller")
     public ResponseEntity<UserDto> createSeller(@Valid @RequestBody UserDto userDto, HttpServletRequest request) throws URISyntaxException {
         log.debug("REST request to save User : {}", userDto);
@@ -103,6 +116,17 @@ public class UserController {
         UserDto result = userService.update(userDto);
         return new ResponseEntity<UserDto>(result, HttpStatus.OK);
     }
+
+    @GetMapping("/all-users")
+    public Page<UserDto> getAllUsers(@RequestParam(name = "page", defaultValue = "0") Integer page,
+                                     @RequestParam(name = "size", defaultValue = "5") Integer size,
+                                     @RequestParam(name = "sortBy", defaultValue = "createdDate") String sortBy,
+                                     @RequestParam(name = "direction", defaultValue = "desc") String direction
+    ) {
+        log.debug("REST request to get Users");
+        return userService.findAll(page, size, sortBy, direction);
+    }
+
 
     /**
      * GET  /users : get all the users by role.
@@ -168,8 +192,11 @@ public class UserController {
     @DeleteMapping("/users/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable Long id) {
         log.debug("REST request to delete User : {}", id);
+        if (id == null) {
+            return new ResponseEntity<>(new CustomErrorType("Unable to delete. A user id can not be null."), HttpStatus.BAD_REQUEST);
+        }
         userService.delete(id);
-        return new ResponseEntity<User>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
 

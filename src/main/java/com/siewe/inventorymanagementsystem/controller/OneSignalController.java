@@ -1,16 +1,10 @@
 package com.siewe.inventorymanagementsystem.controller;
 
-import com.siewe.inventorymanagementsystem.model.Vente;
 import com.siewe.inventorymanagementsystem.repository.VenteRepository;
 import com.siewe.inventorymanagementsystem.service.OneSignalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
 
 @RestController
 @RequestMapping("/api")

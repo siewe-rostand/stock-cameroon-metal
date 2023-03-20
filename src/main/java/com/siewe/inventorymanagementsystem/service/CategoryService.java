@@ -39,7 +39,7 @@ public class CategoryService {
 
         Category category = new Category();
 
-        category.setCategoryId(categoryDto.getId());
+        category.setId(categoryDto.getId());
         category.setName(categoryDto.getName());
         category.setEnabled(categoryDto.getEnabled());
 
@@ -52,7 +52,7 @@ public class CategoryService {
 
         Category category = categoryRepository.findOne(categoryDto.getId());
 
-        category.setCategoryId(categoryDto.getId());
+        category.setId(categoryDto.getId());
         category.setName(categoryDto.getName());
         category.setEnabled(categoryDto.getEnabled());
 

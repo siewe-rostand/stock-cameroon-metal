@@ -34,7 +34,7 @@ public class ApprovisionnementDto {
             }
 
             if(approvisionnement.getProduct() != null){
-                approvisionnementDto.setProductId(approvisionnement.getProduct().getProductId());
+                approvisionnementDto.setProductId(approvisionnement.getProduct().getId());
                 approvisionnementDto.setProductName(approvisionnement.getProduct().getName());
             }
             return approvisionnementDto;

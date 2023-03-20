@@ -15,7 +15,7 @@ public class ProductInvoiceDto {
 
         if (productInvoice != null){
             productInvoiceDto.setRefId(productInvoice.getRefId());
-            productInvoiceDto.setProductId(productInvoice.getProduct().getProductId());
+            productInvoiceDto.setProductId(productInvoice.getProduct().getId());
             productInvoiceDto.setInvoiceId(productInvoice.getInvoice().getInvoiceId());
         }
 
