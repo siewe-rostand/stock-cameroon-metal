@@ -14,7 +14,8 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Setter
+@Getter
 @Table(name = "product")
 public class Product {
     @Id
@@ -53,13 +54,12 @@ public class Product {
     @Column(name = "deleted")
     private Boolean deleted;
 
-    @DecimalMin(value = "1.0", message = "Product price is empty")
+    @Min(1)
     @Basic(optional = false)
     @Column(name = "price")
     private double price;
 
-    @DecimalMin(value = "1.0", message = "Product quantity is empty")
-    @Basic(optional = false)
+
     @Column(name = "quantity")
     private double quantity;
     @Min(0)
@@ -114,11 +114,4 @@ public class Product {
         this.createdDate = cd;
     }
 
-
-    @Transient
-    public String getPhotosImagePath() {
-        if (imageUrl == null || id == null) return null;
-
-        return "/user-photos/" + id + "/" + imageUrl;
-    }
 }

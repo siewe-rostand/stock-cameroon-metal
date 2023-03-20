@@ -1,21 +1,24 @@
 package com.siewe.inventorymanagementsystem.model;
 
-import org.joda.time.LocalDate;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import javax.persistence.Column;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 public class BaseEntity {
 
     private BigDecimal version;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
     @Column(name = "created_date")
-    private LocalDate createdDate;
+    private LocalDateTime createdDate;
 
-    @Column(name = "last_modified_date")
-    private LocalDate lastModifiedDateTime;
+    @Column(name = "updated_date")
+    private LocalDateTime updatedDate;
+
+    @Column(name = "deleted_date")
+    private LocalDateTime deletedDate;
 
     @Column(name = "last_modified_user")
     private String lastModifiedUser;
@@ -24,34 +27,49 @@ public class BaseEntity {
     private String createdUser;
 
     public String getCreatedDate() {
-        String pattern = "yyyy-MM-dd";
+        java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         if(createdDate != null) {
-            return createdDate.toString(pattern);
+            return createdDate.format(formatter);
         }
         return null;
     }
 
     public void setCreatedDate(String createdDate) {
-        DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
-        LocalDate cd = null;
-        if(createdDate!=null && !createdDate.isEmpty())
-            cd = formatter.parseLocalDate(createdDate);
+        java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime cd = null;
+        if(createdDate!=null)
+            cd = LocalDateTime.parse(createdDate,formatter);
         this.createdDate = cd;
     }
 
     public String getUpdatedDate() {
-        String pattern = "yyyy-MM-dd";
-        if(lastModifiedDateTime != null) {
-            return lastModifiedDateTime.toString(pattern);
+        java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        if(updatedDate != null) {
+            return updatedDate.format(formatter);
         }
         return null;
     }
 
     public void setUpdatedDate(String updatedDate) {
-        DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
-        LocalDate cd = null;
-        if(lastModifiedDateTime!=null && !updatedDate.isEmpty())
-            cd = formatter.parseLocalDate(updatedDate);
-        this.lastModifiedDateTime = cd;
+        java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime cd = null;
+        if(updatedDate!=null)
+            cd = LocalDateTime.parse(updatedDate,formatter);
+        this.updatedDate = cd;
+    }
+    public String getDeletedDate() {
+        java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        if(deletedDate != null) {
+            return deletedDate.format(formatter);
+        }
+        return null;
+    }
+
+    public void setDeletedDate(String deletedDate) {
+        java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime cd = null;
+        if(deletedDate!=null)
+            cd = LocalDateTime.parse(deletedDate,formatter);
+        this.deletedDate = cd;
     }
 }

@@ -116,13 +116,6 @@ myApp.controller('customerController', ['$scope', 'customerControllerService', f
     }
 
 
-    function remove(id) {
-        console.log('id to be deleted', id);
-        if ($scope.customer.id === id) {//clean form if the user to be deleted is shown there.
-            deleteUser(id);
-        }
-    }
-
     function getClickUser(user){
         localStorage.setItem("saved", JSON.stringify(user));
         console.log('$scope.clickedUser',user);

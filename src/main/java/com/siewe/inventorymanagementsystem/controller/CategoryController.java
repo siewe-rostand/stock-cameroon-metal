@@ -1,6 +1,7 @@
 package com.siewe.inventorymanagementsystem.controller;
 
 import com.siewe.inventorymanagementsystem.dto.CategoryDto;
+import com.siewe.inventorymanagementsystem.model.error.EntityNotFoundException;
 import com.siewe.inventorymanagementsystem.service.CategoryService;
 import com.siewe.inventorymanagementsystem.utils.CustomErrorType;
 import org.slf4j.Logger;
@@ -20,6 +21,7 @@ import java.util.Optional;
  */
 @CrossOrigin
 @RestController
+@RequestMapping("/api")
 public class CategoryController {
 
     private final Logger log = LoggerFactory.getLogger(CategoryController.class);
@@ -34,7 +36,7 @@ public class CategoryController {
      * @return the ResponseEntity with status 201 (Created) and with body the new category, or with status 400 (Bad Request) if the category has already an ID
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
-    @PostMapping("/api/categories")
+    @PostMapping("/categories")
     public ResponseEntity<CategoryDto> createCategory(@Valid @RequestBody CategoryDto categoryDto) throws URISyntaxException {
         log.debug("REST request to save Category : {}", categoryDto);
         if (categoryDto.getId() != null) {
@@ -50,10 +52,10 @@ public class CategoryController {
      * @param categoryDto the category to update
      * @return the ResponseEntity with status 200 (OK) and with body the updated category,
      * or with status 400 (Bad Request) if the category is not valid,
-     * or with status 500 (Internal Server Error) if the category couldnt be updated
+     * or with status 500 (Internal Server Error) if the category couldn't be updated
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
-    @PutMapping("/api/categories")
+    @PutMapping("/categories")
     public ResponseEntity<CategoryDto> updateCategory(@Valid @RequestBody CategoryDto categoryDto) throws URISyntaxException {
         log.debug("REST request to update Category : {}", categoryDto);
         if (categoryDto.getId() == null) {
@@ -66,13 +68,13 @@ public class CategoryController {
     /**
      * GET  /categories : get all the categories.
      */
-    @GetMapping("/api/categories-enabled")
+    @GetMapping("/categories-enabled")
     public List<CategoryDto> getEnabledByStore() throws URISyntaxException {
         log.debug("REST request to get a list of Categories");
         return categoryService.findAll();
     }
 
-    @GetMapping("/api/categories")
+    @GetMapping("/categories")
     public List<CategoryDto> getByStore()
             throws URISyntaxException {
         log.debug("REST request to get all categories");
@@ -84,7 +86,7 @@ public class CategoryController {
      * @param id the id of the category to retrieve
      * @return the ResponseEntity with status 200 (OK) and with body the category, or with status 404 (Not Found)
      */
-    @GetMapping("/api/categories/{id}")
+    @GetMapping("/categories/{id}")
     public ResponseEntity<CategoryDto> getCategory(@PathVariable Long id) {
         log.debug("REST request to get Category : {}", id);
         CategoryDto categoryDto = categoryService.findOne(id);
@@ -101,7 +103,7 @@ public class CategoryController {
      * @param id the id of the category to delete
      * @return the ResponseEntity with status 200 (OK)
      */
-    @DeleteMapping("/api/categories/{id}")
+    @DeleteMapping("/categories/{id}")
     public ResponseEntity<?> deleteCategory(@PathVariable Long id) {
         log.debug("REST request to delete Category : {}", id);
         categoryService.delete(id);

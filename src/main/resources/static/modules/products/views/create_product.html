@@ -44,21 +44,25 @@
                                 </div>
                             </div>
                             <!--              category field-->
-                            <div class="col-md-6 col-12">
+                            <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="category">Categorie</label>
-                                    <input type="text" id="category" class="form-control"
-                                           name="category" placeholder="Selectionner la categorie"
-                                           ng-model="customer.phone">
+                                    <label>Categorie</label>
+                                    <select class="selectpicker form-control" ng-model="product.categoryId">
+                                        <option value="">Selectionner la categorie</option>
+                                        <option value="1">Tole</option>
+                                        <option value="2">Tole Bac</option>
+                                        <option value="3">gouttiere</option>
+                                    </select>
                                 </div>
                             </div>
                             <!--              telephone 2 field-->
                             <div class="col-md-6 col-12">
                                 <div class="form-group">
-                                    <label for="telephone_alt">Telephone 2</label>
-                                    <input type="text" id="telephone_alt" class="form-control"
-                                           name="telephone_alt" placeholder="autre numéro de téléphone"
-                                           ng-model="customer.phone2">
+                                    <label>Image Produit</label>
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input">
+                                        <label class="custom-file-label">Choissisez la Photo</label>
+                                    </div>
                                 </div>
                             </div>
 

@@ -26,17 +26,3 @@ myApp.factory('utils',function ($http,$q){
 
     return obj;
 })
-
-myApp.factory('notifierService',function(toaster){
-    return{
-        notify: function(msg){
-                toaster.pop('success', 'Update Successful', 'The ' + msg + ' setting was updated');
-        },
-        notifyError: function(msg){
-                toaster.pop('error', 'Something Went Wrong', 'Please check with an administrator');
-        },
-        notifyInfo: function(msg){
-                toaster.pop('info', 'Information', 'The ' + msg + 'just happened' );
-        }
-    };
-})

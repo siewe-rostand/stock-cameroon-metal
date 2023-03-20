@@ -45,12 +45,15 @@
                                 </div>
                             </div>
                             <!--              category field-->
-                            <div class="col-md-6 col-12">
+                            <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="category">Categorie</label>
-                                    <input type="text" id="category" class="form-control"
-                                           name="category" placeholder="Selectionner la categorie"
-                                           ng-model="product.category">
+                                    <label>Categorie</label>
+                                    <select class="custom-select form-control" ng-model="product.category">
+                                        <option value="">Selectionner la categorie</option>
+                                        <option value="1">Tole</option>
+                                        <option value="2">Tole Bac</option>
+                                        <option value="3">gouttiere</option>
+                                    </select>
                                 </div>
                             </div>
                             <!--              telephone 2 field-->

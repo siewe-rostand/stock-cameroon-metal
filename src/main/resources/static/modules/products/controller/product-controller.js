@@ -1,5 +1,5 @@
 
-myApp.controller('productController',['$scope','productService', function($scope, productService){
+myApp.controller('productController',['$scope','productService','utils', function($scope, productService,utils){
 
 
         $scope.submit = submit;
@@ -7,9 +7,12 @@ myApp.controller('productController',['$scope','productService', function($scope
         $scope.getClickProduct = getClickProduct;
 
         $scope.product = {
-                id: null, name: '', city: '', quarter: '',price : '',
-                categoryName: '', stock: '', description: '',
+                id: null, name: '', price : '',
+                 quantity: '', description: '',categoryId:null
             };
+            $scope.category = {
+                id:$scope.product.id,name:''
+            }
 
     fetchAllProducts();
 
@@ -23,9 +26,9 @@ myApp.controller('productController',['$scope','productService', function($scope
         productService.fetchAllProducts()
             .then(
                 function (response) {
-                    // utils.destroyDatatable('user_table');
+                    utils.destroyDatatable('product_table');
                     $scope.products = response.content;
-                    // utils.loadDatatable('user_table');
+                    utils.loadDatatable('product_table');
                      console.log(response)
                 },
                 function (errResponse) {

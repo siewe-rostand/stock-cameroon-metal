@@ -129,8 +129,11 @@ public class ProductService {
         product.setCreatedDate(date.format(formatter));
 //        product.setCreatedDate(LocalDateTime.now());
 
-        if(productDto.getId() != null){
-            Category category = categoryRepository.findOne(productDto.getId());
+        if(productDto.getCategoryId() != null){
+            Category category = categoryRepository.findOne(productDto.getCategoryId());
+            if (category == null){
+                throw new EntityNotFoundException(Category.class," id ",productDto.getCategoryId().toString());
+            }
             product.setCategory(category);
         }
 
@@ -215,8 +218,11 @@ public class ProductService {
 
 //        product.setCreatedDate(LocalDateTime.now());
 
-        if(productDto.getId() != null){
-            Category category = categoryRepository.findOne(productDto.getId());
+        if(productDto.getCategoryId() != null){
+            Category category = categoryRepository.findOne(productDto.getCategoryId());
+            if (category == null){
+                throw new EntityNotFoundException(Category.class," id ",productDto.getCategoryId().toString());
+            }
             product.setCategory(category);
         }
 
@@ -286,9 +292,6 @@ public class ProductService {
             product.setCategory(category);
         }
 
-//        //set created date;
-//        String pattern = "yyyy-MM-dd";
-//        LocalDate date = new LocalDate(DateTimeZone.forOffsetHours(1));
         product.setCreatedDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")));
 
         Product result = productRepository.save(product);
