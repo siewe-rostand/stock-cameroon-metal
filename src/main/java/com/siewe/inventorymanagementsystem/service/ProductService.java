@@ -156,7 +156,7 @@ public class ProductService {
     //@Secured(value = {"ROLE_ADMIN"})
     public ResponseEntity<ProductDto> update(ProductDto productDto){
 
-        log.debug("Request to save Product : {}", productDto);
+        log.debug("Request to update Product : {}", productDto);
 
         Product product = productRepository.findOne(productDto.getId());
 
@@ -374,10 +374,9 @@ public class ProductService {
                     products = productRepository.findByEnabledTrue("%"+name+"%", pageable);
             }*/
 
-            Page<ProductDto> productDtos = products.map(product -> {
+            return products.map(product -> {
                 return new ProductDto().createDTO(product);
             });
-            return productDtos;
 
         }
         return null;
@@ -465,13 +464,11 @@ public class ProductService {
         if(product == null){
             throw new EntityNotFoundException(User.class,"id",id.toString());
         }
-        if(Optional.ofNullable(product).isPresent()){
-            if(product.getApprovisionnements() != null){
-                product.setDeleted(true);
-                productRepository.save(product);
-            }else {
-                productRepository.deleteById(id);
-            }
+        if(product.getApprovisionnements() != null){
+            product.setDeleted(true);
+            productRepository.save(product);
+        }else {
+            productRepository.deleteById(id);
         }
     }
 
@@ -500,7 +497,8 @@ public class ProductService {
             if(resource.exists()) {
                 return resource;
             } else {
-                throw new RuntimeException("File not found " + filePath);
+                Path filePath1 = this.rootLocation.resolve("no-images.jpeg").normalize();
+                return new UrlResource(filePath1.toUri());
             }
         } catch (MalformedURLException ex) {
             throw new RuntimeException("File not found " + fileName, ex);

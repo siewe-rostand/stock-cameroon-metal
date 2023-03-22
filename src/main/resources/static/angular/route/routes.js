@@ -40,6 +40,10 @@ myApp.config(function ($routeProvider){
         templateUrl:'modules/products/views/update_product.html',
         controller:'productController',
         controllerAs:'updateProduct'
+    }).when('/products/:id/edit',{
+        templateUrl:'modules/products/views/update_product.html',
+        controller:'productController',
+        controllerAs:'updateProduct'
     })
 
 

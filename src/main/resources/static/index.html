@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="POS">
+<html ng-app="POS" lang="fr">
   <head>
     <!-- Basic Page Info -->
     <meta charset="utf-8" />
@@ -25,16 +25,12 @@
     />
 
     <!-- Mobile Specific Metas -->
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, maximum-scale=1"
-    />
+    <meta name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
     <!-- Google Font -->
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
-      rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"/>
     <!-- CSS -->
     <link rel="stylesheet" type="text/css" href="vendors/styles/core.css" />
     <link
@@ -77,7 +73,7 @@
         w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
         var f = d.getElementsByTagName(s)[0],
           j = d.createElement(s),
-          dl = l != "dataLayer" ? "&l=" + l : "";
+          dl = l !== "dataLayer" ? "&l=" + l : "";
         j.async = true;
         j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
         f.parentNode.insertBefore(j, f);
@@ -131,8 +127,7 @@
                     <div class="col-sm-12 col-md-10">
                       <input
                         class="form-control form-control-sm form-control-line"
-                        type="text"
-                      />
+                        type="text"/>
                     </div>
                   </div>
                   <div class="form-group row">
@@ -354,6 +349,7 @@
               </a>
               <ul class="submenu">
                 <li><a href="#!/products/save">Nouvelle Sauvegarde</a></li>
+                <li><a href="#!/products">Liste Produit</a></li>
                 <li><a href="#!/products">Liste Produit</a></li>
               </ul>
             </li>

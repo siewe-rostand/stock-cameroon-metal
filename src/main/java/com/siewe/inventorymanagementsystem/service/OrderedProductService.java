@@ -44,7 +44,7 @@ public class OrderedProductService {
      * @return the persisted entity
      */
     @Transactional
-    public OrderedProductDto save(OrderedProductDto orderedProductDto) throws InvalidOrderItemException {
+    public OrderedProductDto save(OrderedProductDto orderedProductDto)  {
         log.debug("Request to save OrderedProduct : {}", orderedProductDto);
 
         OrderedProduct orderedProduct = orderedProductRepository.findByVenteAndProduct(orderedProductDto.getVenteId(), orderedProductDto.getId());
@@ -62,7 +62,7 @@ public class OrderedProductService {
         orderedProduct.setPrixVente(orderedProductDto.getPrixVente());
 
         if(product.getQuantity() - orderedProductDto.getQuantity() < 0){
-            throw new InvalidOrderItemException("Stock " + orderedProductDto.getName() + " insuffisant !");
+            throw new RuntimeException("Stock " + orderedProductDto.getName() + " insuffisant !");
         }
 
         OrderedProduct result = orderedProductRepository.save(orderedProduct);

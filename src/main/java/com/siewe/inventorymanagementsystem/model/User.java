@@ -95,6 +95,9 @@ public class User implements Serializable{
     @OneToMany(mappedBy = "user")
     private List<Vente> ventes;
 
+    @OneToMany(mappedBy = "customer")
+    private  List<Order> orders;
+
     public String getCreatedDate() {
         String pattern = "yyyy-MM-dd";
         if(createdDate != null) {

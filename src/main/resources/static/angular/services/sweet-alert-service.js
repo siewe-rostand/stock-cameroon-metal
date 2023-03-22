@@ -103,7 +103,7 @@ const swalWithBootstrapButtons = Swal.mixin({
 	buttonsStyling: false
   })
 
-  const base_url = 'http://localhost:8080';
+  const base_url = 'http://localhost:8080/api';
 
   const Toast = Swal.mixin({
 	toast: true,

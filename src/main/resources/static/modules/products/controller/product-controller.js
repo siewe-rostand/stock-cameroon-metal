@@ -8,7 +8,7 @@ myApp.controller('productController',['$scope','productService','utils', functio
 
         $scope.product = {
                 id: null, name: '', price : '',
-                 quantity: '', description: '',categoryId:null
+                 quantity: '', description: '',categoryId:null,categoryName:''
             };
             $scope.category = {
                 id:$scope.product.id,name:''

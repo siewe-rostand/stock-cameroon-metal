@@ -34,4 +34,8 @@ public class OrderedProduct implements Serializable {
     @JoinColumn(name = "product_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Product product;
+
+    @ManyToOne
+    @JoinColumn(name = "order_id",referencedColumnName = "id")
+    private  Order order;
 }
