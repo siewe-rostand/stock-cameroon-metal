@@ -134,7 +134,7 @@ public class ProductStockService {
     //after delete vente
     public void restoreStockVente(OrderedProduct op) {
         DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm");
-        LocalDate date = LocalDateTime.parse(op.getVente().getCreatedDate(), formatter).toLocalDate();
+        LocalDate date = LocalDateTime.parse(op.getOrder().getCreatedDate(), formatter).toLocalDate();
         List<ProductStock> productStocks = productStockRepository.findByProductIdAndDateAfter(op.getProduct().getId(), date.minusDays(1));
 
         for(ProductStock productStock: productStocks){

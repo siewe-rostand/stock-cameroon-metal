@@ -8,6 +8,7 @@ import com.siewe.inventorymanagementsystem.model.error.EntityNotFoundException;
 import com.siewe.inventorymanagementsystem.repository.OrderedProductRepository;
 import com.siewe.inventorymanagementsystem.repository.OrdersRepository;
 import com.siewe.inventorymanagementsystem.repository.UserRepository;
+import com.siewe.inventorymanagementsystem.utils.CustomErrorType;
 import com.siewe.inventorymanagementsystem.utils.InvalidOrderItemException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -40,7 +40,7 @@ public class OrderService {
     @Autowired
     private OrderedProductRepository orderedProductRepository;
 
-    private Order localSave(OrderDto orderDto,boolean update){
+    private Order localSave(OrderDto orderDto,boolean update) throws CustomErrorType {
         Order order = new Order();
         if (!update){
             order.setId(orderDto.getId());
@@ -57,9 +57,10 @@ public class OrderService {
         }
 
         if (orderDto.getCustomerId() != null){
-            User customer = userRepository.findByUserId(orderDto.getCustomerId());
+            User customer = userRepository.findByUserId(orderDto.getCustomer().getId());
             if (customer ==null){
-                throw  new EntityNotFoundException(User.class,"id",orderDto.getCustomerId().toString());
+                throw  new CustomErrorType("Unable to create. A user with username " +
+                        orderDto.getCustomer().getId().toString() + " already exist.");
             }
             customerService.update(orderDto.getCustomer());
             order.setCustomer(customer);
@@ -68,15 +69,20 @@ public class OrderService {
         return ordersRepository.save(order);
     }
 
-    public OrderDto save(OrderDto orderDto){
+    public OrderDto save(OrderDto orderDto) throws CustomErrorType {
         log.debug("Request to save orders : {}", orderDto);
 
 
         Order result =localSave(orderDto,false);
+        Order order  = ordersRepository.findOne(result.getId());
+        if (order == null){
+            throw new EntityNotFoundException(Order.class,"order id",result.getId().toString());
+        }
         if (orderDto.getOrderedProducts() != null){
             for(OrderedProductDto orderedProductDto: orderDto.getOrderedProducts()){
                 if(orderedProductDto != null){
-                    orderedProductDto.setVenteId(result.getId());
+                    orderedProductDto.setOrderId(order.getId());
+                    System.out.println(orderedProductDto);
                     orderedProductService.save(orderedProductDto);
                 }
             }
@@ -85,7 +91,7 @@ public class OrderService {
         return new OrderDto().CreateDto(result);
     }
 
-    public OrderDto update(OrderDto orderDto) throws InvalidOrderItemException {
+    public OrderDto update(OrderDto orderDto) throws InvalidOrderItemException, CustomErrorType {
         log.debug("update order: {}", orderDto);
 
         Order order = ordersRepository.findOne(orderDto.getId());

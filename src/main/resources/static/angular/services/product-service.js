@@ -1,6 +1,6 @@
 'use strict';
 
-myApp.factory('productService',['$http','$q','config',function($http,$q,config){
+myApp.factory('productService',['$http','$q','config',function($http, $q, config){
     let base_url = config.base_url;
 
     return {
@@ -12,7 +12,7 @@ myApp.factory('productService',['$http','$q','config',function($http,$q,config){
 
     function fetchAllProducts() {
         let deferred = $q.defer();
-        $http.get(base_url+'/products?stockBas=1')
+        $http.get(base_url+'/products?stockBase=1')
             .then(
                 function (response) {
                     deferred.resolve(response.data);

@@ -4,6 +4,7 @@ import com.siewe.inventorymanagementsystem.dto.CategoryDto;
 import com.siewe.inventorymanagementsystem.model.error.EntityNotFoundException;
 import com.siewe.inventorymanagementsystem.service.CategoryService;
 import com.siewe.inventorymanagementsystem.utils.CustomErrorType;
+import com.siewe.inventorymanagementsystem.utils.ResponseHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,11 +38,11 @@ public class CategoryController {
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PostMapping("/categories")
-    public ResponseEntity<CategoryDto> createCategory(@Valid @RequestBody CategoryDto categoryDto) throws URISyntaxException {
+    public ResponseEntity<Object> createCategory(@Valid @RequestBody CategoryDto categoryDto) throws URISyntaxException {
         log.debug("REST request to save Category : {}", categoryDto);
-        if (categoryDto.getId() != null) {
-            return new ResponseEntity(new CustomErrorType("Unable to create. A category with id " +
-                    categoryDto.getId() + " already exist."), HttpStatus.CONFLICT);
+        if (categoryService.findByName(categoryDto.getName()) != null) {
+            return new ResponseEntity<>(new CustomErrorType("Unable to create. A category with name \""+
+                    categoryDto.getName() + "\" already exist."), HttpStatus.CONFLICT);
         }
         return categoryService.save(categoryDto);
     }
@@ -56,7 +57,7 @@ public class CategoryController {
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PutMapping("/categories")
-    public ResponseEntity<CategoryDto> updateCategory(@Valid @RequestBody CategoryDto categoryDto) throws URISyntaxException {
+    public ResponseEntity<Object> updateCategory(@Valid @RequestBody CategoryDto categoryDto) throws URISyntaxException {
         log.debug("REST request to update Category : {}", categoryDto);
         if (categoryDto.getId() == null) {
             return createCategory(categoryDto);
@@ -75,10 +76,12 @@ public class CategoryController {
     }
 
     @GetMapping("/categories")
-    public List<CategoryDto> getByStore()
+    public ResponseEntity<Object> getByStore()
             throws URISyntaxException {
         log.debug("REST request to get all categories");
-        return categoryService.findAll();
+        List<CategoryDto> result = categoryService.findAll();
+
+        return ResponseHandler.generateResponse("get categories successfully",HttpStatus.OK,result);
     }
     /**
      * GET  /categories/:id : get the "id" category.

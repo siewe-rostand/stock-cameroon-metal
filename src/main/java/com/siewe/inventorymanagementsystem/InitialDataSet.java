@@ -6,7 +6,6 @@ import com.siewe.inventorymanagementsystem.repository.CategoryRepository;
 import com.siewe.inventorymanagementsystem.repository.RoleRepository;
 import com.siewe.inventorymanagementsystem.service.ApprovisionnementService;
 import com.siewe.inventorymanagementsystem.service.UserService;
-import com.siewe.inventorymanagementsystem.service.VenteService;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -33,8 +32,8 @@ public class InitialDataSet {
     @Autowired
     private ApprovisionnementService approvisionnementService;
 
-    @Autowired
-    private VenteService venteService;
+//    @Autowired
+//    private VenteService venteService;
 
     public InitializingBean load() {
         createRoles();

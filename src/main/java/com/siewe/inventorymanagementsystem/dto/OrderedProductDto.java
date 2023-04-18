@@ -8,9 +8,11 @@ public class OrderedProductDto {
 
     private Long id;
     private Double quantity;
-    private Double prixVente;
+    private Double unitPrice;
+    private Double totalPrice;
     private String name;
-    private Long venteId;
+    private Long saleId;
+    private Long orderId;
     private Long productId;
 
     public OrderedProductDto createDTO(OrderedProduct orderedProduct) {
@@ -18,13 +20,19 @@ public class OrderedProductDto {
         if(orderedProduct != null){
             orderedProductDto.setId(orderedProduct.getId());
             orderedProductDto.setQuantity(orderedProduct.getQuantity());
-            orderedProductDto.setPrixVente(orderedProduct.getPrixVente());
-            if(orderedProduct.getProduct() != null){
+
+            if(productId != null){
                 orderedProductDto.setProductId(orderedProduct.getProduct().getId());
                 orderedProductDto.setName(orderedProduct.getProduct().getName());
+                orderedProductDto.setUnitPrice(orderedProduct.getProduct().getPrice());
+                orderedProductDto.setTotalPrice(orderedProductDto.getUnitPrice()*orderedProductDto.getQuantity());
             }
-            if(orderedProduct.getVente() != null)
-                orderedProductDto.setVenteId(orderedProduct.getVente().getVenteId());
+//            if(saleId!= null)
+//                orderedProductDto.setSaleId(orderedProduct.getVente().getVenteId());
+
+            if (orderId != null){
+                orderedProductDto.setOrderId(orderedProduct.getOrder().getId());
+            }
         }
         return orderedProductDto;
     }

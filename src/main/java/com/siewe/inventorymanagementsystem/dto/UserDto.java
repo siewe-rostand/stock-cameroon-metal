@@ -3,9 +3,11 @@ package com.siewe.inventorymanagementsystem.dto;
 import com.siewe.inventorymanagementsystem.model.Role;
 import com.siewe.inventorymanagementsystem.model.User;
 import lombok.Data;
+import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import java.util.Collection;
 import java.util.HashSet;
 
@@ -16,7 +18,6 @@ public class UserDto {
     private String lastname;
     @NotBlank(message = "firstname required" )
     private String firstname;
-    @NotBlank(message = "username required")
     private String username;
     private String fullname;
     @Email(message = "Email format please")
@@ -67,7 +68,7 @@ public class UserDto {
 
             userDto.setLastname(user.getLastname());
             userDto.setFirstname(user.getFirstname());
-            userDto.setUsername(user.getUsername());
+            userDto.setUsername(user.getFirstname() +"."+user.getLastname());
             userDto.setFullname(user.getFullName());
             userDto.setEmail(user.getEmail());
             userDto.setCity(user.getCity());
@@ -93,8 +94,11 @@ public class UserDto {
                     userDto.setBadge("primary");
             }*/
 
+            /**
+             * make sure the role table in the database contain some roles
+             */
             HashSet<String> roles = new HashSet<>();
-            if (user.getRoles() != null) {
+            if (user.getRoles().size()>0) {
                 for (Role role : user.getRoles())
                     roles.add(role.getName());
             }

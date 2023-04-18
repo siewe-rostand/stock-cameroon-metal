@@ -14,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "vente")
-public class Vente {
+public class Vente{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,19 +22,20 @@ public class Vente {
     @Column(name = "id")
     private Long venteId;
 
+    @Column(name = "acompte")
+    private Double acompte;
+
+    @Column(name = "total_price")
+    private Double totalPrice;
+
+    @Column(name = "reglement")
+    private Double reglement;
+
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
     @Column(name = "created_date")
     private LocalDateTime createdDate;
 
-    @Column(name = "acompte")
-    private Double acompte;
-
-    @Column(name = "prixTotal")
-    private Double prixTotal;
-
-    @Column(name = "reglement")
-    private Double reglement;
 
     @JoinColumn(name = "user_id")
     @ManyToOne(optional = false)
@@ -44,8 +45,8 @@ public class Vente {
     @ManyToOne
     private User customer;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "vente")
-    private List<OrderedProduct> orderedProducts;
+//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "vente")
+//    private List<OrderedProduct> orderedProducts;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "vente")
     private List<Reglement> reglements;
@@ -68,7 +69,6 @@ public class Vente {
     public void setTypePaiement(TypePaiement typePaiement) {
         this.typePaiement = typePaiement.toValue();
     }
-
     public String getCreatedDate() {
         String pattern = "yyyy-MM-dd HH:mm";
         if(createdDate != null) {
@@ -91,4 +91,7 @@ public class Vente {
 
         return createdDate.toString(patternDate) + " à " + createdDate.toString(patternTime);
     }
+
+
+
 }

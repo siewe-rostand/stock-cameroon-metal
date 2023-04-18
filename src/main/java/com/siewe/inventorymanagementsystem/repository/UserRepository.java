@@ -6,16 +6,20 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public interface UserRepository extends JpaRepository<User,Long> {
 
 
     User findByUserId(Long id);
     User findByUsername(String username);
     User findByPlayerId(String playerId);
+    @Query("select u from User u where (u.username = ?1 or u.email = ?1)")
+    User findByLoginOrEmail(String loginOrEmail);
 
     @Override
     void delete(User user);

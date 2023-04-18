@@ -18,6 +18,8 @@ public class UserRole implements Serializable {
     @Column(name = "id")
     private Long refId;
 
+    private String roleName;
+
     @ManyToOne
     private Role role;
 

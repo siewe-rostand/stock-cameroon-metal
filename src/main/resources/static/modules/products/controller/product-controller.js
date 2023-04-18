@@ -1,5 +1,5 @@
 
-myApp.controller('productController',['$scope','productService','utils', function($scope, productService,utils){
+myApp.controller('productController',['$scope','productService','utils', function($scope, productService, utils){
 
 
         $scope.submit = submit;

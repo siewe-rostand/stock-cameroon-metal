@@ -28,6 +28,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
@@ -87,17 +88,8 @@ public class ProductService {
             throw new RuntimeException("Could not initialize folder for upload!");
         }
     }
-    /**
-     * Save a product.
-     *
-     * @param productDto the entity to save
-     * @return the persisted entity
-     */
-    //@Secured(value = {"ROLE_ADMIN"})
-    public ProductDto save(ProductDto productDto){
 
-        log.debug("Request to save Product : {}", productDto);
-
+    private Product local(ProductDto productDto,boolean update){
         Product product = new Product();
         if (productDto.getId() != null) {
             product = productRepository.findOne(productDto.getId());
@@ -109,10 +101,6 @@ public class ProductService {
 
         product.setPrice(productDto.getPrice());
 
- //        product.setPrice(0);
-//        if(productDto.getPrice() != null)
-//            product.setPrice(productDto.getPrice());
-
         product.setStockAlerte(productDto.getStockAlerte());
 
         product.setQuantity(productDto.getQuantity());
@@ -123,14 +111,17 @@ public class ProductService {
 
         product.setEnabled(true);
         product.setAvailable(true);
+        product.setDeleted(false);
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime date = LocalDateTime.now();
-        product.setCreatedDate(date.format(formatter));
-//        product.setCreatedDate(LocalDateTime.now());
-
+        if (!update){
+            product.setCreatedDate(date.format(formatter));
+        }else {
+            product.setUpdatedDate(date.format(formatter));
+        }
         if(productDto.getCategoryId() != null){
-            Category category = categoryRepository.findOne(productDto.getCategoryId());
+            Category category = categoryRepository.findOne(productDto.getId());
             if (category == null){
                 throw new EntityNotFoundException(Category.class," id ",productDto.getCategoryId().toString());
             }
@@ -138,45 +129,37 @@ public class ProductService {
         }
 
         Product result = productRepository.save(product);
-
-        if(productDto.getQuantity() != null && productDto.getCump() != null) {
-            if(productDto.getCump() != 0 && productDto.getQuantity() != 0){
-                ApprovisionnementDto approvisionnementDto = new ApprovisionnementDto();
-                approvisionnementDto.setQuantity(productDto.getQuantity());
-                approvisionnementDto.setPrixEntree(productDto.getCump());
-                approvisionnementDto.setProductId(result.getId());
-                approvisionnementService.save(approvisionnementDto);
+        if (!update){
+            if(productDto.getQuantity() != null && productDto.getCump() != null) {
+                if(productDto.getCump() != 0 && productDto.getQuantity() != 0){
+                    ApprovisionnementDto approvisionnementDto = new ApprovisionnementDto();
+                    approvisionnementDto.setQuantity(productDto.getQuantity());
+                    approvisionnementDto.setPrixEntree(productDto.getCump());
+                    approvisionnementDto.setProductId(result.getId());
+                    approvisionnementService.save(approvisionnementDto);
+                }
             }
         }
 
-        //return new ResponseEntity<ProductDto>(new ProductDto().createDTO(result), HttpStatus.CREATED);
-        return new ProductDto().createDTO(result);
+        return result;
+    }
+    /**
+     * Save a product.
+     *
+     * @param productDto the entity to save
+     * @return the persisted entity
+     */
+    //@Secured(value = {"ROLE_ADMIN"})
+    public ProductDto save(ProductDto productDto){
+        log.debug("Request to save Product : {}", productDto);
+        return new ProductDto().createDTO(local(productDto,false));
     }
 
     //@Secured(value = {"ROLE_ADMIN"})
     public ResponseEntity<ProductDto> update(ProductDto productDto){
 
         log.debug("Request to update Product : {}", productDto);
-
-        Product product = productRepository.findOne(productDto.getId());
-
-        product.setName(productDto.getName());
-//        product.setCip(productDto.getCip());
-        product.setDescription(productDto.getDescription());
-        product.setPrice(productDto.getPrice());
-        product.setStockAlerte(productDto.getStockAlerte());
-
-        product.setEnabled(productDto.getEnabled());
-        product.setAvailable(productDto.getAvailable());
-        product.setDeleted(false);
-
-        if(productDto.getId() != null){
-            Category category = categoryRepository.findOne(productDto.getId());
-            product.setCategory(category);
-        }
-
-        Product result = productRepository.save(product);
-        return new ResponseEntity<ProductDto>(new ProductDto().createDTO(result), HttpStatus.CREATED);
+        return new ResponseEntity<ProductDto>(new ProductDto().createDTO( local(productDto,true)), HttpStatus.CREATED);
     }
 
 
@@ -186,47 +169,7 @@ public class ProductService {
 
         log.debug("Request to save Product with image : {}", productDto);
 
-        Product product = new Product();
-        if (productDto.getId() != null) {
-            product = productRepository.findOne(productDto.getId());
-        }
-
-        product.setName(productDto.getName());
-//        product.setCip(productDto.getCip());
-        product.setDescription(productDto.getDescription());
-
-        product.setPrice(0);
-        if(productDto.getPrice() != null)
-            product.setPrice(productDto.getPrice());
-
-        product.setStockAlerte(productDto.getStockAlerte());
-
-        product.setQuantity(productDto.getQuantity());
-
-//        if(productDto.getQuantity() != null && productDto.getCump() != null){
-//            product.setQuantity(productDto.getQuantity());
-//            product.setCump(productDto.getCump());
-//        }
-
-        product.setEnabled(true);
-        product.setAvailable(true);
-
-        //set created date;
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        LocalDateTime date = LocalDateTime.now();
-        product.setCreatedDate(date.format(formatter));
-
-//        product.setCreatedDate(LocalDateTime.now());
-
-        if(productDto.getCategoryId() != null){
-            Category category = categoryRepository.findOne(productDto.getCategoryId());
-            if (category == null){
-                throw new EntityNotFoundException(Category.class," id ",productDto.getCategoryId().toString());
-            }
-            product.setCategory(category);
-        }
-
-     Product result = productRepository.save(product);
+     Product result = local(productDto,false);
 
         if(productDto.getQuantity() != null && productDto.getCump() != null) {
             if(productDto.getCump() != 0 && productDto.getQuantity() != 0){
@@ -240,29 +183,27 @@ public class ProductService {
 
 
         if (file !=null ) {
-            if (result != null) {
-//                rootLocation = Paths.get(uploadPath+"/");
-                String originalFileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
-                String fileName = "";
-                if (originalFileName.contains("..")) {
-                    throw new RuntimeException("Sorry! Filename contains invalid path sequence " + originalFileName);
-                }
-                String fileExtension = "";
-                try {
-                    fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
-                } catch (Exception e) {
-                    fileExtension = "";
-                }
-                StringBuffer fullFilePath = new StringBuffer(FOLDER).append(File.separator).append(fileName);
-                fileName ="product-" + result.getId() + fileExtension;
-                product.setImageUrl(String.valueOf(fullFilePath));
-                final Path targetPath = this.rootLocation.resolve(fileName);
-                System.out.println(fullFilePath);
+            //                rootLocation = Paths.get(uploadPath+"/");
+            String originalFileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
+            String fileName = "";
+            if (originalFileName.contains("..")) {
+                throw new RuntimeException("Sorry! Filename contains invalid path sequence " + originalFileName);
+            }
+            String fileExtension = "";
+            try {
+                fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
+            } catch (Exception e) {
+                fileExtension = "";
+            }
+            StringBuffer fullFilePath = new StringBuffer(FOLDER).append(File.separator).append(fileName);
+            fileName ="product-" + result.getId() + fileExtension;
+            result.setImageUrl(String.valueOf(fullFilePath));
+            final Path targetPath = this.rootLocation.resolve(fileName);
+            System.out.println(fullFilePath);
 
-                try (InputStream in = file.getInputStream()) {
-                    try (OutputStream out = Files.newOutputStream(targetPath, StandardOpenOption.CREATE)) {
-                        in.transferTo(out);
-                    }
+            try (InputStream in = file.getInputStream()) {
+                try (OutputStream out = Files.newOutputStream(targetPath, StandardOpenOption.CREATE)) {
+                    in.transferTo(out);
                 }
             }
         }
@@ -273,7 +214,7 @@ public class ProductService {
 
 
     //@Secured(value = {"ROLE_ADMIN"})
-    public ResponseEntity<ProductDto> update(ProductDto productDto,
+    public ResponseEntity<ProductDto> update( ProductDto productDto,
                                              MultipartFile file, MultipartFile thumb) throws IOException {
 
         log.debug("Request to save Product : {}", productDto);
@@ -287,34 +228,25 @@ public class ProductService {
         product.setStockAlerte(productDto.getStockAlerte());
         product.setEnabled(productDto.getEnabled());
 
-        if(productDto.getId() != null){
+        if(productDto.getCategoryId() != null){
             Category category = categoryRepository.findOne(productDto.getId());
             product.setCategory(category);
         }
 
-        product.setCreatedDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")));
+        java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        java.time.LocalDateTime date = java.time.LocalDateTime.now();
+        product.setCreatedDate(date.format(formatter));
 
         Product result = productRepository.save(product);
 
-        if(file != null && thumb != null){
+        if(file != null || thumb != null){
             if(result != null){
-                if (!Files.exists(Paths.get(FOLDER + "products/"))) {
-                    File products = new File(FOLDER + "products/");
-                    if(! products.mkdirs()) {
-                        return new ResponseEntity(new CustomErrorType("Unable to create folder ${dir.images}"), HttpStatus.CONFLICT);
-                    }
-                }
-
-                if(!file.isEmpty()){
-                    try {
-                        file.transferTo(new File(FOLDER + "products/" + result.getId()));
-                        thumb.transferTo(new File(FOLDER + "products/" + result.getId() + "_small"));
-                    }
-                    catch (IOException e) {
-                        e.printStackTrace();
-                        return new ResponseEntity(new CustomErrorType("Error while saving product image"), HttpStatus.NO_CONTENT);
-                    }
-                }
+                // Save the file
+                String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+                File newFile = new File(FOLDER+"/" + fileName);
+                FileOutputStream fileOutputStream = new FileOutputStream(newFile);
+                fileOutputStream.write(file.getBytes());
+                fileOutputStream.close();
             }
         }
         return new ResponseEntity<ProductDto>(new ProductDto().createDTO(result), HttpStatus.CREATED);
@@ -361,6 +293,10 @@ public class ProductService {
             Pageable pageable = PageRequest.of(page, size, Sort.Direction.fromString(direction), sortBy);
             Page<Product> products = null;
 
+            if(stockBas)
+                products = productRepository.findByEnabledTrueWithStockBas("%"+name+"%", pageable);
+            else
+                products = productRepository.findByEnabledTrue("%"+name+"%", pageable);
             /*if(SecurityUtils.isCurrentUserInRole("ROLE_ADMIN") || SecurityUtils.isCurrentUserInRole("ROLE_USER")){
                 if(stockBas)
                     products = productRepository.findAllByCategoryIdWithStockBas("%"+name+"%", cat.getId(), pageable);
@@ -401,7 +337,7 @@ public class ProductService {
         return productDtos;
     }
 
-    public List<ProductDto> findByMc(String mc) {
+    public List<ProductDto> findByKeyword(String mc) {
 
         List<Product> products = productRepository.findByMc("%"+mc+"%");
         List<ProductDto> productDtos = new ArrayList<>();

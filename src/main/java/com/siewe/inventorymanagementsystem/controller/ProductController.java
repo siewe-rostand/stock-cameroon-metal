@@ -7,8 +7,6 @@ import com.siewe.inventorymanagementsystem.utils.CustomErrorType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
@@ -20,12 +18,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -130,7 +124,7 @@ public class ProductController {
             @RequestParam(name = "sortBy", defaultValue = "name") String sortBy,
             @RequestParam(name = "direction", defaultValue = "asc") String direction,
             @RequestParam(name = "product", defaultValue = "") String product,
-            @RequestParam(name = "stockBas") boolean stockBas) {
+            @RequestParam(name = "stockBase") boolean stockBas) {
         log.debug("REST request to get page of Products by store");
         return productService.findAll(page, size, sortBy, direction, product, stockBas);
     }
@@ -142,7 +136,7 @@ public class ProductController {
                                                      @RequestParam(name = "sortBy", defaultValue = "name") String sortBy,
                                                      @RequestParam(name = "direction", defaultValue = "asc") String direction,
                                                      @RequestParam(name = "product", defaultValue = "") String product,
-                                                     @RequestParam(name = "stockBas") boolean stockBas) {
+                                                     @RequestParam(name = "stockBase") boolean stockBas) {
         log.debug("REST request to get page of Products by store");
         return productService.findAllByCategory(page, size, sortBy, direction, product, categoryId, stockBas);
     }
@@ -161,7 +155,7 @@ public class ProductController {
     public Map<String, List<ProductDto>> getProductsByMc(@RequestParam(name = "mc") String mc) {
         log.debug("REST request to get Products");
         Map<String, List<ProductDto>> map = new HashMap<>();
-        map.put("results", productService.findByMc(mc));
+        map.put("results", productService.findByKeyword(mc));
         return map;
     }
 

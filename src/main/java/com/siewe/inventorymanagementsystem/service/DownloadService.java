@@ -212,25 +212,25 @@ public class DownloadService {
                             .append("\\\\\n");
                     s.append("\\\\");
                 }*/
-        for(OrderedProduct op: vente.getOrderedProducts()){
-            String name =  op.getProduct().getName().replace("%","\\%");
-            s.append("\\begin{minipage}[t]{0.1\\linewidth}\n" +
-                    Math.round(op.getQuantity()) + "x" + "\n" +
-                    "\\end{minipage}\n" +
-                    "\\begin{minipage}[t]{0.70\\linewidth}\n" +
-                    name + "\n" +
-                    "\\end{minipage}\n" +
-                    "\\begin{minipage}[t]{0.2\\linewidth}\n" +
-                    "\\hfill \\textbf{"+(Math.round(op.getQuantity() * op.getPrixVente()))+"}\n" +
-                    "\\end{minipage}");
-            s.append("\\\\");
-        }
+//        for(OrderedProduct op: vente.getOrderedProducts()){
+//            String name =  op.getProduct().getName().replace("%","\\%");
+//            s.append("\\begin{minipage}[t]{0.1\\linewidth}\n" +
+//                    Math.round(op.getQuantity()) + "x" + "\n" +
+//                    "\\end{minipage}\n" +
+//                    "\\begin{minipage}[t]{0.70\\linewidth}\n" +
+//                    name + "\n" +
+//                    "\\end{minipage}\n" +
+//                    "\\begin{minipage}[t]{0.2\\linewidth}\n" +
+//                    "\\hfill \\textbf{"+(Math.round(op.getQuantity() * op.getUnitPrice()))+"}\n" +
+//                    "\\end{minipage}");
+//            s.append("\\\\");
+//        }
         s.append(
                 "  \n" +
                         "~\\\\\n" +
                         "\\hrule\n" +
                         "\\vspace{0.2cm}\n" +
-                        "\\centering{Total  : \\large{\\textbf{ " + Math.round(vente.getPrixTotal())+"}} \\tiny{FCFA}}\n" +
+                        "\\centering{Total  : \\large{\\textbf{ " + Math.round(vente.getTotalPrice())+"}} \\tiny{FCFA}}\n" +
                         "\n" +
                         "\\vfill\n" +
                         "\\hrule % Horizontal line\n" +
@@ -290,25 +290,25 @@ public class DownloadService {
                 "\\uppercase{Détail de la commande}\\\\ \n" +
                 "\n");
 
-        for(OrderedProduct op: vente.getOrderedProducts()){
-            String name =  op.getProduct().getName().replace("%","\\%");
-            s.append("\\begin{minipage}[t]{0.1\\linewidth}\n" +
-                    Math.round(op.getQuantity()) + "x" + "\n" +
-                    "\\end{minipage}\n" +
-                    "\\begin{minipage}[t]{0.70\\linewidth}\n" +
-                    name + "\n" +
-                    "\\end{minipage}\n" +
-                    "\\begin{minipage}[t]{0.2\\linewidth}\n" +
-                    "\\hfill \\textbf{"+(Math.round(op.getQuantity() * op.getPrixVente()))+"}\n" +
-                    "\\end{minipage}" +
-                    "\n" );
-        }
+//        for(OrderedProduct op: vente.getOrderedProducts()){
+//            String name =  op.getProduct().getName().replace("%","\\%");
+//            s.append("\\begin{minipage}[t]{0.1\\linewidth}\n" +
+//                    Math.round(op.getQuantity()) + "x" + "\n" +
+//                    "\\end{minipage}\n" +
+//                    "\\begin{minipage}[t]{0.70\\linewidth}\n" +
+//                    name + "\n" +
+//                    "\\end{minipage}\n" +
+//                    "\\begin{minipage}[t]{0.2\\linewidth}\n" +
+//                    "\\hfill \\textbf{"+(Math.round(op.getQuantity() * op.getUnitPrice()))+"}\n" +
+//                    "\\end{minipage}" +
+//                    "\n" );
+//        }
         s.append(
                 "\\vspace{1cm}\n" +
                         "\\hrule\n" +
                         "\\vspace{1cm}\n" +
                         "\n" +
-                        "\\centering{TOTAL  : \\Huge{\\textbf{"+ Math.round(vente.getPrixTotal())+"}} \\huge{FCFA}}\n" +
+                        "\\centering{TOTAL  : \\Huge{\\textbf{"+ Math.round(vente.getTotalPrice())+"}} \\huge{FCFA}}\n" +
                         "\n" +
                         "\\vfill\n" +
                         "\\hrule % Horizontal line\n" +

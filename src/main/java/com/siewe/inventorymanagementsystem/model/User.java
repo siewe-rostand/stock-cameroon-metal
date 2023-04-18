@@ -1,18 +1,22 @@
 package com.siewe.inventorymanagementsystem.model;
 
 import lombok.*;
+import org.hibernate.validator.constraints.Length;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 @Entity
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
@@ -74,9 +78,9 @@ public class User implements Serializable{
     private String resetKey;
 
     @Column(name = "created_date")
-    private LocalDate createdDate;
+    private LocalDateTime createdDate;
     @Column(name = "updated_date")
-    private LocalDate updatedDate;
+    private LocalDateTime updatedDate;
 
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
@@ -86,11 +90,17 @@ public class User implements Serializable{
     @OneToMany(mappedBy="user")
     private List<UserRole> userRoles;
 
+    @OneToOne(optional=false, mappedBy="customer")
+    private Receipt receipt;
+
+    @OneToOne(optional=false, mappedBy="employee")
+    private Receipt userReceipt;
+
     @ManyToMany
     @JoinTable(name = "user_roles", joinColumns = {
             @JoinColumn(name = "user_id", referencedColumnName = "id")}, inverseJoinColumns = {
             @JoinColumn(name = "role_id", referencedColumnName = "id")})
-    private Collection<Role> roles;
+    private Set<Role> roles;
 
     @OneToMany(mappedBy = "user")
     private List<Vente> ventes;
@@ -99,7 +109,7 @@ public class User implements Serializable{
     private  List<Order> orders;
 
     public String getCreatedDate() {
-        String pattern = "yyyy-MM-dd";
+        String pattern = "yyyy-MM-dd HH:mm:ss";
         if(createdDate != null) {
             return createdDate.toString(pattern);
         }
@@ -107,14 +117,14 @@ public class User implements Serializable{
     }
 
     public void setCreatedDate(String createdDate) {
-        DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
-        LocalDate cd = null;
+        DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime cd = null;
         if(createdDate!=null && !createdDate.isEmpty())
-            cd = formatter.parseLocalDate(createdDate);
+            cd = formatter.parseLocalDateTime(createdDate);
         this.createdDate = cd;
     }
     public String getUpdatedDate() {
-        String pattern = "yyyy-MM-dd";
+        String pattern = "yyyy-MM-dd HH:mm:ss";
         if(updatedDate != null) {
             return updatedDate.toString(pattern);
         }
@@ -122,15 +132,15 @@ public class User implements Serializable{
     }
 
     public void setUpdatedDate(String updatedDate) {
-        DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
-        LocalDate cd = null;
+        DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime cd = null;
         if(updatedDate !=null && !updatedDate.isEmpty())
-            cd = formatter.parseLocalDate(updatedDate);
+            cd = formatter.parseLocalDateTime(updatedDate);
         this.updatedDate = cd;
     }
 
     public String getResetDate() {
-        String pattern = "yyyy-MM-dd HH:mm";
+        String pattern = "yyyy-MM-dd HH:mm:ss";
         if(resetDate != null) {
             return resetDate.toString(pattern);
         }
@@ -152,6 +162,14 @@ public class User implements Serializable{
         }
         return name;
     }
+    public String username() {
+        String name = this.getLastname();
+        if(this.getFirstname() != null){
+            name += "_" + this.getFirstname();
+        }
+        return name;
+    }
+
     public  String getFullName(){
         String name = "";
         if (this.firstname != null){

@@ -53,16 +53,16 @@ public class VenteDto {
             }
 
             ArrayList<OrderedProductDto> orderedProductDtos = new ArrayList<>();
-            if(vente.getOrderedProducts() != null){
-                for(OrderedProduct orderedProduct: vente.getOrderedProducts()){
-                    orderedProductDtos.add(new OrderedProductDto().createDTO(orderedProduct));
-                }
-            }
+//            if(vente.getOrderedProducts() != null){
+//                for(OrderedProduct orderedProduct: vente.getOrderedProducts()){
+//                    orderedProductDtos.add(new OrderedProductDto().createDTO(orderedProduct));
+//                }
+//            }
             venteDto.setOrderedProducts(orderedProductDtos);
-            venteDto.setPrixTotal(vente.getPrixTotal());
+            venteDto.setPrixTotal(vente.getTotalPrice());
             venteDto.setReglement(vente.getReglement());
             if(vente.getReglement() != null)
-                venteDto.setRendu(vente.getPrixTotal() - vente.getReglement());
+                venteDto.setRendu(vente.getTotalPrice() - vente.getReglement());
 
             venteDto.setTypePaiement(String.valueOf(vente.getTypePaiement()));
             venteDto.typePaimentBadge = "success";
@@ -79,7 +79,7 @@ public class VenteDto {
             }
             venteDto.setReglements(reglementDtos);
             venteDto.setAcompte(acompte);
-            venteDto.setReste(vente.getPrixTotal() - acompte);
+            venteDto.setReste(vente.getTotalPrice() - acompte);
             venteDto.setNewReglement(0.0);
 
             return venteDto;

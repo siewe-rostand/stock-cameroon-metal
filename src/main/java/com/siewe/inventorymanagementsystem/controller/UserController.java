@@ -1,17 +1,20 @@
 package com.siewe.inventorymanagementsystem.controller;
 
+import com.siewe.inventorymanagementsystem.dto.CategoryDto;
 import com.siewe.inventorymanagementsystem.dto.UserDto;
 import com.siewe.inventorymanagementsystem.model.User;
 import com.siewe.inventorymanagementsystem.repository.UserRepository;
 import com.siewe.inventorymanagementsystem.service.MailService;
 import com.siewe.inventorymanagementsystem.service.UserService;
 import com.siewe.inventorymanagementsystem.utils.CustomErrorType;
+import com.siewe.inventorymanagementsystem.utils.ResponseHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -44,23 +47,23 @@ public class UserController {
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PostMapping("/register")
-    public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserDto userDto, HttpServletRequest request) throws URISyntaxException {
+    public ResponseEntity<Object> createUser(@Valid @RequestBody UserDto userDto) throws URISyntaxException {
         log.debug("REST request to save User : {}", userDto);
         HashMap<String, String> error = new HashMap<>();
-        /*if (userDto.getId() != null) {
-            return new ResponseEntity(new CustomErrorType("Unable to create. A user with id " +
-                    userDto.getId() + " already exist."), HttpStatus.CONFLICT);
-        }*/
+        User user = new User();
+//        User userRole = userRepository.findByUsername(user.username());
         if (userRepository.findByUsername(userDto.getUsername().toLowerCase()) != null) {
-            error.put("error", "username already in use");
-            return new ResponseEntity(error, HttpStatus.BAD_REQUEST);
+            System.out.println("user name error");
+            error.put("error", "Ce nom d'utilisateur est déjà utilisé !");
+            return new ResponseEntity<>(new CustomErrorType("Unable to create. A user with username " +
+                    userDto.getUsername() + " already exist."), HttpStatus.CONFLICT);
         }
         UserDto result = userService.save(userDto, "USER");
 
         /*
         String baseUrl = request.getScheme() + // "http"
                 "://" +                                // "://"
-                request.getServerName() +              // "myhost"
+                request.getServerName() +              // "my host"
                 ":" +                                  // ":"
                 request.getServerPort() +              // "80"
                 request.getContextPath();              // "/myContextPath" or "" if deployed in root context
@@ -69,25 +72,25 @@ public class UserController {
         if(result != null)
         mailService.sendNewRegistrationEmail(userDto);
         */
-        return new ResponseEntity<UserDto>(result, HttpStatus.CREATED);
+        return ResponseHandler.generateResponse("Product save Successfully",HttpStatus.CREATED,result);
     }
 
     @PostMapping("/customers")
-    public ResponseEntity<UserDto> createCustomer(@Valid @RequestBody UserDto userDto, HttpServletRequest request) throws URISyntaxException {
+    public ResponseEntity<Object> createCustomer(@Valid @RequestBody UserDto userDto, HttpServletRequest request) throws URISyntaxException {
         log.debug("REST request to save User : {}", userDto);
         HashMap<String, String> error = new HashMap<>();
 
         if (userRepository.findByUsername(userDto.getUsername().toLowerCase()) != null) {
             error.put("error", "Ce nom d'utilisateur est déjà utilisé !");
-            return new ResponseEntity(error, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
         }
         UserDto result = userService.saveCustomer(userDto, "CUSTOMER");
-        return new ResponseEntity<UserDto>(result, HttpStatus.CREATED);
+        return ResponseHandler.generateResponse("user created succesfully",HttpStatus.CREATED,result);
     }
 
     @PostMapping("/user-seller")
     public ResponseEntity<UserDto> createSeller(@Valid @RequestBody UserDto userDto, HttpServletRequest request) throws URISyntaxException {
-        log.debug("REST request to save User : {}", userDto);
+        log.debug("REST request to save seller : {}", userDto);
         HashMap<String, String> error = new HashMap<>();
 
         if (userRepository.findByUsername(userDto.getUsername().toLowerCase()) != null) {

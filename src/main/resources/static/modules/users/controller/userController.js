@@ -32,6 +32,10 @@ myApp.controller('userController', ['$scope', 'UserService', 'utils', function (
                     // console.log(d)
                 },
                 function (errResponse) {
+                    Toast.fire({
+                        icon:'error',
+                        title: 'une erreur s\'est produite'
+                    })
                     console.log(errResponse)
                     console.error('Error while fetching Users');
                 }
@@ -41,6 +45,7 @@ myApp.controller('userController', ['$scope', 'UserService', 'utils', function (
 
     function createUser(user) {
         let url = '/register'
+        console.log(user)
         UserService.createUser(url, user)
             .then(
                 function (res){
@@ -49,6 +54,10 @@ myApp.controller('userController', ['$scope', 'UserService', 'utils', function (
                     reset();
                 },
                 function (errResponse) {
+                    Toast.fire({
+                        icon:'error',
+                        title: 'une erreur s\'est produite'
+                    })
                     console.error(errResponse)
                     console.error('Error while creating User');
                 }

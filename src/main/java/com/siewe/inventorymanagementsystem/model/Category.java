@@ -24,7 +24,7 @@ public class Category {
     @Column(nullable = false, unique = true)
     private String name;
 
-    @Column(name = "enabled")
+    @Column(name = "enabled",nullable = false)
     private Boolean enabled;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "category")

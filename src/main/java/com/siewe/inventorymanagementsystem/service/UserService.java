@@ -42,6 +42,45 @@ public class UserService {
     private RoleRepository roleRepository;
 
 
+
+    private  User local(UserDto userDto,String role){
+        User user = new User();
+        user.setUserId(userDto.getId());
+        if(userDto.getEmail() != null) {
+            user.setEmail(userDto.getEmail().toLowerCase());
+        }
+        user.setLastname(userDto.getLastname());
+        user.setFirstname(userDto.getFirstname());
+        user.setUsername(userDto.getUsername());
+        user.setName(userDto.getFullname());
+        user.setTelephone(userDto.getTelephone());
+        user.setTelephoneAlt(userDto.getTelephone_alt());
+        user.setCity(userDto.getCity());
+        user.setQuarter(userDto.getQuarter());
+
+        user.setLangKey(userDto.getLangKey());
+        user.setActivated(true);
+        user.setDeleted(false);
+
+        //set created date;
+        java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        java.time.LocalDateTime date = java.time.LocalDateTime.now();
+        user.setCreatedDate(date.format(formatter));
+
+        //before saving a user we encrypt password, and we can give roles
+        user.setPassword(userDto.getPassword());
+        //user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        //user.setRoles(new HashSet<>(roleRepository.findAll()));
+
+        user.setRoles(new HashSet<>());
+        Role role1 = roleRepository.findByName(role);
+        if(role != null){
+            user.getRoles().add(role1);
+        }
+
+        return  userRepository.save(user);
+    }
+
 //    public void changePassword(String password) {
 //        User user = userRepository.findByUsername(SecurityUtils.getCurrentUserLogin());
 //        log.debug("Changed password for UserBase: {}", user);
@@ -94,6 +133,9 @@ public class UserService {
                     return user;
                 });
     }
+    public User findUserByUserName(String userName) {
+        return userRepository.findByUsername(userName);
+    }
     /**
      * Save a user.
      *
@@ -101,19 +143,15 @@ public class UserService {
      * @return the persisted entity
      */
     public UserDto save(UserDto userDto, String role) {
-        log.debug("Request to save User : {}", userDto);
-
+        log.debug("Request to save User Dto class : {}", userDto);
         User user = new User();
         user.setUserId(userDto.getId());
-        user.setUsername(userDto.getUsername());
-        if (userDto.getUsername().isEmpty()){
-            throw new RuntimeException("Username must not be null!");
-        }
         if(userDto.getEmail() != null) {
             user.setEmail(userDto.getEmail().toLowerCase());
         }
         user.setLastname(userDto.getLastname());
         user.setFirstname(userDto.getFirstname());
+        user.setUsername("userDto.getUsername()");
         user.setName(userDto.getFullname());
         user.setTelephone(userDto.getTelephone());
         user.setTelephoneAlt(userDto.getTelephone_alt());
@@ -125,8 +163,8 @@ public class UserService {
         user.setDeleted(false);
 
         //set created date;
-        String pattern = "yyyy-MM-dd";
-        LocalDate date = new LocalDate();
+        String pattern = "yyyy-MM-dd HH:mm:ss";
+        LocalDateTime date = new LocalDateTime();
         user.setCreatedDate(date.toString(pattern));
 
         //before saving a user we encrypt password, and we can give roles
@@ -140,13 +178,14 @@ public class UserService {
             user.getRoles().add(role1);
         }
 
-        User result =  userRepository.save(user);
+        User result =   userRepository.save(user);
         return new UserDto().createDTO(result);
     }
 
 
     public UserDto save(UserDto userDto){
         log.debug("Request to save a new user {}",userDto);
+        System.err.println(userDto);
 
         User user = new User();
         user.setUserId(userDto.getId());
@@ -159,6 +198,7 @@ public class UserService {
         }
         user.setLastname(userDto.getLastname());
         user.setFirstname(userDto.getFirstname());
+        user.setUsername(userDto.getFirstname() + "_" + userDto.getLastname());
         user.setName(userDto.getFullname());
         user.setTelephone(userDto.getTelephone());
         user.setTelephoneAlt(userDto.getTelephone_alt());
@@ -213,7 +253,7 @@ public class UserService {
         customer.setActivated(true);
         customer.setDeleted(false);
 
-        String pattern = "yyyy-MM-dd";
+        String pattern = "yyyy-MM-dd HH:mm:ss";
         LocalDateTime datetime = new LocalDateTime(DateTimeZone.forOffsetHours(1));
         customer.setCreatedDate(datetime.toString(pattern));
 
@@ -243,8 +283,8 @@ public class UserService {
         user.setActivated(true);
         user.setDeleted(false);
 
-        String pattern = "yyyy-MM-dd";
-        LocalDate date = new LocalDate();
+        String pattern = "yyyy-MM-dd HH:mm:ss";
+        LocalDateTime date = new LocalDateTime();
         user.setCreatedDate(date.toString(pattern));
 
         user.setPassword(userDto.getPassword());
@@ -268,6 +308,9 @@ public class UserService {
         String fullname = userDto.getFirstname() + "  " + userDto.getLastname();
 
         User user = userRepository.findByUserId(userDto.getId());
+        if (user==null){
+            throw  new EntityNotFoundException(User.class,"user id",userDto.getId().toString());
+        }
 
         user.setUserId(userDto.getId());
         //currentUser.setPassword(userDto.getPassword());
@@ -284,9 +327,9 @@ public class UserService {
         user.setValidated(userDto.getValidated());
         
         //set created date;
-        String pattern = "yyyy-MM-dd";
-        LocalDate date = new LocalDate();
-        user.setUpdatedDate(date.toString(pattern));
+        String pattern = "yyyy-MM-dd HH:mm:ss";
+        LocalDateTime date = new LocalDateTime();
+        user.setCreatedDate(date.toString(pattern));
 
         //this is to ensure that only one user will be linked to a player id
         if(userDto.getPlayerId() != null){
@@ -507,8 +550,8 @@ public class UserService {
         }
 
         //set created date;
-        String pattern = "yyyy-MM-dd";
-        LocalDate date = new LocalDate();
+        String pattern = "yyyy-MM-dd HH:mm:ss";
+        LocalDateTime date = new LocalDateTime();
         user.setCreatedDate(date.toString(pattern));
 
         userRepository.save(user);
@@ -527,8 +570,8 @@ public class UserService {
         user.getRoles().addAll(roleRepository.findAll());
 
         //set created date;
-        String pattern = "yyyy-MM-dd";
-        LocalDate date = new LocalDate();
+        String pattern = "yyyy-MM-dd HH:mm:ss";
+        LocalDateTime date = new LocalDateTime();
         user.setCreatedDate(date.toString(pattern));
 
         userRepository.save(user);

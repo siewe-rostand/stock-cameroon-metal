@@ -114,7 +114,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleConstraintViolation(
             javax.validation.ConstraintViolationException ex) {
         ApiError apiError = new ApiError(BAD_REQUEST);
-        apiError.setMessage("Validation error");
+        apiError.setMessage("constraint Validation error");
         apiError.addValidationErrors(ex.getConstraintViolations());
         return buildResponseEntity(apiError);
     }
@@ -183,6 +183,15 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return buildResponseEntity(apiError);
     }
 
+    /**
+     * handle http message error when http request method is invalid
+     * @param ex
+     * @param headers
+     * @param status
+     * @param request
+     * @return
+     */
+
     @Override
 protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(
   HttpRequestMethodNotSupportedException ex,
@@ -196,7 +205,7 @@ protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(
     ex.getSupportedHttpMethods().forEach(t -> builder.append(t + " "));
 
     ApiError apiError = new ApiError(HttpStatus.METHOD_NOT_ALLOWED,
-            builder.substring(0, builder.length() - 2), ex);
+            builder.substring(0, builder.length() - 1), ex);
     return new ResponseEntity<Object>(
       apiError, new HttpHeaders(), apiError.getStatus());
 }

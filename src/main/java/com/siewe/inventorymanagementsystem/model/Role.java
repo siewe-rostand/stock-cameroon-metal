@@ -8,13 +8,12 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-@NamedQueries({
-        @NamedQuery(name = "Role.findAll", query = "SELECT r FROM Role r")})
-public class Role extends BaseEntity {
+public class Role{
     private static final long serialVersionUID = 1L;
 
     @Id

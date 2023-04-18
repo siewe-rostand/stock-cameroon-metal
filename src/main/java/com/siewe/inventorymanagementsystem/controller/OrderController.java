@@ -5,6 +5,8 @@ import com.siewe.inventorymanagementsystem.model.Order;
 import com.siewe.inventorymanagementsystem.repository.UserRepository;
 import com.siewe.inventorymanagementsystem.service.OrderService;
 import com.siewe.inventorymanagementsystem.service.OrderedProductService;
+import com.siewe.inventorymanagementsystem.utils.CustomErrorType;
+import com.siewe.inventorymanagementsystem.utils.ResponseHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,12 +30,12 @@ public class OrderController {
     private OrderedProductService orderedProductService;
 
     @PostMapping("/save")
-    public ResponseEntity<OrderDto> createOrder(@RequestBody OrderDto orderDto){
+    public ResponseEntity<Object> createOrder(@RequestBody OrderDto orderDto) throws CustomErrorType {
         log.debug("REST request to create new order : {}",orderDto);
 
 //        orderDto.setCustomerId(userRepository.findByUsername());
         OrderDto order = orderService.save(orderDto);
 
-        return new ResponseEntity<>(order, HttpStatus.CREATED);
+        return ResponseHandler.generateResponse("Order created successfully",HttpStatus.CREATED,order);
     }
 }
