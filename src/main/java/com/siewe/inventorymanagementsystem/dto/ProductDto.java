@@ -3,6 +3,7 @@ package com.siewe.inventorymanagementsystem.dto;
 import com.siewe.inventorymanagementsystem.model.Product;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data

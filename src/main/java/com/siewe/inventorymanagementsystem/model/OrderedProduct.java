@@ -1,14 +1,12 @@
 package com.siewe.inventorymanagementsystem.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.joda.time.LocalDateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 @Entity
 @Data
@@ -33,11 +31,13 @@ public class OrderedProduct implements Serializable {
     @Column(name = "total_price")
     private Double totalPrice;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
     @Column(name = "created_date")
     private LocalDateTime createdDate;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
     @Column(name = "updated_date")
     private LocalDateTime updatedDate;
 
@@ -53,35 +53,43 @@ public class OrderedProduct implements Serializable {
     @JoinColumn(name = "order_id",referencedColumnName = "id")
     private  Order order;
 
+    public OrderedProduct(Product productId,Double quantity){
+        this.product = productId;
+        this.quantity = quantity;
+    }
+
 
     public String getCreatedDate() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String pattern = "yyyy-MM-dd HH:mm";
         if(createdDate != null) {
-            return createdDate.format(formatter);
+            return createdDate.toString(pattern);
         }
         return null;
     }
     public void setCreatedDate(String createdDate) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm");
         LocalDateTime cd = null;
         if(createdDate!=null)
-            cd = LocalDateTime.parse(createdDate,formatter);
+            cd = LocalDateTime.parse(createdDate, formatter);
         this.createdDate = cd;
     }
 
     public String getUpdatedDate() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String pattern = "yyyy-MM-dd HH:mm";
         if(updatedDate != null) {
-            return updatedDate.format(formatter);
+            return updatedDate.toString(pattern);
         }
         return null;
     }
 
-    public void setUpdatedDate(String createdDate) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        LocalDateTime cd = null;
-        if(createdDate!=null)
-            cd = LocalDateTime.parse(createdDate,formatter);
-        this.updatedDate = cd;
+    public void setUpdatedDate(String updatedDate) {
+        DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm");
+        LocalDateTime ud = null;
+        if(updatedDate!=null)
+            ud = LocalDateTime.parse(updatedDate, formatter);
+        this.updatedDate = ud;
     }
+//    public double getTotalPrice() {
+//        return product.getPrice() * quantity;
+//    }
 }

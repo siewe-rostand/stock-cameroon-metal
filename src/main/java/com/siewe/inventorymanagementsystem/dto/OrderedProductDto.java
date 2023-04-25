@@ -20,17 +20,21 @@ public class OrderedProductDto {
         if(orderedProduct != null){
             orderedProductDto.setId(orderedProduct.getId());
             orderedProductDto.setQuantity(orderedProduct.getQuantity());
+//            orderedProductDto.setUnitPrice(orderedProduct.getUnitPrice());
+//            orderedProductDto.setTotalPrice(orderedProduct.getUnitPrice()*orderedProduct.getQuantity());
 
-            if(productId != null){
+
+            if(orderedProduct.getProduct() != null){
                 orderedProductDto.setProductId(orderedProduct.getProduct().getId());
                 orderedProductDto.setName(orderedProduct.getProduct().getName());
                 orderedProductDto.setUnitPrice(orderedProduct.getProduct().getPrice());
-                orderedProductDto.setTotalPrice(orderedProductDto.getUnitPrice()*orderedProductDto.getQuantity());
+                orderedProductDto.setTotalPrice(orderedProduct.getTotalPrice());
+                System.out.println("------------"+orderedProduct.getProduct().getPrice());
             }
 //            if(saleId!= null)
 //                orderedProductDto.setSaleId(orderedProduct.getVente().getVenteId());
 
-            if (orderId != null){
+            if (orderedProduct.getOrder() != null){
                 orderedProductDto.setOrderId(orderedProduct.getOrder().getId());
             }
         }

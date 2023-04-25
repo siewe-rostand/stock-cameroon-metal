@@ -2,6 +2,7 @@ package com.siewe.inventorymanagementsystem.dto;
 
 import com.siewe.inventorymanagementsystem.model.Order;
 import com.siewe.inventorymanagementsystem.model.OrderedProduct;
+import com.siewe.inventorymanagementsystem.model.Product;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ public class OrderDto {
     private UserDto customer;
     private String createdDate;
     private Boolean deleted;
+    private double totalAmount;
 
     private List<OrderedProductDto> orderedProducts;
 
@@ -31,7 +33,7 @@ public class OrderDto {
                orderDto.setCustomer(new UserDto().createDTO(order.getCustomer()));
             }
             ArrayList<OrderedProductDto> orderedProductDtos = new ArrayList<>();
-            if(order.getOrderedProducts() != null){
+            if (order.getOrderedProducts() != null){
                 for(OrderedProduct orderedProduct: order.getOrderedProducts()){
                     orderedProductDtos.add(new OrderedProductDto().createDTO(orderedProduct));
                 }

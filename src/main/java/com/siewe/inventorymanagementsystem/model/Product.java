@@ -9,8 +9,11 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import javax.persistence.*;
+import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 import java.util.List;
 
 @Entity
@@ -26,8 +29,9 @@ public class Product {
     @Column(name = "id")
     private Long id;
 
-    @NotBlank(message = "product name need to be provided")
-    @Column(name="name")
+//    @NotBlank(message = "product name need to be provided")
+    @NotBlank
+    @Column(name="name",unique = true)
     private String name;
 
     @Column(name = "image_url")
@@ -47,14 +51,16 @@ public class Product {
     @Column(name = "deleted")
     private Boolean deleted;
 
-    @Min(1)
-    @Basic(optional = false)
+//    @NotNull
+//    @DecimalMin(value = "0.0")
     @Column(name = "price")
-    private double price;
+    private Double price;
 
 
+//    @NotNull
+//    @Min(value = 0)
     @Column(name = "quantity")
-    private double quantity;
+    private Double quantity;
     @Min(0)
     @Column(name = "stock")
     private double stock;

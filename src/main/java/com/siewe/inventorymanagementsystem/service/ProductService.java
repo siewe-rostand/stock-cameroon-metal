@@ -89,6 +89,11 @@ public class ProductService {
         }
     }
 
+    public Product getProduct(Long productId) throws EntityNotFoundException {
+        return productRepository.findById(productId)
+                .orElseThrow(() -> new EntityNotFoundException(Product.class,"Product with ID: " + productId + " not found"));
+    }
+
     private Product local(ProductDto productDto,boolean update){
         Product product = new Product();
         if (productDto.getId() != null) {
@@ -160,6 +165,13 @@ public class ProductService {
 
         log.debug("Request to update Product : {}", productDto);
         return new ResponseEntity<ProductDto>(new ProductDto().createDTO( local(productDto,true)), HttpStatus.CREATED);
+    }
+    //@Secured(value = {"ROLE_ADMIN"})
+    public ResponseEntity<ProductDto> updateProduct(Product product){
+
+        log.debug("Request to update Product with product id: {}", product);
+
+        return new ResponseEntity<ProductDto>(new ProductDto().createDTO( product), HttpStatus.CREATED);
     }
 
 

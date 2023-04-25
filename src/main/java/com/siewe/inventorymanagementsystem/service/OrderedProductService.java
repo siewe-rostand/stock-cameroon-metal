@@ -10,6 +10,7 @@ import com.siewe.inventorymanagementsystem.repository.OrderedProductRepository;
 import com.siewe.inventorymanagementsystem.repository.OrdersRepository;
 import com.siewe.inventorymanagementsystem.repository.ProductRepository;
 import com.siewe.inventorymanagementsystem.repository.VenteRepository;
+import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,9 @@ public class OrderedProductService {
     private ProductRepository productRepository;
 
     @Autowired
+    private ProductService productService;
+
+    @Autowired
     private OrderedProductRepository orderedProductRepository;
 
     @Autowired
@@ -54,16 +58,16 @@ public class OrderedProductService {
 
         OrderedProduct orderedProduct = new OrderedProduct();
 
+        orderedProduct.setQuantity(orderedProductDto.getQuantity());
+        orderedProduct.setUnitPrice(orderedProductDto.getUnitPrice());
+        orderedProduct.setTotalPrice(orderedProductDto.getQuantity()*orderedProductDto.getQuantity());
+        String pattern = "yyyy-MM-dd HH:mm";
+        LocalDateTime datetime = new LocalDateTime();
+        orderedProduct.setCreatedDate(datetime.toString(pattern));
 
         Product product = productRepository.findOne(orderedProductDto.getId());
-        if (product != null){
-            orderedProduct.setQuantity(product.getQuantity());
-            orderedProduct.setUnitPrice(product.getPrice());
-            orderedProduct.setTotalPrice(product.getQuantity()*product.getPrice());
-            orderedProduct.setProduct(product);
-        }else {
-            throw new EntityNotFoundException(OrderedProduct.class,"product id",orderedProductDto.getId().toString());
-        }
+        orderedProduct.setProduct(product);
+
         if (orderedProductDto.getOrderId() !=null){
             Order order = ordersRepository.findOne(orderedProductDto.getOrderId());
             orderedProduct.setOrder(order);
@@ -102,6 +106,25 @@ public class OrderedProductService {
 //        return orderedProductDtos;
 //    }
 
+    public OrderedProduct createOrderItem(OrderedProductDto orderedProductDto) {
+
+        OrderedProduct orderedProduct = new OrderedProduct();
+        orderedProduct.setQuantity(orderedProductDto.getQuantity());
+        String pattern = "yyyy-MM-dd HH:mm";
+        LocalDateTime datetime = new LocalDateTime();
+        orderedProduct.setCreatedDate(datetime.toString(pattern));
+
+        Product product = productRepository.findOne(orderedProductDto.getId());
+        orderedProduct.setProduct(product);
+        orderedProduct.setUnitPrice(product.getPrice());
+        orderedProduct.setTotalPrice(product.getPrice()*orderedProductDto.getQuantity());
+
+        if (orderedProductDto.getOrderId() !=null){
+            Order order = ordersRepository.findOne(orderedProductDto.getOrderId());
+            orderedProduct.setOrder(order);
+        }
+        return orderedProductRepository.save(orderedProduct);
+    }
 
     /**
      *  Get one orderedProduct by id.
