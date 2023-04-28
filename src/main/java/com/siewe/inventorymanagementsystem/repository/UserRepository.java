@@ -21,6 +21,10 @@ public interface UserRepository extends JpaRepository<User,Long> {
     @Query("select u from User u where (u.username = ?1 or u.email = ?1)")
     User findByLoginOrEmail(String loginOrEmail);
 
+    Boolean existsByUsername(String username);
+
+    Boolean existsByEmail(String email);
+
     @Override
     void delete(User user);
 
