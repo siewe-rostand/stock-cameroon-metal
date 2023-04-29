@@ -5,15 +5,21 @@ import com.siewe.inventorymanagementsystem.security.jwt.TokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+@Configuration
+@EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true,securedEnabled = true)
 public class SecurityConfig  extends WebSecurityConfigurerAdapter {
 
     private final TokenProvider tokenProvider;
@@ -58,12 +64,13 @@ public class SecurityConfig  extends WebSecurityConfigurerAdapter {
                 //.httpBasic() // optional, if you want to access
                 //  .and()     // the services from a browser
                 .authorizeRequests()
-                .antMatchers("/login/**").permitAll()
-                .antMatchers("/activate").permitAll()
+                .antMatchers("/api/login/**").permitAll()
+                .antMatchers("/api/activate").permitAll()
                 .antMatchers("/reset_password/init").permitAll()
                 .antMatchers("/reset_password/finish").permitAll()
 
                 .antMatchers("/api/register").permitAll()
+                .antMatchers("/api/register-app").permitAll()
                 .antMatchers("/api/activate").permitAll()
                 .antMatchers("/api/authenticate").permitAll()
                 .antMatchers("/api/account/reset_password/init").permitAll()

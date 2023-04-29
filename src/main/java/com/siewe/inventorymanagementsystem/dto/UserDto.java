@@ -8,6 +8,7 @@ import org.hibernate.validator.constraints.Length;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
+import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.HashSet;
 
@@ -18,6 +19,7 @@ public class UserDto {
     private String lastname;
     @NotBlank(message = "firstname required" )
     private String firstname;
+    @NotBlank(message = "username must not be empty")
     private String username;
     private String fullname;
     @Email(message = "Email format please")
@@ -31,7 +33,7 @@ public class UserDto {
     private String langKey;
     private String activationKey;
     private String resetKey;
-    private String createdDate;
+    private Timestamp createdDate;
     private String resetDate;
     //private String role;
     private Collection<String> roles;
@@ -60,7 +62,7 @@ public class UserDto {
             userDto.setId(user.getUserId());
             userDto.setLangKey(user.getLangKey());
             userDto.setActivated(user.getActivated());
-            userDto.setCreatedDate(user.getCreatedDate());
+            userDto.setCreatedDate(user.getCreated_date());
             userDto.setActivationKey(user.getActivationKey());
             userDto.setResetDate(user.getUpdatedDate());
             userDto.setResetKey(user.getResetKey());
@@ -68,7 +70,7 @@ public class UserDto {
 
             userDto.setLastname(user.getLastname());
             userDto.setFirstname(user.getFirstname());
-            userDto.setUsername(user.getFirstname() +"."+user.getLastname());
+            userDto.setUsername(user.getUsername());
             userDto.setFullname(user.getFullName());
             userDto.setEmail(user.getEmail());
             userDto.setCity(user.getCity());
@@ -84,15 +86,6 @@ public class UserDto {
                     userDto.setDeletable(true);
             }
 
-            /*if(user.getRole() != null){
-                userDto.setRole(user.getRole().getName());
-                if(userDto.getRole().equals("ADMIN"))
-                    userDto.setBadge("success");
-                if(userDto.getRole().equals("USER"))
-                    userDto.setBadge("warning");
-                if(userDto.getRole().equals("USER"))
-                    userDto.setBadge("primary");
-            }*/
 
             /**
              * make sure the role table in the database contain some roles

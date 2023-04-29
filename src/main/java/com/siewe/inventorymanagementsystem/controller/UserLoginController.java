@@ -2,6 +2,7 @@ package com.siewe.inventorymanagementsystem.controller;
 
 import com.siewe.inventorymanagementsystem.dto.UserLoginDto;
 import com.siewe.inventorymanagementsystem.repository.UserRepository;
+import com.siewe.inventorymanagementsystem.security.SecurityUtils;
 import com.siewe.inventorymanagementsystem.service.UserLoginService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +39,7 @@ public class UserLoginController {
 
         UserLoginDto userLoginDto = new UserLoginDto();
         //automatically set user to current user
-//        userLoginDto.setUserId(userRepository.findByUsername(SecurityUtils.getCurrentUserLogin()).getId());
+        userLoginDto.setUserId(userRepository.findByUsername(SecurityUtils.getCurrentUserLogin()).getUserId());
         UserLoginDto result = userLoginService.save(userLoginDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }

@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -130,7 +131,7 @@ public class AccountController {
 
 
     @GetMapping("/roles")
-//    @Secured(value = {"ROLE_ADMIN"})
+    @Secured(value = {"ROLE_ADMIN"})
     public List<String> getRoles() {
         List<Role> roles =  roleRepository.findAll();
         List<String> roleNames = new ArrayList<>();

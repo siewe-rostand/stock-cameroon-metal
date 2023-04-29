@@ -53,10 +53,8 @@ public class UserController {
         User user = new User();
 //        User userRole = userRepository.findByUsername(user.username());
         if (userRepository.findByUsername(userDto.getUsername().toLowerCase()) != null) {
-            System.out.println("user name error");
             error.put("error", "Ce nom d'utilisateur est déjà utilisé !");
-            return new ResponseEntity<>(new CustomErrorType("Unable to create. A user with username " +
-                    userDto.getUsername() + " already exist."), HttpStatus.CONFLICT);
+            return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
         }
         UserDto result = userService.save(userDto, "USER");
 
@@ -72,7 +70,7 @@ public class UserController {
         if(result != null)
         mailService.sendNewRegistrationEmail(userDto);
         */
-        return ResponseHandler.generateResponse("Product save Successfully",HttpStatus.CREATED,result);
+        return ResponseHandler.generateResponse("user save Successfully",HttpStatus.CREATED,result);
     }
 
     @PostMapping("/customers")
@@ -85,7 +83,7 @@ public class UserController {
             return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
         }
         UserDto result = userService.saveCustomer(userDto, "CUSTOMER");
-        return ResponseHandler.generateResponse("user created succesfully",HttpStatus.CREATED,result);
+        return ResponseHandler.generateResponse("user created successfully",HttpStatus.CREATED,result);
     }
 
     @PostMapping("/user-seller")

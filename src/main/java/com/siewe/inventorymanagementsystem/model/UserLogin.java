@@ -2,11 +2,13 @@ package com.siewe.inventorymanagementsystem.model;
 
 
 import lombok.*;
+import org.hibernate.Hibernate;
 import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 /**
  *
@@ -14,7 +16,9 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "user_login")
-@Data
+@Getter
+@Setter
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserLogin {
@@ -48,5 +52,18 @@ public class UserLogin {
         if(dateTime!=null)
             cd = LocalDateTime.parse(dateTime, formatter);
         this.dateTime = cd;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        UserLogin userLogin = (UserLogin) o;
+        return id != null && Objects.equals(id, userLogin.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 }

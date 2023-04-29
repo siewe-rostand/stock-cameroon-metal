@@ -21,13 +21,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
+import java.sql.Timestamp;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Service
@@ -41,6 +41,8 @@ public class UserService {
     @Autowired
     private RoleRepository roleRepository;
 
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
 
     private  User local(UserDto userDto,String role){
@@ -52,7 +54,6 @@ public class UserService {
         user.setLastname(userDto.getLastname());
         user.setFirstname(userDto.getFirstname());
         user.setUsername(userDto.getUsername());
-        user.setName(userDto.getFullname());
         user.setTelephone(userDto.getTelephone());
         user.setTelephoneAlt(userDto.getTelephone_alt());
         user.setCity(userDto.getCity());
@@ -65,7 +66,8 @@ public class UserService {
         //set created date;
         java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         java.time.LocalDateTime date = java.time.LocalDateTime.now();
-        user.setCreatedDate(date.format(formatter));
+        Calendar cal = Calendar.getInstance();
+        user.setCreated_date(new Timestamp(cal.getTimeInMillis()));
 
         //before saving a user we encrypt password, and we can give roles
         user.setPassword(userDto.getPassword());
@@ -151,7 +153,7 @@ public class UserService {
         }
         user.setLastname(userDto.getLastname());
         user.setFirstname(userDto.getFirstname());
-        user.setUsername("userDto.getUsername()");
+        user.setUsername(userDto.getUsername());
         user.setName(userDto.getFullname());
         user.setTelephone(userDto.getTelephone());
         user.setTelephoneAlt(userDto.getTelephone_alt());
@@ -165,11 +167,12 @@ public class UserService {
         //set created date;
         String pattern = "yyyy-MM-dd HH:mm:ss";
         LocalDateTime date = new LocalDateTime();
-        user.setCreatedDate(date.toString(pattern));
+        Calendar cal = Calendar.getInstance();
+        user.setCreated_date(new Timestamp(cal.getTimeInMillis()));
 
         //before saving a user we encrypt password, and we can give roles
-        user.setPassword(userDto.getPassword());
-        //user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+//        user.setPassword(userDto.getPassword());
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         //user.setRoles(new HashSet<>(roleRepository.findAll()));
 
         user.setRoles(new HashSet<>());
@@ -212,7 +215,8 @@ public class UserService {
         //set created date;
         String pattern = "yyyy-MM-dd";
         LocalDate date = new LocalDate();
-        user.setCreatedDate(date.toString(pattern));
+        Calendar cal = Calendar.getInstance();
+        user.setCreated_date(new Timestamp(cal.getTimeInMillis()));
 
         HashSet<Role> roles = new HashSet<>();
         if (user.getRoles() != null){
@@ -255,7 +259,8 @@ public class UserService {
 
         String pattern = "yyyy-MM-dd HH:mm:ss";
         LocalDateTime datetime = new LocalDateTime(DateTimeZone.forOffsetHours(1));
-        customer.setCreatedDate(datetime.toString(pattern));
+        Calendar cal = Calendar.getInstance();
+        customer.setCreated_date(new Timestamp(cal.getTimeInMillis()));
 
         customer.setRoles(new HashSet<>());
         Role role1 = roleRepository.findByName(role);
@@ -283,9 +288,10 @@ public class UserService {
         user.setActivated(true);
         user.setDeleted(false);
 
-        String pattern = "yyyy-MM-dd HH:mm:ss";
+        String pattern = "yyyy-MM-dd HH:mm";
         LocalDateTime date = new LocalDateTime();
-        user.setCreatedDate(date.toString(pattern));
+        Calendar cal = Calendar.getInstance();
+        user.setCreated_date(new Timestamp(cal.getTimeInMillis()));
 
         user.setPassword(userDto.getPassword());
 
@@ -329,7 +335,8 @@ public class UserService {
         //set created date;
         String pattern = "yyyy-MM-dd HH:mm:ss";
         LocalDateTime date = new LocalDateTime();
-        user.setCreatedDate(date.toString(pattern));
+        Calendar cal = Calendar.getInstance();
+        user.setCreated_date(new Timestamp(cal.getTimeInMillis()));
 
         //this is to ensure that only one user will be linked to a player id
         if(userDto.getPlayerId() != null){
@@ -495,11 +502,11 @@ public class UserService {
         User user = userRepository.findByUserId(id);
 
         UserDto userDto = new UserDto().createDTO(user);
-        return Optional.ofNullable(userDto)
+         return Optional.ofNullable(userDto)
                 .map(result -> new ResponseEntity<>(
                         result,
                         HttpStatus.OK))
-                .orElseThrow(()->new EntityNotFoundException(UserDto.class,"User not found with id",String.valueOf(userDto.getId())));
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
 
@@ -508,7 +515,7 @@ public class UserService {
      *
      *  @param id the id of the entity
      */
-//    @Secured(value = {"ROLE_ADMIN", "ROLE_USER"})
+    @Secured(value = {"ROLE_ADMIN", "ROLE_USER"})
     public void delete(Long id) {
         log.debug("Request to delete User : {}", id);
         User user = userRepository.findByUserId(id);
@@ -550,9 +557,10 @@ public class UserService {
         }
 
         //set created date;
-        String pattern = "yyyy-MM-dd HH:mm:ss";
+        String pattern = "yyyy-MM-dd HH:mm";
         LocalDateTime date = new LocalDateTime();
-        user.setCreatedDate(date.toString(pattern));
+        Calendar cal = Calendar.getInstance();
+        user.setCreated_date(new Timestamp(cal.getTimeInMillis()));
 
         userRepository.save(user);
     }
@@ -570,9 +578,10 @@ public class UserService {
         user.getRoles().addAll(roleRepository.findAll());
 
         //set created date;
-        String pattern = "yyyy-MM-dd HH:mm:ss";
+        String pattern = "yyyy-MM-dd HH:mm";
         LocalDateTime date = new LocalDateTime();
-        user.setCreatedDate(date.toString(pattern));
+        Calendar cal = Calendar.getInstance();
+        user.setCreated_date(new Timestamp(cal.getTimeInMillis()));
 
         userRepository.save(user);
     }

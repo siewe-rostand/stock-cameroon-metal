@@ -1,18 +1,16 @@
 package com.siewe.inventorymanagementsystem.model;
 
 import lombok.*;
-import org.hibernate.validator.constraints.Length;
-import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.List;
+import java.sql.Timestamp;
 import java.util.Set;
 
 @Entity
@@ -31,6 +29,9 @@ public class User implements Serializable{
     @Column(name = "fullname")
     private String name;
 
+    @Basic(optional = false)
+//    @NotNull
+//    @Size(min = 1,max = 16)
     private String username;
 
     private String firstname;
@@ -39,6 +40,9 @@ public class User implements Serializable{
 
     private String email;
 
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 60)
     private String password;
 
     private String telephone;
@@ -77,8 +81,13 @@ public class User implements Serializable{
     @Column(name = "reset_key", length = 20)
     private String resetKey;
 
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
     @Column(name = "created_date")
-    private LocalDateTime createdDate;
+    private Timestamp created_date;
+
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
     @Column(name = "updated_date")
     private LocalDateTime updatedDate;
 
@@ -108,23 +117,29 @@ public class User implements Serializable{
     @OneToMany(mappedBy = "customer")
     private  List<Order> orders;
 
-    public String getCreatedDate() {
-        String pattern = "yyyy-MM-dd HH:mm:ss";
-        if(createdDate != null) {
-            return createdDate.toString(pattern);
-        }
-        return null;
+//    public String getCreatedDate() {
+//        String pattern = "yyyy-MM-dd HH:mm";
+//        if(createdDate != null) {
+//            return createdDate.toString(pattern);
+//        }
+//        return null;
+//    }
+//
+//    public void setCreatedDate(String createdDate) {
+//        DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm");
+//        LocalDateTime rd = null;
+//        if(createdDate!=null)
+//            rd = LocalDateTime.parse(createdDate, formatter);
+//        this.createdDate = rd;
+//    }
+    public Timestamp getCreated_date() {
+        return created_date;
     }
-
-    public void setCreatedDate(String createdDate) {
-        DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
-        LocalDateTime cd = null;
-        if(createdDate!=null && !createdDate.isEmpty())
-            cd = formatter.parseLocalDateTime(createdDate);
-        this.createdDate = cd;
+    public void setCreated_date(Timestamp createDate) {
+        this.created_date = createDate;
     }
     public String getUpdatedDate() {
-        String pattern = "yyyy-MM-dd HH:mm:ss";
+        String pattern = "yyyy-MM-dd HH:mm";
         if(updatedDate != null) {
             return updatedDate.toString(pattern);
         }
@@ -132,15 +147,15 @@ public class User implements Serializable{
     }
 
     public void setUpdatedDate(String updatedDate) {
-        DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
-        LocalDateTime cd = null;
-        if(updatedDate !=null && !updatedDate.isEmpty())
-            cd = formatter.parseLocalDateTime(updatedDate);
-        this.updatedDate = cd;
+        DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm");
+        LocalDateTime rd = null;
+        if(updatedDate!=null)
+            rd = LocalDateTime.parse(updatedDate, formatter);
+        this.updatedDate = rd;
     }
 
     public String getResetDate() {
-        String pattern = "yyyy-MM-dd HH:mm:ss";
+        String pattern = "yyyy-MM-dd HH:mm";
         if(resetDate != null) {
             return resetDate.toString(pattern);
         }
