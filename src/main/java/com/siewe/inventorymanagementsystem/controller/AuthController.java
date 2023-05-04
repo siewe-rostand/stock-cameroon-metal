@@ -2,6 +2,7 @@ package com.siewe.inventorymanagementsystem.controller;
 
 import com.siewe.inventorymanagementsystem.controller.vm.LoginVM;
 import com.siewe.inventorymanagementsystem.dto.UserDto;
+import com.siewe.inventorymanagementsystem.security.JwtResponse;
 import com.siewe.inventorymanagementsystem.security.SecurityUtils;
 import com.siewe.inventorymanagementsystem.security.jwt.TokenProvider;
 import com.siewe.inventorymanagementsystem.service.UserService;
@@ -38,7 +39,9 @@ public class AuthController {
 
         try {
             this.authenticationManager.authenticate(authenticationToken);
-            return new ResponseEntity<>(this.tokenProvider.createToken(loginUser.getUsername()), HttpStatus.OK);
+//            return new ResponseEntity<>(this.tokenProvider.createToken(loginUser.getUsername()), HttpStatus.OK);
+            return new ResponseEntity<>(new JwtResponse(this.tokenProvider.createToken(loginUser.getUsername()),loginUser.getUsername()), HttpStatus.OK);
+//            return new ResponseEntity.ok(new JwtResponse(this.tokenProvider.createToken(loginUser.getUsername()),loginUser.getUsername()));
         }catch (BadCredentialsException bce){
             return new ResponseEntity<>("Bad Credential",HttpStatus.BAD_REQUEST);
         }catch (DisabledException e){

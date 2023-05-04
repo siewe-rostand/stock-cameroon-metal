@@ -6,6 +6,7 @@ import com.siewe.inventorymanagementsystem.model.User;
 import com.siewe.inventorymanagementsystem.model.error.EntityNotFoundException;
 import com.siewe.inventorymanagementsystem.repository.RoleRepository;
 import com.siewe.inventorymanagementsystem.repository.UserRepository;
+import com.siewe.inventorymanagementsystem.security.SecurityUtils;
 import com.siewe.inventorymanagementsystem.utils.RandomUtil;
 import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDate;
@@ -22,6 +23,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -172,7 +176,7 @@ public class UserService {
 
         //before saving a user we encrypt password, and we can give roles
 //        user.setPassword(userDto.getPassword());
-        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        user.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
         //user.setRoles(new HashSet<>(roleRepository.findAll()));
 
         user.setRoles(new HashSet<>());
@@ -201,7 +205,7 @@ public class UserService {
         }
         user.setLastname(userDto.getLastname());
         user.setFirstname(userDto.getFirstname());
-        user.setUsername(userDto.getFirstname() + "_" + userDto.getLastname());
+        user.setUsername(userDto.getUsername());
         user.setName(userDto.getFullname());
         user.setTelephone(userDto.getTelephone());
         user.setTelephoneAlt(userDto.getTelephone_alt());
@@ -356,23 +360,30 @@ public class UserService {
         User result = userRepository.save(user);
         return new UserDto().createDTO(result);
     }
-/*
+
     @Transactional(readOnly = true)
     public UserDto findByUserIsCurrentUser() {
-   User user = userRepository.findByLogin(SecurityUtils.getCurrentUserLogin());
+   User user = userRepository.findByUsername(SecurityUtils.getCurrentUserLogin());
         return new UserDto().createDTO(user);
     }
 
+    public UserDto getUserInfo(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        User user = (User) authentication.getPrincipal();
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        User user = userRepository.findByUsername(userDetails.getUsername());
+        return new UserDto().createDTO(user);
+    }
 
     public void changePassword(String password) {
-        User user = userRepository.findByLogin(SecurityUtils.getCurrentUserLogin());
+        User user = userRepository.findByUsername(SecurityUtils.getCurrentUserLogin());
         log.debug("Changed password for UserBase: {}", user);
         if(user != null){
             //user.setPassword(bCryptPasswordEncoder.encode(password));
             user.setPassword(password);
             userRepository.save(user);
         }
-    }*/
+    }
 
     public Optional<User> activateRegistration(String key) {
         log.debug("Activating user for activation key {}", key);

@@ -1,13 +1,12 @@
 package com.siewe.inventorymanagementsystem.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.siewe.inventorymanagementsystem.model.Role;
 import com.siewe.inventorymanagementsystem.model.User;
 import lombok.Data;
-import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.HashSet;
@@ -28,6 +27,7 @@ public class UserDto {
     private String quarter;
     private String telephone;
     private String telephone_alt;
+    @JsonIgnore
     private String password;
     private Boolean activated;
     private String langKey;
@@ -87,8 +87,8 @@ public class UserDto {
             }
 
 
-            /**
-             * make sure the role table in the database contain some roles
+            /*
+              make sure the role table in the database contain some roles
              */
             HashSet<String> roles = new HashSet<>();
             if (user.getRoles().size()>0) {
