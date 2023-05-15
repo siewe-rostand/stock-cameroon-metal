@@ -35,15 +35,15 @@ public class AuthController {
     @PostMapping("/login")
     @ResponseBody
     public ResponseEntity<?> authorize(@Valid @RequestBody LoginVM loginUser, HttpServletResponse response){
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginUser.getUsername(),loginUser.getPassword());
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginUser.getEmail(),loginUser.getPassword());
 
         try {
             this.authenticationManager.authenticate(authenticationToken);
 //            return new ResponseEntity<>(this.tokenProvider.createToken(loginUser.getUsername()), HttpStatus.OK);
-            return new ResponseEntity<>(new JwtResponse(this.tokenProvider.createToken(loginUser.getUsername()),loginUser.getUsername()), HttpStatus.OK);
+            return new ResponseEntity<>(new JwtResponse(this.tokenProvider.createToken(loginUser.getEmail()),loginUser.getEmail()), HttpStatus.OK);
 //            return new ResponseEntity.ok(new JwtResponse(this.tokenProvider.createToken(loginUser.getUsername()),loginUser.getUsername()));
         }catch (BadCredentialsException bce){
-            return new ResponseEntity<>("Bad Credential",HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Bad Credential {password or email is wrong} \n"+bce ,HttpStatus.BAD_REQUEST);
         }catch (DisabledException e){
             return new ResponseEntity<>("User is disabled", HttpStatus.BAD_REQUEST);
         }catch (AccountExpiredException e){
@@ -56,12 +56,12 @@ public class AuthController {
 
     @PostMapping("/register-app")
     public String register(@RequestBody UserDto userDto){
-        if (userService.loginExists(userDto.getUsername())){
+        if (userService.emailExist(userDto.getEmail())){
             return "User already exist in the system";
         }
 
         userService.save(userDto);
-        return this.tokenProvider.createToken(userDto.getUsername());
+        return this.tokenProvider.createToken(userDto.getEmail());
     }
 
     @GetMapping("/refresh-token")

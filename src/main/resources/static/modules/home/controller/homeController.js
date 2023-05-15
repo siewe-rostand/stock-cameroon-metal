@@ -1,24 +1,13 @@
-myApp.controller('homeController',function ($scope,$http,config){
-    update();
+myApp.controller('homeController',function ($scope,$http,config,$window){
+    getUsers();
+    $scope.getClickUser = getClickUser;
 
 
-   function getUsers (){
-       let data = $scope.users;
-       let url = 'http://localhost:8080/api/users?roles=USER';
-       $http.post(url, data).success(function (response) {
-           // Loader.destroy();
-           console.log("success   ", response.data);
-           // utilitaire.alert(true,"les données de l'utilisateur ont été enregistrer avec succès");
-           $scope.users={};
-
-       }).error(function (data, status, header) {
-           // Loader.destroy();
-           console.error(data);
-           // utilitaire.gestionErreurs(status, data, header);
-       });
-   }
-
-    function update() {
+    function getClickUser(user){
+        $window.localStorage.setItem("saved", JSON.stringify(user));
+        console.log('$scope.clickedUser',user);
+    }
+    function getUsers() {
         let data = $scope.users;
         console.log(config)
         let url = config.base_url+'/users?roles=user';
@@ -28,9 +17,10 @@ myApp.controller('homeController',function ($scope,$http,config){
             contentType: 'application/json; charset=utf-8',
             // data: data
         }).then(function (result) { // this is the success
-            console.log("update result",result.data.content);
+            console.log("get all users from home page",result.data.content);
             $scope.allUsers =result.data.content;
         }, function (data, status, header) {  // this is the error
+            console.log('error while getting users',header)
             console.error(data);
         });
     }

@@ -3,7 +3,7 @@
     <div class="col-12">
       <div class="card shadow m-3 border-bottom rounded">
         <div class="card-header py-3">
-          <h4 class="font-weight-bold text-primary">Modification Utilisateur {{clickedUser.lastname}}</h4>
+          <h4 >Modification Utilisateur:: <span class="font-weight-bold text-primary">{{clickedUser.fullname}}</span></h4>
         </div>
         <div class="card-body">
           <form class="form" ng-submit="submit()" ng-init="initView()">
@@ -47,16 +47,16 @@
                 <div class="form-group">
                   <label for="telephone">Telephone</label>
                   <input type="text" id="telephone" class="form-control" ng-value="clickedUser.phone"
-                         name="telephone" placeholder="Numero telephone" ng-model="user.phone">
+                         name="telephone" placeholder="Numero telephone" ng-model="user.telephone">
                 </div>
               </div>
               <!--              telephone 2 field-->
               <div class="col-md-6 col-12">
                 <div class="form-group">
                   <label for="telephone_alt">Telephone 2</label>
-                  <input type="text" id="telephone_alt" class="form-control" ng-value="clickedUser.phone2"
+                  <input type="text" id="telephone_alt" class="form-control" ng-value="clickedUser.telephone_alt"
                          name="telephone_alt" placeholder="Numero telephone"
-                         ng-model="user.phone2">
+                         ng-model="user.telephone_alt">
                 </div>
               </div>
               <!--              email field-->

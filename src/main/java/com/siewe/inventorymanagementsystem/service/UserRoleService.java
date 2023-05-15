@@ -27,7 +27,7 @@ public class UserRoleService {
         log.debug("Request to save User role : {}", userRoleDto);
         UserRole userRole = new UserRole();
 
-        userRole.setUser(userRepository.findByUsername(userRoleDto.getUsername()));
+        userRole.setUser(userRepository.findByEmail(userRoleDto.getUsername()));
         userRole.setRole(roleRepository.findByName(userRoleDto.getRoleName()));
         return  userRoleDto.createDto(userRole);
     }

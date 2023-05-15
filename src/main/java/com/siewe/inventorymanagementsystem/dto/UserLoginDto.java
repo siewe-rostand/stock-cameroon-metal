@@ -19,7 +19,7 @@ public class UserLoginDto {
 
             if(userLogin.getUser() != null){
                 userLoginDto.setUserId(userLogin.getUser().getUserId());
-                userLoginDto.setLogin(userLogin.getUser().getUsername());
+                userLoginDto.setLogin(userLogin.getUser().getEmail());
                 userLoginDto.setUser(userLogin.getUser().getName());
             }
         }

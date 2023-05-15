@@ -1,0 +1,172 @@
+<div class="login-header box-shadow">
+  <div class="container-fluid d-flex justify-content-between align-items-center">
+    <div class="brand-logo">
+      <a href="#!/">
+        <img alt="" src="vendors/images/deskapp-logo.svg"/>
+      </a>
+    </div>
+    <div class="login-menu">
+      <ul>
+        <li><a href="#!/">Login</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+<div class="register-page-wrap d-flex align-items-center flex-wrap justify-content-center">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-md-6 col-lg-7">
+        <img alt="" src="vendors/images/register-page-img.png"/>
+      </div>
+      <div class="col-md-6 col-lg-5">
+        <div class="login-box bg-white box-shadow border-radius-10">
+          <div class="login-title">
+            <h2 class="text-center text-primary">Création de Compte </h2>
+          </div>
+          <div class="wizard-content">
+            <form name="registrationForm" ng-submit="signUp()">
+
+<!--              first name input-->
+              <div class="input-group custom has-warning">
+                <input ng-class=" {'form-control form-control-lg form-control-warning':httpError != ''&& user.firstname != '','form-control form-control-lg':httpError == ''}"
+                       ng-model="user.firstname" placeholder="Prénom *"
+                       type="text" required/>
+                <div class="input-group-append custom">
+                  <span class="input-group-text" ng-show="httpError == ''">
+                    <i class="icon-copy dw dw-user1"></i>
+                  </span>
+                </div>
+                <div class="form-control-feedback"
+                     ng-show="httpError.includes('firstname') && user.firstname != ''">le champ nom est vide!
+                </div>
+              </div>
+
+<!--              last name input-->
+              <div class="input-group custom has-warning">
+                <input ng-class=" {'form-control form-control-lg form-control-warning':httpError != ''&& user.lastname != '','form-control form-control-lg':httpError == ''}"
+                       ng-model="user.lastname" placeholder="Prénom *"
+                       type="text" required/>
+                <div class="input-group-append custom">
+                  <span class="input-group-text" ng-show="httpError == ''">
+                    <i class="icon-copy dw dw-user1"></i>
+                  </span>
+                </div>
+                <div class="form-control-feedback"
+                     ng-show="httpError.includes('lastname') && user.lastname != ''">le champ Prénom est vide!
+                </div>
+              </div>
+
+<!--              email input-->
+              <div class="input-group custom has-warning">
+                <input name="email" ng-class=" {'form-control form-control-lg form-control-warning':httpError != ''&& user.email != '','form-control form-control-lg':httpError == ''}"
+                       ng-model="user.email"
+                       placeholder="Email *"
+                       type="email"/>
+                <div class="input-group-append custom">
+                  <span class="input-group-text" ng-show="httpError == ''">
+                    <i class="icon-copy dw dw-email"></i>
+                  </span>
+                </div>
+                <div class="form-control-feedback"
+                     ng-show="httpError.includes('email est déjà utilisé') && user.email != ''">Désolé, cet e-mail est déjà pris. Essayez-en un autre!
+                </div>
+              </div>
+
+<!--              telephone text field-->
+              <div class="input-group custom has-danger">
+                <input ng-class=" {'form-control form-control-lg form-control-danger':httpError != ''&& user.telephone != '','form-control form-control-lg':httpError == ''}"
+                       ng-model="user.telephone" placeholder="Numéro téléphone *"
+                       type="text"/>
+                <div class="input-group-append custom">
+                  <span class="input-group-text" ng-show="httpError == ''">
+                    <i class="icon-copy dw dw-phone-call"></i>
+                  </span>
+                </div>
+                <div class="form-control-feedback"
+                     ng-show="httpError.includes('téléphone a déjà') && user.telephone != ''">Désolé, ce numéro de téléphone est déjà utilisé!
+                </div>
+              </div>
+
+<!--              password text field-->
+              <div class="input-group custom has-warning">
+                <input ng-class=" {'form-control form-control-lg form-control-warning':registrationForm.password.$error.minlength,'form-control form-control-lg':registrationForm.password.$valid}"
+                       ng-model="user.password" placeholder="Mot de Passe *" name="password"
+                       type="password" ng-minlength="6"/>
+                <div class="input-group-append custom">
+                  <span class="input-group-text" ng-hide="registrationForm.password.$error.minlength">
+                    <i class="icon-copy dw dw-padlock1"></i>
+                  </span>
+                </div>
+                <div class="form-control-feedback"
+                     ng-show="registrationForm.password.$error.minlength && user.password != ''">le mot de passe doit être composé d'au moins 6 caractères ou chiffres!
+                </div>
+              </div>
+
+<!--             confirm password text field-->
+              <div class="input-group custom has-warning">
+                <input ng-class=" {'form-control form-control-lg form-control-warning': registrationForm.confirmPassword.$error.minlength,'form-control form-control-lg':registrationForm.confirmPassword.$valid}"
+                       ng-model="user.confirmPassword" placeholder="Confirmer Mot de Passe *" name="confirmPassword"
+                       type="password" ng-minlength="6"/>
+                <div class="input-group-append custom">
+                  <span class="input-group-text" ng-hide="registrationForm.confirmPassword.$error.minlength">
+                    <i class="icon-copy dw dw-padlock1"></i>
+                  </span>
+                </div>
+                <div class="form-control-feedback"
+                     ng-show="registrationForm.confirmPassword.$error.minlength && registrationForm.confirmPassword != registrationForm.password">doit être identique au mot de passe et comporter au moins 6 caractères ou chiffres!
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="input-group mb-0">
+                    <button class="btn btn-primary btn-lg btn-block" type="submit">Sauvegarder</button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- success Popup html Start -->
+<button
+        data-backdrop="static"
+        data-target="#success-modal"
+        data-toggle="modal"
+        hidden
+        id="success-modal-btn"
+        type="button"
+>
+  Launch modal
+</button>
+<div
+        aria-hidden="true"
+        aria-labelledby="exampleModalCenterTitle"
+        class="modal fade"
+        id="success-modal"
+        role="dialog"
+        tabindex="-1"
+>
+  <div
+          class="modal-dialog modal-dialog-centered max-width-400"
+          role="document"
+  >
+    <div class="modal-content">
+      <div class="modal-body text-center font-18">
+        <h3 class="mb-20">Form Submitted!</h3>
+        <div class="mb-30 text-center">
+          <img src="vendors/images/success.png"/>
+        </div>
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
+        eiusmod
+      </div>
+      <div class="modal-footer justify-content-center">
+        <a class="btn btn-primary" href="login.html">Done</a>
+      </div>
+    </div>
+  </div>
+</div>
+

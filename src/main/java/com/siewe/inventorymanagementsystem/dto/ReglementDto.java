@@ -26,7 +26,7 @@ public class ReglementDto {
 
             if(reglement.getStaff() != null){
                 reglementDto.setStaffId(reglement.getStaff().getUserId());
-                reglementDto.setStaff(reglement.getStaff().getUsername());
+                reglementDto.setStaff(reglement.getStaff().getEmail());
             }
         }
         return reglementDto;

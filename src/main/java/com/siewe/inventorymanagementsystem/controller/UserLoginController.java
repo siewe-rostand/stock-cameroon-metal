@@ -39,7 +39,7 @@ public class UserLoginController {
 
         UserLoginDto userLoginDto = new UserLoginDto();
         //automatically set user to current user
-        userLoginDto.setUserId(userRepository.findByUsername(SecurityUtils.getCurrentUserLogin()).getUserId());
+        userLoginDto.setUserId(userRepository.findByEmail(SecurityUtils.getCurrentUserLogin()).getUserId());
         UserLoginDto result = userLoginService.save(userLoginDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }

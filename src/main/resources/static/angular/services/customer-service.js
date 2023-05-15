@@ -13,7 +13,7 @@ myApp.factory('customerControllerService',['$http','$q','config', function($http
 
     function fetchAllCustomers() {
         let deferred = $q.defer();
-        $http.get(base_url+'/users?roles=customer')
+        $http.get(base_url+'/customers')
             .then(
                 function (response) {
                     deferred.resolve(response.data);
@@ -26,9 +26,9 @@ myApp.factory('customerControllerService',['$http','$q','config', function($http
         return deferred.promise;
     }
 
-    function createCustomers(user) {
+    function createCustomers(customer) {
         let deferred = $q.defer();
-        $http.post(base_url + '/customers', user)
+        $http.post(base_url + '/customers', customer)
             .then(
                 function (response) {
                     deferred.resolve(response.data);
@@ -41,9 +41,9 @@ myApp.factory('customerControllerService',['$http','$q','config', function($http
         return deferred.promise;
     }
 
-    function updateCustomers(user) {
+    function updateCustomers(customer) {
         let deferred = $q.defer();
-        $http.put(base_url +'/users', user)
+        $http.put(base_url +'/customers', customer)
             .then(
                 function (response) {
                     deferred.resolve(response.data);
@@ -58,7 +58,7 @@ myApp.factory('customerControllerService',['$http','$q','config', function($http
 
     function deleteCustomer(id) {
         let deferred = $q.defer();
-        $http.delete(base_url+ '/users/' + id)
+        $http.delete(base_url+ '/customers/' + id)
             .then(
                 function (response) {
                     deferred.resolve(response.data);

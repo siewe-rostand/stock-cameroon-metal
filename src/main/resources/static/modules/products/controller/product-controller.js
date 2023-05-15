@@ -1,11 +1,13 @@
 
-myApp.controller('productController',['$scope','productService','utils', function($scope, productService, utils){
+myApp.controller('productController',['$scope','productService','utils','$rootScope', function($scope, productService, utils,$rootScope){
 
 
         $scope.submit = submit;
         $scope.remove = deleteProduct;
         $scope.getClickProduct = getClickProduct;
+        $scope.getProductImage = getProductImage;
 
+        var products = [];
         $scope.product = {
                 id: null, name: '', price : '',
                  quantity: '', description: '',categoryId:null,categoryName:''
@@ -15,6 +17,10 @@ myApp.controller('productController',['$scope','productService','utils', functio
             }
 
     fetchAllProducts();
+
+    $rootScope.$on('fetchProducts',function (){
+        $scope.fetchProducts = fetchAllProducts;
+    })
 
      $scope.initView=function (){
              let clickedProduct = JSON.parse(localStorage.getItem('saved'));
@@ -27,15 +33,45 @@ myApp.controller('productController',['$scope','productService','utils', functio
             .then(
                 function (response) {
                     utils.destroyDatatable('product_table');
-                    $scope.products = response.content;
+                    angular.forEach(response.content, function (product,k){
+                        console.log(product.id + ' ' +k)
+                        productService.getProductImage(product.id).then(
+                            function (response){
+                                console.log('product image'+response.data)
+                                var uint8Array = new Uint8Array(response);
+                                var binaryString = String.fromCharCode.apply(null, uint8Array);
+                                var base64String = btoa(binaryString);
+                                $scope.productimage = 'data:image/JPEG;base64,' + base64String;
+                                products.push(product);
+                                $scope.products =products;
+                            },
+                            function (errResponse) {
+                                console.log(errResponse)
+                                console.error('controller:Error while fetching products');
+                            }
+                        )
+                    })
                     utils.loadDatatable('product_table');
-                     console.log(response)
+                    console.log(response)
                 },
                 function (errResponse) {
                     console.log(errResponse)
                     console.error('controller:Error while fetching products');
                 }
             );
+    }
+
+    function getProductImage(id){
+        productService.getProductImage(id)
+            .then(function(response) {
+                // `response.data` will be an ArrayBuffer
+                var arrayBuffer = response.data;
+
+                // Use the ArrayBuffer as needed
+            })
+            .catch(function(error) {
+                console.error(error);
+            });
     }
 
     function createProducts(product){

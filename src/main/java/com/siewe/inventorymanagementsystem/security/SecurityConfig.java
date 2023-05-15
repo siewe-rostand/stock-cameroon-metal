@@ -43,11 +43,11 @@ public class SecurityConfig  extends WebSecurityConfigurerAdapter {
         web.ignoring()
                 //.antMatchers(HttpMethod.OPTIONS, "/**")
                 .antMatchers("/app/**/*.{js,html}")
-                .antMatchers("/bower_components/**")
+                .antMatchers("/angular/**")
                 .antMatchers("/i18n/**")
                 .antMatchers("/css/**")
-                .antMatchers("/fonts/**")
-                .antMatchers("/images/**");
+                .antMatchers("/vendors/**")
+                .antMatchers("/modules/**");
     }
 
     @Override

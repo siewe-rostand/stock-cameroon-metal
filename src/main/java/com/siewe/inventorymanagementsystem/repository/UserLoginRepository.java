@@ -15,11 +15,11 @@ public interface UserLoginRepository extends JpaRepository<UserLogin,Long> {
         return (UserLogin) findById(id).orElse(null);
     }
 
-    @Query("select userLogin from UserLogin userLogin where userLogin.user.username = ?1")
+    @Query("select userLogin from UserLogin userLogin where userLogin.user.email = ?1")
     List<UserLogin> findByUserIsCurrentUser(String currentUserLogin);
 
     @Query("select userLogin from UserLogin userLogin "
-            + "where (userLogin.user.username like ?1 or ?1 = '%%') "
+            + "where (userLogin.user.email like ?1 or ?1 = '%%') "
             + "AND userLogin.dateTime between ?2 and ?3 ")
     Page<UserLogin> findAll(String login, LocalDateTime cdf, LocalDateTime cdt, Pageable pageable);
 }

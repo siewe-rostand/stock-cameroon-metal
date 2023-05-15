@@ -24,10 +24,10 @@ public class CustomUserDetailsService  implements UserDetailsService {
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
 
         if (login.trim().isEmpty()) {
-            throw new UsernameNotFoundException("username is empty");
+            throw new UsernameNotFoundException("email is empty");
         }
 
-        User user = userRepository.findByUsername(login);
+        User user = userRepository.findByEmail(login);
 
         if (user == null) {
             throw new UsernameNotFoundException("User " + login + " not found");

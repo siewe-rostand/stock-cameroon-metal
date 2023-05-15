@@ -34,11 +34,14 @@ public class TokenProvider {
         this.userService = userService;
     }
 
-    public String createToken(String username) {
+    public String createToken(String email) {
         Date now = new Date();
         Date validity = new Date(now.getTime() + this.tokenValidityInMilliseconds);
 
-        User user = userRepository.findByUsername(username);
+        User user = userRepository.findByEmail(email);
+        System.out.println("====================");
+        System.out.println(user);
+        System.out.println("====================");
         List<String> roles = new ArrayList<>();
         if(user != null){
             for(Role role: user.getRoles()){
@@ -47,10 +50,10 @@ public class TokenProvider {
         }
 
 
-        return Jwts.builder().setId(UUID.randomUUID().toString()).setSubject(username)
+        return Jwts.builder().setId(UUID.randomUUID().toString()).setSubject(email)
                 .setIssuedAt(now).signWith(SignatureAlgorithm.HS512, this.secretKey)
                 .setExpiration(validity).claim("id", user.getUserId())
-                .claim("login", user.getUsername())
+                .claim("login", user.getEmail())
                 .claim("lastName", user.getLastname())
                 .claim("firstName", user.getFirstname())
                 .claim("telephone", user.getTelephone())

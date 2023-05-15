@@ -3,11 +3,11 @@ package com.siewe.inventorymanagementsystem.security;
 public class JwtResponse {
     private String token;
     private String type = "Bearer";
-    private String username;
+    private String email;
 
-    public JwtResponse(String accessToken, String username) {
+    public JwtResponse(String accessToken, String email) {
         this.token = accessToken;
-        this.username = username;
+        this.email = email;
     }
 
     public String getAccessToken() {
@@ -26,12 +26,12 @@ public class JwtResponse {
         this.type = tokenType;
     }
 
-    public String getUsername() {
-        return username;
+    public String getEmail() {
+        return email;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setEmail(String email) {
+        this.email = email;
     }
 }
 

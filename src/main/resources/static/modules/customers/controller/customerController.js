@@ -2,7 +2,7 @@ myApp.controller('customerController', ['$scope', 'customerControllerService', f
 
 
     $scope.customer = {
-        id: null, firstname: '', lastname: '', phone: '',
+        id: null, name: '', address: '', phone: '',
         phone2: '', city: '', quarter: '',
     };
 

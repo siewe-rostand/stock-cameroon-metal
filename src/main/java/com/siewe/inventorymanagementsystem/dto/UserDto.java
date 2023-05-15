@@ -1,12 +1,12 @@
 package com.siewe.inventorymanagementsystem.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.siewe.inventorymanagementsystem.model.Role;
 import com.siewe.inventorymanagementsystem.model.User;
 import lombok.Data;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.HashSet;
@@ -18,16 +18,17 @@ public class UserDto {
     private String lastname;
     @NotBlank(message = "firstname required" )
     private String firstname;
-    @NotBlank(message = "username must not be empty")
-    private String username;
     private String fullname;
     @Email(message = "Email format please")
+    @NotBlank(message = "Email is required")
     private String email;
     private String city;
     private String quarter;
+    @NotBlank(message = "Phone number is required")
     private String telephone;
     private String telephone_alt;
-    @JsonIgnore
+//    @JsonIgnore
+    @Size(min = 6)
     private String password;
     private Boolean activated;
     private String langKey;
@@ -62,7 +63,7 @@ public class UserDto {
             userDto.setId(user.getUserId());
             userDto.setLangKey(user.getLangKey());
             userDto.setActivated(user.getActivated());
-            userDto.setCreatedDate(user.getCreated_date());
+            userDto.setCreatedDate(user.getCreatedDate());
             userDto.setActivationKey(user.getActivationKey());
             userDto.setResetDate(user.getUpdatedDate());
             userDto.setResetKey(user.getResetKey());
@@ -70,9 +71,9 @@ public class UserDto {
 
             userDto.setLastname(user.getLastname());
             userDto.setFirstname(user.getFirstname());
-            userDto.setUsername(user.getUsername());
             userDto.setFullname(user.getFullName());
             userDto.setEmail(user.getEmail());
+            userDto.setPassword(user.getPassword());
             userDto.setCity(user.getCity());
             userDto.setQuarter(user.getQuarter());
 

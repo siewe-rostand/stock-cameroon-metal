@@ -2,8 +2,10 @@ package com.siewe.inventorymanagementsystem.model;
 
 import lombok.*;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Objects;
 
@@ -23,6 +25,12 @@ public class Role{
     private Long roleId;
 
     private String name;
+
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
+    @Column(name = "created_date")
+    @CreationTimestamp
+    private Timestamp createdDate;
 
     public Role(Long id) {
         this.roleId = id;

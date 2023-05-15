@@ -1,6 +1,7 @@
 package com.siewe.inventorymanagementsystem.model;
 
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -30,9 +31,6 @@ public class User implements Serializable{
     private String name;
 
     @Basic(optional = false)
-//    @NotNull
-//    @Size(min = 1,max = 16)
-    private String username;
 
     private String firstname;
 
@@ -84,7 +82,8 @@ public class User implements Serializable{
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
     @Column(name = "created_date")
-    private Timestamp created_date;
+    @CreationTimestamp
+    private Timestamp createdDate;
 
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
@@ -132,11 +131,11 @@ public class User implements Serializable{
 //            rd = LocalDateTime.parse(createdDate, formatter);
 //        this.createdDate = rd;
 //    }
-    public Timestamp getCreated_date() {
-        return created_date;
+    public Timestamp getCreatedDate() {
+        return createdDate;
     }
-    public void setCreated_date(Timestamp createDate) {
-        this.created_date = createDate;
+    public void setCreatedDate(Timestamp createDate) {
+        this.createdDate = createDate;
     }
     public String getUpdatedDate() {
         String pattern = "yyyy-MM-dd HH:mm";

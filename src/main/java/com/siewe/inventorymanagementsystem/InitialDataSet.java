@@ -71,7 +71,7 @@ public class InitialDataSet {
     }
 
     private void createAdministrators() {
-        if(userService.findByLogin("admin") == null)
+        if(userService.findByEmail("admin@admin.com") == null)
             userService.addAdmin();
     }
 
@@ -80,7 +80,7 @@ public class InitialDataSet {
         //List<String> managers = Arrays.asList("yaya", "jojo", "baba", "toto");
         List<String> managers = Arrays.asList("rostand");
         for(String manager : managers){
-            if(userService.findByLogin(manager) == null){
+            if(userService.findByEmail(manager) == null){
                 userService.addNewUser(manager, "MANAGER");
             }
         }

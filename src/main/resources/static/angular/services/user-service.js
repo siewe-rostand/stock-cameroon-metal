@@ -71,4 +71,34 @@ myApp.factory('UserService', ['$http', '$q','config', function ($http, $q,config
         return deferred.promise;
     }
 
+    function login(user) {
+        let deferred = $q.defer();
+        $http.post(base_url + '/login', user)
+            .then(
+                function (response) {
+                    deferred.resolve(response.data);
+                },
+                function (errResponse) {
+                    console.error('Error while logging in User');
+                    deferred.reject(errResponse);
+                }
+            );
+        return deferred.promise;
+    }
+
+    function getUserIfo(token) {
+        let deferred = $q.defer();
+        $http.post(base_url + '/user', token)
+            .then(
+                function (response) {
+                    deferred.resolve(response.data);
+                },
+                function (errResponse) {
+                    console.error('Error while logging in User');
+                    deferred.reject(errResponse);
+                }
+            );
+        return deferred.promise;
+    }
+
 }]);

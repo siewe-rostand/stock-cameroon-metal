@@ -57,7 +57,6 @@ public class UserService {
         }
         user.setLastname(userDto.getLastname());
         user.setFirstname(userDto.getFirstname());
-        user.setUsername(userDto.getUsername());
         user.setTelephone(userDto.getTelephone());
         user.setTelephoneAlt(userDto.getTelephone_alt());
         user.setCity(userDto.getCity());
@@ -71,7 +70,7 @@ public class UserService {
         java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         java.time.LocalDateTime date = java.time.LocalDateTime.now();
         Calendar cal = Calendar.getInstance();
-        user.setCreated_date(new Timestamp(cal.getTimeInMillis()));
+        user.setCreatedDate(new Timestamp(cal.getTimeInMillis()));
 
         //before saving a user we encrypt password, and we can give roles
         user.setPassword(userDto.getPassword());
@@ -139,9 +138,6 @@ public class UserService {
                     return user;
                 });
     }
-    public User findUserByUserName(String userName) {
-        return userRepository.findByUsername(userName);
-    }
     /**
      * Save a user.
      *
@@ -157,7 +153,6 @@ public class UserService {
         }
         user.setLastname(userDto.getLastname());
         user.setFirstname(userDto.getFirstname());
-        user.setUsername(userDto.getUsername());
         user.setName(userDto.getFullname());
         user.setTelephone(userDto.getTelephone());
         user.setTelephoneAlt(userDto.getTelephone_alt());
@@ -169,10 +164,8 @@ public class UserService {
         user.setDeleted(false);
 
         //set created date;
-        String pattern = "yyyy-MM-dd HH:mm:ss";
-        LocalDateTime date = new LocalDateTime();
         Calendar cal = Calendar.getInstance();
-        user.setCreated_date(new Timestamp(cal.getTimeInMillis()));
+        user.setCreatedDate(new Timestamp(cal.getTimeInMillis()));
 
         //before saving a user we encrypt password, and we can give roles
 //        user.setPassword(userDto.getPassword());
@@ -196,16 +189,14 @@ public class UserService {
 
         User user = new User();
         user.setUserId(userDto.getId());
-        user.setUsername(userDto.getUsername());
-        if (userDto.getUsername().isEmpty()){
-            throw new EntityNotFoundException(UserDto.class,"username",userDto.getUsername());
-        }
+//        if (userDto.getUsername().isEmpty()){
+//            throw new EntityNotFoundException(UserDto.class,"username",userDto.getUsername());
+//        }
         if(userDto.getEmail() != null) {
             user.setEmail(userDto.getEmail().toLowerCase());
         }
         user.setLastname(userDto.getLastname());
         user.setFirstname(userDto.getFirstname());
-        user.setUsername(userDto.getUsername());
         user.setName(userDto.getFullname());
         user.setTelephone(userDto.getTelephone());
         user.setTelephoneAlt(userDto.getTelephone_alt());
@@ -220,7 +211,7 @@ public class UserService {
         String pattern = "yyyy-MM-dd";
         LocalDate date = new LocalDate();
         Calendar cal = Calendar.getInstance();
-        user.setCreated_date(new Timestamp(cal.getTimeInMillis()));
+        user.setCreatedDate(new Timestamp(cal.getTimeInMillis()));
 
         HashSet<Role> roles = new HashSet<>();
         if (user.getRoles() != null){
@@ -247,11 +238,10 @@ public class UserService {
 
         customer.setLastname(customerDto.getLastname());
         customer.setFirstname(customerDto.getFirstname());
-        customer.setUsername(customerDto.getFirstname() + "_" + customerDto.getLastname());
 
-        if (customerDto.getUsername().isEmpty()){
-            throw new EntityNotFoundException(UserDto.class,"Username must not be null!",customerDto.getUsername());
-        }
+//        if (customerDto.getUsername().isEmpty()){
+//            throw new EntityNotFoundException(UserDto.class,"Username must not be null!",customerDto.getUsername());
+//        }
         customer.setUserId(customerDto.getId());
         customer.setName(customerDto.getFirstname() + "  " + customerDto.getLastname());
         customer.setTelephone(customerDto.getTelephone());
@@ -264,7 +254,7 @@ public class UserService {
         String pattern = "yyyy-MM-dd HH:mm:ss";
         LocalDateTime datetime = new LocalDateTime(DateTimeZone.forOffsetHours(1));
         Calendar cal = Calendar.getInstance();
-        customer.setCreated_date(new Timestamp(cal.getTimeInMillis()));
+        customer.setCreatedDate(new Timestamp(cal.getTimeInMillis()));
 
         customer.setRoles(new HashSet<>());
         Role role1 = roleRepository.findByName(role);
@@ -282,7 +272,6 @@ public class UserService {
 
         User user = new User();
         user.setUserId(userDto.getId());
-        user.setUsername(userDto.getUsername());
         user.setLastname(userDto.getLastname());
         user.setFirstname(userDto.getFirstname());
         user.setTelephone(userDto.getTelephone());
@@ -295,7 +284,7 @@ public class UserService {
         String pattern = "yyyy-MM-dd HH:mm";
         LocalDateTime date = new LocalDateTime();
         Calendar cal = Calendar.getInstance();
-        user.setCreated_date(new Timestamp(cal.getTimeInMillis()));
+        user.setCreatedDate(new Timestamp(cal.getTimeInMillis()));
 
         user.setPassword(userDto.getPassword());
 
@@ -314,8 +303,7 @@ public class UserService {
 
 
     public UserDto update(UserDto userDto) {
-        log.debug("Request to save User : {}", userDto);
-        String fullname = userDto.getFirstname() + "  " + userDto.getLastname();
+        log.debug("Request to update User : {}", userDto);
 
         User user = userRepository.findByUserId(userDto.getId());
         if (user==null){
@@ -323,11 +311,9 @@ public class UserService {
         }
 
         user.setUserId(userDto.getId());
-        //currentUser.setPassword(userDto.getPassword());
-        //user.setUsername(userDto.getLogin());
-        //user.setEmail(userDto.getEmail());
         user.setLangKey(userDto.getLangKey());
         user.setActivated(userDto.getActivated());
+        user.setDeleted(false);
 
         user.setLastname(userDto.getLastname());
         user.setFirstname(userDto.getFirstname());
@@ -335,12 +321,13 @@ public class UserService {
         user.setTelephoneAlt(userDto.getTelephone_alt());
         user.setTelephone(userDto.getTelephone());
         user.setValidated(userDto.getValidated());
+        user.setCity(userDto.getCity());
+        user.setQuarter(userDto.getQuarter());
         
         //set created date;
-        String pattern = "yyyy-MM-dd HH:mm:ss";
-        LocalDateTime date = new LocalDateTime();
-        Calendar cal = Calendar.getInstance();
-        user.setCreated_date(new Timestamp(cal.getTimeInMillis()));
+        String pattern = "yyyy-MM-dd HH:mm";
+        LocalDateTime datetime = new LocalDateTime();
+        user.setUpdatedDate(datetime.toString(pattern));
 
         //this is to ensure that only one user will be linked to a player id
         if(userDto.getPlayerId() != null){
@@ -363,7 +350,7 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public UserDto findByUserIsCurrentUser() {
-   User user = userRepository.findByUsername(SecurityUtils.getCurrentUserLogin());
+   User user = userRepository.findByEmail(SecurityUtils.getCurrentUserLogin());
         return new UserDto().createDTO(user);
     }
 
@@ -371,12 +358,12 @@ public class UserService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 //        User user = (User) authentication.getPrincipal();
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        User user = userRepository.findByUsername(userDetails.getUsername());
+        User user = userRepository.findByEmail(userDetails.getUsername());
         return new UserDto().createDTO(user);
     }
 
     public void changePassword(String password) {
-        User user = userRepository.findByUsername(SecurityUtils.getCurrentUserLogin());
+        User user = userRepository.findByEmail(SecurityUtils.getCurrentUserLogin());
         log.debug("Changed password for UserBase: {}", user);
         if(user != null){
             //user.setPassword(bCryptPasswordEncoder.encode(password));
@@ -541,21 +528,31 @@ public class UserService {
         }
     }
 
-    public User findByLogin(String login) {
-        return userRepository.findByUsername(login);
+
+    public User findByPhone(String phone) {
+        return userRepository.findByTelephone(phone);
     }
 
-    public boolean loginExists(String login) {
-        return (userRepository.findByUsername(login) != null);
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
+
+    public boolean phoneExist(String phone) {
+        return (userRepository.findByTelephone(phone) != null);
+    }
+
+    public boolean emailExist(String email) {
+        return (userRepository.existsByEmail(email));
+    }
+
 
     public void addNewUser(String login, String role) {
         User user = new User();
-        user.setUsername(login);
         user.setLastname(login);
+        user.setFirstname("user");
         user.setTelephone("6" + ThreadLocalRandom.current().nextInt(11111111, 99999999));
-        user.setPassword("1234");
-        //user.setEmail(user.getLogin()+ "@pharma.com");
+        user.setPassword("123456");
+        user.setEmail(user.getFirstname()+ "@test.com");
         user.setActivated(true);
 
         /*Role role1 = roleRepository.findByName(role);
@@ -571,7 +568,7 @@ public class UserService {
         String pattern = "yyyy-MM-dd HH:mm";
         LocalDateTime date = new LocalDateTime();
         Calendar cal = Calendar.getInstance();
-        user.setCreated_date(new Timestamp(cal.getTimeInMillis()));
+        user.setCreatedDate(new Timestamp(cal.getTimeInMillis()));
 
         userRepository.save(user);
     }
@@ -579,11 +576,12 @@ public class UserService {
     public void addAdmin() {
         User user = new User();
         user.setLastname("Admin");
-        user.setUsername("admin");
-        user.setTelephone("");
-        user.setPassword("1234");
-        //user.setEmail(user.getLogin()+ "@pharma.com");
+        user.setFirstname("Admin");
+        user.setEmail("admin@admin.com");
+        user.setTelephone("1234");
+        user.setPassword("123456");
         user.setActivated(true);
+        user.setDeleted(false);
 
         user.setRoles(new HashSet<>());
         user.getRoles().addAll(roleRepository.findAll());
@@ -592,7 +590,7 @@ public class UserService {
         String pattern = "yyyy-MM-dd HH:mm";
         LocalDateTime date = new LocalDateTime();
         Calendar cal = Calendar.getInstance();
-        user.setCreated_date(new Timestamp(cal.getTimeInMillis()));
+        user.setCreatedDate(new Timestamp(cal.getTimeInMillis()));
 
         userRepository.save(user);
     }

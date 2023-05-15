@@ -17,14 +17,19 @@ public interface UserRepository extends JpaRepository<User,Long> {
 
 
     User findByUserId(Long id);
-    User findByUsername(String username);
     User findByPlayerId(String playerId);
-    @Query("select u from User u where (u.username = ?1 or u.email = ?1)")
-    User findByLoginOrEmail(String loginOrEmail);
+//    @Query("select u from User u where (u.username = ?1 or u.email = ?1)")
+//    User findByLoginOrEmail(String loginOrEmail);
 
-    Boolean existsByUsername(String username);
+    User findByTelephone(String phone);
 
+    User findByEmail(String email);
+
+
+    @Query("select (count(u) > 0) from User u where u.email = ?1")
     Boolean existsByEmail(String email);
+
+    Boolean existsByTelephone(String phone);
 
     @Override
     void delete(User user);
@@ -41,7 +46,7 @@ public interface UserRepository extends JpaRepository<User,Long> {
 
     Optional<User> findOneByResetKey(String resetKey);
 
-    Optional<User> findByTelephone(String phone);
+//    Optional<User> findByTelephone(String phone);
     Optional<User> findOneByTelephone(String phone);
 
     Optional<User> findOneByUserId(Long userId);

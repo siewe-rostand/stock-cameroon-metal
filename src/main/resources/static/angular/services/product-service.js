@@ -7,7 +7,8 @@ myApp.factory('productService',['$http','$q','config',function($http, $q, config
         fetchAllProducts: fetchAllProducts,
         createProduct: createProduct,
         updateProduct: updateProduct,
-        deleteProduct: deleteProduct
+        deleteProduct: deleteProduct,
+        getProductImage:getProductImage
     };
 
     function fetchAllProducts() {
@@ -19,6 +20,21 @@ myApp.factory('productService',['$http','$q','config',function($http, $q, config
                 },
                 function (errResponse) {
                     console.error('Service: Error while fetching product');
+                    deferred.reject(errResponse);
+                }
+            );
+        return deferred.promise;
+    }
+
+    function getProductImage(id){
+        let deferred = $q.defer();
+        $http.get(base_url+'/product-image/'+id,{ responseType: 'arraybuffer' })
+            .then(
+                function (response) {
+                    deferred.resolve(response.data);
+                },
+                function (errResponse) {
+                    console.error('Service: Error while fetching product image');
                     deferred.reject(errResponse);
                 }
             );

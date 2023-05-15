@@ -20,7 +20,7 @@ public class UserRoleDto {
             userRoleDto.setRoleId(userRole.getRole().getRoleId());
             userRoleDto.setRoleName(userRole.getRole().getName());
             userRoleDto.setUserId(userRole.getUser().getUserId());
-            userRoleDto.setUsername(userRole.getUser().getUsername());
+            userRoleDto.setUsername(userRole.getUser().getEmail());
         }
         return userRoleDto;
     }

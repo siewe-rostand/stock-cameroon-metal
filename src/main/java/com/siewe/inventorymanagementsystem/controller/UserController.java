@@ -7,6 +7,7 @@ import com.siewe.inventorymanagementsystem.repository.UserRepository;
 import com.siewe.inventorymanagementsystem.service.MailService;
 import com.siewe.inventorymanagementsystem.service.UserService;
 import com.siewe.inventorymanagementsystem.utils.CustomErrorType;
+import com.siewe.inventorymanagementsystem.utils.InvalidActionException;
 import com.siewe.inventorymanagementsystem.utils.ResponseHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,54 +54,43 @@ public class UserController {
     public ResponseEntity<Object> createUser(@Valid @RequestBody UserDto userDto) throws URISyntaxException {
         log.debug("REST request to save User : {}", userDto);
         HashMap<String, String> error = new HashMap<>();
-        User user = new User();
-//        User userRole = userRepository.findByUsername(user.username());
-        if (userRepository.findByUsername(userDto.getUsername().toLowerCase()) != null) {
-            error.put("error", "Ce nom d'utilisateur est déjà utilisé !");
+        if (userService.emailExist(userDto.getEmail())) {
+            error.put("error", "Cet email est déjà utilisé par un autre d'utilisateur !");
             return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
         }
+        if (userRepository.findOneByTelephone(userDto.getTelephone()).isPresent()){
+            error.put("error","ce numéro de téléphone a déjà été utilisé");
+            return new ResponseEntity<>(error,HttpStatus.BAD_REQUEST);
+        }
         UserDto result = userService.save(userDto, "USER");
-
-        /*
-        String baseUrl = request.getScheme() + // "http"
-                "://" +                                // "://"
-                request.getServerName() +              // "my host"
-                ":" +                                  // ":"
-                request.getServerPort() +              // "80"
-                request.getContextPath();              // "/myContextPath" or "" if deployed in root context
-
-        mailService.sendActivationEmail(userDto, baseUrl);
-        if(result != null)
-        mailService.sendNewRegistrationEmail(userDto);
-        */
         return ResponseHandler.generateResponse("user save Successfully",HttpStatus.CREATED,result);
     }
 
     @GetMapping("/user")
     public ResponseEntity<Object> getUserInfo() {
         UserDto userDto = userService.getUserInfo();
-        return ResponseEntity.ok(userDto);
+        return  ResponseHandler.generateResponse("user data successfully gotten",HttpStatus.OK,userDto);
     }
-
-    @PostMapping("/customers")
-    public ResponseEntity<Object> createCustomer(@Valid @RequestBody UserDto userDto, HttpServletRequest request) throws URISyntaxException {
-        log.debug("REST request to save User : {}", userDto);
-        HashMap<String, String> error = new HashMap<>();
-
-        if (userRepository.findByUsername(userDto.getUsername().toLowerCase()) != null) {
-            error.put("error", "Ce nom d'utilisateur est déjà utilisé !");
-            return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
-        }
-        UserDto result = userService.saveCustomer(userDto, "CUSTOMER");
-        return ResponseHandler.generateResponse("user created successfully",HttpStatus.CREATED,result);
-    }
+//
+//    @PostMapping("/customers")
+//    public ResponseEntity<Object> createCustomer(@Valid @RequestBody UserDto userDto, HttpServletRequest request) throws URISyntaxException {
+//        log.debug("REST request to save User : {}", userDto);
+//        HashMap<String, String> error = new HashMap<>();
+//
+//        if (userRepository.findByEmail(userDto.getEmail().toLowerCase()) != null) {
+//            error.put("error", "Ce nom d'utilisateur est déjà utilisé !");
+//            return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+//        }
+//        UserDto result = userService.saveCustomer(userDto, "CUSTOMER");
+//        return ResponseHandler.generateResponse("user created successfully",HttpStatus.CREATED,result);
+//    }
 
     @PostMapping("/user-seller")
-    public ResponseEntity<UserDto> createSeller(@Valid @RequestBody UserDto userDto, HttpServletRequest request) throws URISyntaxException {
+    public ResponseEntity<UserDto> createSeller(@Valid @RequestBody UserDto userDto, HttpServletRequest request) throws URISyntaxException, InvalidActionException {
         log.debug("REST request to save seller : {}", userDto);
         HashMap<String, String> error = new HashMap<>();
 
-        if (userRepository.findByUsername(userDto.getUsername().toLowerCase()) != null) {
+        if (userRepository.findByEmail(userDto.getEmail().toLowerCase()) != null) {
             error.put("error", "Ce nom d'utilisateur est déjà utilisé !");
             return new ResponseEntity(error, HttpStatus.BAD_REQUEST);
         }

@@ -1,6 +1,14 @@
 myApp.config(function ($routeProvider){
     $routeProvider
         .when('/',{
+        templateUrl:'modules/users/views/login.html',
+            controller:'authController',
+            controllerAs:'login'
+    }).when('/login',{
+        templateUrl:'modules/users/views/login.html',
+            controller:'authController',
+            controllerAs:'login'
+    }).when('/home',{
         templateUrl:'modules/home/home.html',
             controller:'homeController',
             controllerAs:'home'
@@ -8,6 +16,10 @@ myApp.config(function ($routeProvider){
         templateUrl:'modules/users/views/create.html',
         controller:'userController',
         controllerAs:'createUser'
+    }).when('/register',{
+        templateUrl:'modules/users/views/register.html',
+        controller:'authController',
+        controllerAs:'registerUser'
     }).when('/users/list',{
         templateUrl:'modules/users/views/user-list.html',
         controller:'userController',
@@ -48,6 +60,10 @@ myApp.config(function ($routeProvider){
         templateUrl:'modules/category/views/update_product.html',
         controller:'categoryController',
         controllerAs:'categoryList'
+    }).when('/orders',{
+        templateUrl:'modules/orders/views/order_page.html',
+        controller:'orderController',
+        controllerAs:'orderPage'
     })
 
 
