@@ -39,7 +39,7 @@ public class InitialDataSet {
         createRoles();
         createDefaultUsers();
         createManagers();
-        //createCategories();
+        createCategories();
         return null;
     }
 
@@ -54,10 +54,7 @@ public class InitialDataSet {
     }
 
     private void createCategories() {
-        List<String> categories = Arrays.asList("COMPRIMES", "MAT ET ACCESSOIRES", "ORL", "INJECTIONS",
-                "PARAMEDICAL", "USAGE EXT", "SACH-GLE", "SIROP", "GOUTTES BUVABLES", "FARINE-LAIT",
-                "AMPOULES BUVABLE", "CREMES", "COLLYRE", "FRIGO", "OVULE", "PRESERVATIF", "VITAMINES",
-                "SOLUTE", "SUPPOSITOIRES", "ARKO");
+        List<String> categories = Arrays.asList("TOLE", "ACCESSOIRES", "TOLE COLOREE");
         for(String category : categories){
             if(categoryRepository.findByName(category) == null){
                 categoryRepository.save(new Category(category));

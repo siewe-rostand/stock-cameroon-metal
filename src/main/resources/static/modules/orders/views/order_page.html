@@ -7,46 +7,48 @@
         <h6 class="m-0 font-weight-bold text-info float-left">Liste des Produits</h6>
       </div>
       <div class="card-body">
-        <table class="data-table table nowrap" id="product_table">
-          <thead>
-          <tr>
-            <th class="table-plus">Nom</th>
-            <th>Description</th>
-            <th>Prix</th>
-            <th>Quantité</th>
-            <th>Total</th>
-            <th>Action</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr ng-repeat="product in products">
-            <td class="table-plus">
-              <div class="name-avatar d-flex align-items-center">
-                <div class="avatar mr-2 flex-shrink-0">
-                  <img ng-src="{{productimage}}"
-                       class="border-radius-100 shadow"
-                       width="40"
-                       height="40"
-                       alt=""/>
+        <div class="table-responsive">
+          <table class="data-table table table-bordered nowrap" id="product_table">
+            <thead>
+            <tr>
+              <th class="table-plus">Nom</th>
+              <th>Description</th>
+              <th>Prix</th>
+              <th>Quantité</th>
+              <th>Total</th>
+              <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="product in products">
+              <td class="table-plus">
+                <div class="name-avatar d-flex align-items-center">
+                  <div class="avatar mr-2 flex-shrink-0">
+                    <img ng-src="{{productimage}}"
+                         class="border-radius-100 shadow"
+                         width="40"
+                         height="40"
+                         alt=""/>
+                  </div>
+                  <div class="txt">
+                    <div class="weight-600">{{product.product.name}}</div>
+                  </div>
                 </div>
-                <div class="txt">
-                  <div class="weight-600">{{product.name}}</div>
+              </td>
+              <td>{{product.product.description}}</td>
+              <td>{{product.product.price}} FCFA</td>
+              <td><input class="form-control"  type="number" ng-model="product.qty" min="1"></td>
+              <td>{{product.qty * product.product.price}} FCFA</td>
+              <td>
+                <div class="table-actions">
+                  <button  data-bgcolor="#e7ebf5" data-color="#265ed7" class="btn btn-outline-info float-right" style="color: rgb(38, 94, 215);" ng-click="addItem(product)">
+                    Ajouter</i></button>
                 </div>
-              </div>
-            </td>
-            <td>{{product.description}}</td>
-            <td>{{product.price | currency:'XAF ':false}}</td>
-            <td><input class="form-control"  type="number" ng-model="qty" min="1"></td>
-            <td>{{qty * product.price | currency:'XAF ':false}}</td>
-            <td>
-              <div class="table-actions">
-                <button  data-bgcolor="#e7ebf5" data-color="#265ed7" class="btn btn-outline-info float-right" style="color: rgb(38, 94, 215);" ng-click="addToCart(product)">
-                  Ajouter</i></button>
-              </div>
-            </td>
-          </tr>
-          </tbody>
-        </table>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
@@ -54,6 +56,7 @@
     <div class="card shadow mb-4">
       <div class="card-header py-3">
         <h6 class="m-0 font-weight-bold text-info float-left">Panier</h6>
+        <a ng-href="#!/orders/clients" ng-show="cart.length != 0" class="btn btn-primary float-right">Suivant</a>
       </div>
       <div class="card-body">
         <div class="table-responsive">
@@ -71,17 +74,20 @@
             <tr ng-repeat="item in cart">
               <td>{{item.product.name}}</td>
               <td>{{item.product.price}}</td>
-              <td>{{item.quantity}}</td>
-              <td>{{total}}</td>
+              <td>{{item.qty}}</td>
+              <td>{{getCost(item)}} FCFA</td>
               <td><div class="table-actions">
-                <button   class="btn btn-outline-danger " ng-click="removeFromCart(item)">
+                <button   class="btn btn-outline-danger " ng-click="removeItem(item)">
                   Retirer</i></button>
               </div></td>
             </tr>
             </tbody>
           </table>
         </div>
-        <a href="#" class="btn btn-primary float-right">Valider</a>
+        <div>
+          <h3  class="float-left">Total: {{getTotal()}} FCFA</h3>
+          <button ng-show="cart.length != 0" class="btn btn-danger float-right" ng-click="clearCart()">vider Panier</button>
+        </div>
       </div>
     </div>
   </div>

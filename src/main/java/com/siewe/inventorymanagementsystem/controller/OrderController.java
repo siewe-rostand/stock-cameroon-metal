@@ -29,7 +29,7 @@ public class OrderController {
     @Autowired
     private OrderedProductService orderedProductService;
 
-    @PostMapping("/save")
+    @PostMapping("/orders")
     public ResponseEntity<Object> createOrder(@RequestBody OrderDto orderDto) throws CustomErrorType {
         log.debug("REST request to create new order : {}",orderDto);
 
@@ -39,13 +39,13 @@ public class OrderController {
         return ResponseHandler.generateResponse("Order created successfully",HttpStatus.CREATED,order);
     }
 
-    @PostMapping("/orders")
-    public ResponseEntity<Order> createOrder1(@RequestBody OrderDto orderDto) {
-        try {
-            Order newOrder = orderService.createOrder1(orderDto);
-            return ResponseEntity.status(HttpStatus.CREATED).body(newOrder);
-        } catch (IllegalArgumentException | CustomErrorType e) {
-            return ResponseEntity.badRequest().build();
-        }
-    }
+//    @PostMapping("/orders")
+//    public ResponseEntity<Order> createOrder1(@RequestBody OrderDto orderDto) {
+//        try {
+//            Order newOrder = orderService.createOrder1(orderDto);
+//            return ResponseEntity.status(HttpStatus.CREATED).body(newOrder);
+//        } catch (IllegalArgumentException | CustomErrorType e) {
+//            return ResponseEntity.badRequest().build();
+//        }
+//    }
 }

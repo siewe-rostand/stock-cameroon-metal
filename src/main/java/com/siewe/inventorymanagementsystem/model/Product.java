@@ -9,10 +9,7 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import javax.persistence.*;
-import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.*;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -36,6 +33,7 @@ public class Product {
 
     @Column(name = "image_url")
     private String imageUrl;
+
     @Column(name="cip")
     private String cip;
 
@@ -52,13 +50,14 @@ public class Product {
     private Boolean deleted;
 
 //    @NotNull
-//    @DecimalMin(value = "0.0")
+    @DecimalMin(value = "1.0")
     @Column(name = "price")
     private Double price;
 
 
 //    @NotNull
 //    @Min(value = 0)
+@DecimalMin(value = "1.0")
     @Column(name = "quantity")
     private Double quantity;
     @Min(0)

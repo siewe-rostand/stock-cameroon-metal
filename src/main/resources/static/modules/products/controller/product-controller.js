@@ -1,5 +1,5 @@
 
-myApp.controller('productController',['$scope','productService','utils','$rootScope', function($scope, productService, utils,$rootScope){
+myApp.controller('productController',['$scope','productService','utils','$rootScope','$window', function($scope, productService, utils,$rootScope,$window){
 
 
         $scope.submit = submit;
@@ -61,19 +61,6 @@ myApp.controller('productController',['$scope','productService','utils','$rootSc
             );
     }
 
-    function getProductImage(id){
-        productService.getProductImage(id)
-            .then(function(response) {
-                // `response.data` will be an ArrayBuffer
-                var arrayBuffer = response.data;
-
-                // Use the ArrayBuffer as needed
-            })
-            .catch(function(error) {
-                console.error(error);
-            });
-    }
-
     function createProducts(product){
             productService.createProduct(product)
             .then(
@@ -83,6 +70,7 @@ myApp.controller('productController',['$scope','productService','utils','$rootSc
                         title: 'produit enregistré avec success'
                     })
                     console.log("save new product response",res);
+                    $window.history.back();
                     fetchAllProducts();
                 },
                 function (errResponse) {

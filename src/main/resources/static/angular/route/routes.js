@@ -64,6 +64,14 @@ myApp.config(function ($routeProvider){
         templateUrl:'modules/orders/views/order_page.html',
         controller:'orderController',
         controllerAs:'orderPage'
+    }).when('/orders/clients',{
+        templateUrl:'modules/orders/views/customer_list.html',
+        controller:'orderController',
+        controllerAs:'orderPage'
+    }).when('/orders/review',{
+        templateUrl:'modules/orders/views/order_review.html',
+        controller:'orderController',
+        controllerAs:'orderReview'
     })
 
 

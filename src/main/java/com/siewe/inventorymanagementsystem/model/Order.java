@@ -35,7 +35,7 @@ public class Order  extends BaseEntity{
 
     @ManyToOne
     @JoinColumn(name = "customer_id",referencedColumnName = "id")
-    private  User customer;
+    private  Customer customer;
 
     @OneToMany(mappedBy = "order")
     private List<OrderedProduct> orderedProducts;

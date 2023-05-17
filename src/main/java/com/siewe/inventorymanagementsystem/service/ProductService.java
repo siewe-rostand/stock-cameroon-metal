@@ -126,7 +126,7 @@ public class ProductService {
             product.setUpdatedDate(date.format(formatter));
         }
         if(productDto.getCategoryId() != null){
-            Category category = categoryRepository.findOne(productDto.getId());
+            Category category = categoryRepository.findOne(productDto.getCategoryId());
             if (category == null){
                 throw new EntityNotFoundException(Category.class," id ",productDto.getCategoryId().toString());
             }

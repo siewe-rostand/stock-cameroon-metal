@@ -3,11 +3,9 @@ package com.siewe.inventorymanagementsystem.service;
 import com.siewe.inventorymanagementsystem.dto.OrderDto;
 import com.siewe.inventorymanagementsystem.dto.OrderedProductDto;
 import com.siewe.inventorymanagementsystem.exceptions.OutOfStockException;
-import com.siewe.inventorymanagementsystem.model.Order;
-import com.siewe.inventorymanagementsystem.model.OrderedProduct;
-import com.siewe.inventorymanagementsystem.model.Product;
-import com.siewe.inventorymanagementsystem.model.User;
+import com.siewe.inventorymanagementsystem.model.*;
 import com.siewe.inventorymanagementsystem.model.error.EntityNotFoundException;
+import com.siewe.inventorymanagementsystem.repository.CustomerRepository;
 import com.siewe.inventorymanagementsystem.repository.OrderedProductRepository;
 import com.siewe.inventorymanagementsystem.repository.OrdersRepository;
 import com.siewe.inventorymanagementsystem.repository.UserRepository;
@@ -37,10 +35,10 @@ public class OrderService {
     private OrdersRepository ordersRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    private CustomerRepository userRepository;
 
     @Autowired
-    private UserService customerService;
+    private CustomerService customerService;
 
     @Autowired
     private OrderedProductService orderedProductService;
@@ -68,7 +66,7 @@ public class OrderService {
         }
 
         if (orderDto.getCustomerId() != null){
-            User customer = userRepository.findByUserId(orderDto.getCustomer().getId());
+            Customer customer = userRepository.findOne(orderDto.getCustomer().getId());
             if (customer ==null){
                 throw  new CustomErrorType("Unable to create. A user with username " +
                         orderDto.getCustomer().getId().toString() + " already exist.");
@@ -126,7 +124,7 @@ public class OrderService {
         Order result = ordersRepository.save(order);
         //create customer
         if (orderDto.getCustomerId() != null){
-            User customer = userRepository.findByUserId(orderDto.getCustomer().getId());
+            Customer customer = userRepository.findOne(orderDto.getCustomer().getId());
             if (customer ==null){
                 throw  new CustomErrorType("Unable to create. A user with username " +
                         orderDto.getCustomer().getId().toString() + " already exist.");

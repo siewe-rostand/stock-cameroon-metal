@@ -13,7 +13,7 @@ public class OrderDto {
     private Long id;
 
     private Long customerId;
-    private UserDto customer;
+    private CustomerDto customer;
     private String createdDate;
     private Boolean deleted;
     private double totalAmount;
@@ -28,9 +28,9 @@ public class OrderDto {
             orderDto.setDeleted(order.getDeleted());
 
             if (order.getCustomer() != null){
-               orderDto.setCustomerId(order.getCustomer().getUserId());
+               orderDto.setCustomerId(order.getCustomer().getId());
 
-               orderDto.setCustomer(new UserDto().createDTO(order.getCustomer()));
+               orderDto.setCustomer(new CustomerDto().createDTO(order.getCustomer()));
             }
             ArrayList<OrderedProductDto> orderedProductDtos = new ArrayList<>();
             if (order.getOrderedProducts() != null){
