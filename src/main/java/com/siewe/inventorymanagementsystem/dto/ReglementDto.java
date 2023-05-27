@@ -21,7 +21,7 @@ public class ReglementDto {
             reglementDto.setCreatedDate(reglement.getCreatedDate());
 
             if(reglement.getVente() != null){
-                reglementDto.setVenteId(reglement.getVente().getVenteId());
+                reglementDto.setVenteId(reglement.getVente().getId());
             }
 
             if(reglement.getStaff() != null){

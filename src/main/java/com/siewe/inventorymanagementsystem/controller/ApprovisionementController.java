@@ -42,7 +42,7 @@ public class ApprovisionementController {
      * @return the ResponseEntity with status 201 (Created) and with body the new approvisionnement, or with status 400 (Bad Request) if the approvisionnement has already an ID
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
-    @PostMapping("/api/approvisionnements")
+    @PostMapping("/approvisionnements")
     public ResponseEntity<ApprovisionnementDto> createApprovisionnement(@Valid @RequestBody ApprovisionnementDto approvisionnementDto) throws URISyntaxException {
         log.debug("REST request to save Approvisionnement : {}", approvisionnementDto);
         if (approvisionnementDto.getId() != null) {
@@ -63,7 +63,7 @@ public class ApprovisionementController {
      * or with status 500 (Internal Server Error) if the approvisionnement couldn't be updated
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
-    @PutMapping("/api/approvisionnements")
+    @PutMapping("/approvisionnements")
     public ResponseEntity<ApprovisionnementDto> updateApprovisionnement(@Valid @RequestBody ApprovisionnementDto approvisionnementDto) throws URISyntaxException {
         log.debug("REST request to update Approvisionnement : {}", approvisionnementDto);
         if (approvisionnementDto.getId() == null) {
@@ -76,7 +76,7 @@ public class ApprovisionementController {
     /**
      * GET  /approvisionnements : get all the approvisionnements.
      */
-    @GetMapping("/api/approvisionnements-by-store/{storeId}")
+    @GetMapping("/approvisionnements-by-store/{storeId}")
     public Page<ApprovisionnementDto> getByStore(@PathVariable Long storeId,
                                                  @RequestParam(name = "page", defaultValue = "0") Integer page,
                                                  @RequestParam(name = "size", defaultValue = "999999") Integer size,
@@ -88,7 +88,7 @@ public class ApprovisionementController {
         log.debug("REST request to get Approvisionnements by store");
         return approvisionnementService.findByStoreId(page, size, sortBy, direction, storeId, createdDateFrom, createdDateTo, productId);
     }
-    @GetMapping("/api/approvisionnements-by-product/{storeId}")
+    @GetMapping("/approvisionnements-by-product/{storeId}")
     public List<ApprovisionnementRepository.ProductApprovisionnements> findProductApprovisionnements(@PathVariable Long storeId,
                                                                                                      @RequestParam(name = "createdDateFrom") String createdDateFrom,
                                                                                                      @RequestParam(name = "createdDateTo") String createdDateTo,
@@ -102,7 +102,7 @@ public class ApprovisionementController {
      * @param id the id of the approvisionnement to retrieve
      * @return the ResponseEntity with status 200 (OK) and with body the approvisionnement, or with status 404 (Not Found)
      */
-    @GetMapping("/api/approvisionnements/{id}")
+    @GetMapping("/approvisionnements/{id}")
     public ResponseEntity<ApprovisionnementDto> getApprovisionnement(@PathVariable Long id) {
         log.debug("REST request to get Approvisionnement : {}", id);
         ApprovisionnementDto approvisionnementDto = approvisionnementService.findOne(id);
@@ -119,7 +119,7 @@ public class ApprovisionementController {
      * @param id the id of the approvisionnement to delete
      * @return the ResponseEntity with status 200 (OK)
      */
-    @DeleteMapping("/api/approvisionnements/{id}")
+    @DeleteMapping("/approvisionnements/{id}")
     public ResponseEntity<?> deleteApprovisionnement(@PathVariable Long id) throws InvalidActionException {
         log.debug("REST request to delete Approvisionnement : {}", id);
         return approvisionnementService.delete(id);

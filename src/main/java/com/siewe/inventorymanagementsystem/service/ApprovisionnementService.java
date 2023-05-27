@@ -64,9 +64,9 @@ public class ApprovisionnementService {
         LocalDateTime datetime = new LocalDateTime(DateTimeZone.forOffsetHours(1));
         approvisionnement.setCreatedDate(datetime.toString(pattern));
 
-
-        if(approvisionnementDto.getId() != null){
-            Product product = productRepository.findOne(approvisionnementDto.getId());
+        if(approvisionnementDto.getProductId() != null){
+            Product product = productRepository.findOne(approvisionnementDto.getProductId());
+            approvisionnementDto.setProductName(product.getName());
             approvisionnement.setProduct(product);
         }
 

@@ -36,8 +36,6 @@ public class Receipt implements Serializable {
 
     private Boolean deleted;
 
-    @OneToOne
-    private Order order;
 
     @OneToOne(optional=false)
     @JoinColumn(

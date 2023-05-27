@@ -22,7 +22,7 @@ public class CustomerDto {
     public CustomerDto createDTO(Customer customer) {
         CustomerDto customerDto = new CustomerDto();
         if(customer != null){
-            customerDto.setId(customer.getId());
+            customerDto.setId(customer.getCustomerId());
             customerDto.setName(customer.getName());
             customerDto.setAddress(customer.getAddress());
             customerDto.setPhone(customer.getPhone());

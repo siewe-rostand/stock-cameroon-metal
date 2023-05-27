@@ -1,16 +1,13 @@
 package com.siewe.inventorymanagementsystem.service;
 
 import com.siewe.inventorymanagementsystem.dto.OrderedProductDto;
-import com.siewe.inventorymanagementsystem.model.Order;
 import com.siewe.inventorymanagementsystem.model.OrderedProduct;
 import com.siewe.inventorymanagementsystem.model.Product;
 import com.siewe.inventorymanagementsystem.model.Vente;
-import com.siewe.inventorymanagementsystem.model.error.EntityNotFoundException;
 import com.siewe.inventorymanagementsystem.repository.OrderedProductRepository;
-import com.siewe.inventorymanagementsystem.repository.OrdersRepository;
 import com.siewe.inventorymanagementsystem.repository.ProductRepository;
 import com.siewe.inventorymanagementsystem.repository.VenteRepository;
-import org.joda.time.LocalDateTime;
+import com.siewe.inventorymanagementsystem.utils.InvalidOrderItemException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,19 +29,14 @@ public class OrderedProductService {
     private VenteRepository venteRepository;
 
     @Autowired
-    private OrdersRepository ordersRepository;
-
-    @Autowired
     private ProductRepository productRepository;
-
-    @Autowired
-    private ProductService productService;
 
     @Autowired
     private OrderedProductRepository orderedProductRepository;
 
     @Autowired
     private ProductStockService productStockService;
+
 
     /**
      * Save a orderedProduct.
@@ -53,78 +45,47 @@ public class OrderedProductService {
      * @return the persisted entity
      */
     @Transactional
-    public OrderedProductDto save(OrderedProductDto orderedProductDto) throws EntityNotFoundException {
-        log.debug("Request to save OrderedProduct  Service: {}", orderedProductDto);
+    public OrderedProductDto save(OrderedProductDto orderedProductDto) throws InvalidOrderItemException {
+        log.debug("Request to save OrderedProduct : {}", orderedProductDto);
 
-        OrderedProduct orderedProduct = new OrderedProduct();
-
-        orderedProduct.setQuantity(orderedProductDto.getQuantity());
-        orderedProduct.setUnitPrice(orderedProductDto.getUnitPrice());
-        orderedProduct.setTotalPrice(orderedProductDto.getQuantity()*orderedProductDto.getQuantity());
-        String pattern = "yyyy-MM-dd HH:mm";
-        LocalDateTime datetime = new LocalDateTime();
-        orderedProduct.setCreatedDate(datetime.toString(pattern));
-
-        Product product = productRepository.findOne(orderedProductDto.getId());
-        orderedProduct.setProduct(product);
-
-        if (orderedProductDto.getOrderId() !=null){
-            Order order = ordersRepository.findOne(orderedProductDto.getOrderId());
-            orderedProduct.setOrder(order);
+        OrderedProduct orderedProduct = orderedProductRepository.findByVenteIdAndProductId(orderedProductDto.getVenteId(), orderedProductDto.getProductId());
+        if(orderedProduct == null){
+            orderedProduct = new OrderedProduct();
         }
 
+        Vente vente = venteRepository.findOne(orderedProductDto.getVenteId());
+        orderedProduct.setVente(vente);
 
-//        if (orderedProductDto.getSaleId() != null){
-//        Vente vente = venteRepository.findByVenteId(orderedProductDto.getSaleId());
-//        orderedProduct.setVente(vente);
-//        }
+        Product product = productRepository.findOne(orderedProductDto.getProductId());
+        orderedProduct.setProduct(product);
 
+        orderedProduct.setQuantity(orderedProductDto.getQuantity());
+        orderedProduct.setPrixVente(orderedProductDto.getPrixVente());
 
-
-
-//        if(product.getQuantity() - orderedProductDto.getQuantity() <= 0){
-//            throw new RuntimeException("Stock " + orderedProductDto.getName() + " insuffisant !");
-//        }
+        if(product.getStock() - orderedProductDto.getQuantity() < 0){
+            throw new InvalidOrderItemException("Stock " + orderedProductDto.getName() + " insuffisant !");
+        }
 
         OrderedProduct result = orderedProductRepository.save(orderedProduct);
-//        if(result != null){
-//            productStockService.deleteStockVente(result);
-//        }
+        if(result != null){
+            productStockService.deleteStockVente(result);
+        }
         return new OrderedProductDto().createDTO(result);
     }
 
-//    @Transactional(readOnly = true)
-//    public List<OrderedProductDto> findAllByVente(Long id) {
-//        log.debug("Request to get all OrderedProducts by Vente");
-//
-//        List<OrderedProductDto> orderedProductDtos = new ArrayList<>();
-//        List<OrderedProduct> orderedProducts = orderedProductRepository.findByVente(id);
-//
-//        for (OrderedProduct orderedProduct : orderedProducts)
-//            orderedProductDtos.add(new OrderedProductDto().createDTO(orderedProduct));
-//
-//        return orderedProductDtos;
-//    }
+    @Transactional(readOnly = true)
+    public List<OrderedProductDto> findAllByVente(Long id) {
+        log.debug("Request to get all OrderedProducts by Vente");
 
-    public OrderedProduct createOrderItem(OrderedProductDto orderedProductDto) {
+        List<OrderedProductDto> orderedProductDtos = new ArrayList<>();
+        List<OrderedProduct> orderedProducts = orderedProductRepository.findByVenteId(id);
 
-        OrderedProduct orderedProduct = new OrderedProduct();
-        orderedProduct.setQuantity(orderedProductDto.getQuantity());
-        String pattern = "yyyy-MM-dd HH:mm";
-        LocalDateTime datetime = new LocalDateTime();
-        orderedProduct.setCreatedDate(datetime.toString(pattern));
+        for (OrderedProduct orderedProduct : orderedProducts)
+            orderedProductDtos.add(new OrderedProductDto().createDTO(orderedProduct));
 
-        Product product = productRepository.findOne(orderedProductDto.getId());
-        orderedProduct.setProduct(product);
-        orderedProduct.setUnitPrice(product.getPrice());
-        orderedProduct.setTotalPrice(product.getPrice()*orderedProductDto.getQuantity());
-
-        if (orderedProductDto.getOrderId() !=null){
-            Order order = ordersRepository.findOne(orderedProductDto.getOrderId());
-            orderedProduct.setOrder(order);
-        }
-        return orderedProductRepository.save(orderedProduct);
+        return orderedProductDtos;
     }
+
 
     /**
      *  Get one orderedProduct by id.

@@ -37,7 +37,7 @@ public class Product {
     @Column(name="cip")
     private String cip;
 
-    @Column(name = "description")
+    @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
     @Column(name = "enable")
@@ -50,7 +50,7 @@ public class Product {
     private Boolean deleted;
 
 //    @NotNull
-    @DecimalMin(value = "1.0")
+    @DecimalMin(value = "1.0",message = "product price cannot be null")
     @Column(name = "price")
     private Double price;
 
@@ -97,8 +97,6 @@ public class Product {
     @OneToMany(mappedBy = "product")
     private List<Approvisionnement> approvisionnements;
 
-    @OneToMany(mappedBy = "order")
-    private List<OrderedProduct> orderedProducts;
 
     public Product(String name) {
         this.name = name;

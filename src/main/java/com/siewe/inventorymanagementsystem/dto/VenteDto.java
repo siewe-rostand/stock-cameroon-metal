@@ -18,7 +18,7 @@ public class VenteDto {
     private String numVente;
     private Long storeId;
     private Long customerId;
-    private UserDto customer;
+    private CustomerDto customer;
     private Double prixTotal;
     private Double acompte;
     private Double reste;
@@ -30,20 +30,21 @@ public class VenteDto {
     private String typePaiement;
     private String typePaimentBadge;
     private Boolean deleted;
+
     private Double reglement;
     private Double rendu;
 
     public VenteDto createDTO(Vente vente) {
         VenteDto venteDto = new VenteDto();
         if(vente != null){
-            venteDto.setId(vente.getVenteId());
-            venteDto.setNumVente(StringUtils.leftPad(vente.getVenteId().toString(), 6, "0"));
+            venteDto.setId(vente.getId());
+            venteDto.setNumVente(StringUtils.leftPad(vente.getId().toString(), 6, "0"));
             venteDto.setCreatedDate(vente.getCreatedDate());
             venteDto.setDeleted(vente.getDeleted());
 
             if(vente.getCustomer() != null){
-                venteDto.setCustomerId(vente.getCustomer().getUserId());
-                venteDto.setCustomer(new UserDto()
+                venteDto.setCustomerId(vente.getCustomer().getCustomerId());
+                venteDto.setCustomer(new CustomerDto()
                         .createDTO(vente.getCustomer()));
             }
 
@@ -53,16 +54,16 @@ public class VenteDto {
             }
 
             ArrayList<OrderedProductDto> orderedProductDtos = new ArrayList<>();
-//            if(vente.getOrderedProducts() != null){
-//                for(OrderedProduct orderedProduct: vente.getOrderedProducts()){
-//                    orderedProductDtos.add(new OrderedProductDto().createDTO(orderedProduct));
-//                }
-//            }
+            if(vente.getOrderedProducts() != null){
+                for(OrderedProduct orderedProduct: vente.getOrderedProducts()){
+                    orderedProductDtos.add(new OrderedProductDto().createDTO(orderedProduct));
+                }
+            }
             venteDto.setOrderedProducts(orderedProductDtos);
-            venteDto.setPrixTotal(vente.getTotalPrice());
+            venteDto.setPrixTotal(vente.getPrixTotal());
             venteDto.setReglement(vente.getReglement());
             if(vente.getReglement() != null)
-                venteDto.setRendu(vente.getTotalPrice() - vente.getReglement());
+                venteDto.setRendu(vente.getPrixTotal() - vente.getReglement());
 
             venteDto.setTypePaiement(String.valueOf(vente.getTypePaiement()));
             venteDto.typePaimentBadge = "success";
@@ -79,7 +80,7 @@ public class VenteDto {
             }
             venteDto.setReglements(reglementDtos);
             venteDto.setAcompte(acompte);
-            venteDto.setReste(vente.getTotalPrice() - acompte);
+            venteDto.setReste(vente.getPrixTotal() - acompte);
             venteDto.setNewReglement(0.0);
 
             return venteDto;

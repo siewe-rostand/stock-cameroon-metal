@@ -16,7 +16,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 @CrossOrigin
-@RequestMapping("/api")
 @RestController
 public class AuthController {
 

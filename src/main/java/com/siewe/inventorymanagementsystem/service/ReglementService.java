@@ -54,7 +54,7 @@ public class ReglementService {
         reglement.setCreatedDate(date.toString(patternDate));
 
         if(reglementDto.getVenteId() != null){
-            Vente vente = venteRepository.findByVenteId(reglementDto.getVenteId());
+            Vente vente = venteRepository.findOne(reglementDto.getVenteId());
             reglement.setVente(vente);
         }
 

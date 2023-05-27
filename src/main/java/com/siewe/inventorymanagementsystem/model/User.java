@@ -1,6 +1,7 @@
 package com.siewe.inventorymanagementsystem.model;
 
 import lombok.*;
+import org.hibernate.Hibernate;
 import org.hibernate.annotations.CreationTimestamp;
 import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -10,15 +11,18 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.List;
 import java.sql.Timestamp;
+import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
+@ToString
 public class User implements Serializable{
 
     @Id
@@ -96,6 +100,7 @@ public class User implements Serializable{
     private LocalDateTime resetDate = null;
 
     @OneToMany(mappedBy="user")
+    @ToString.Exclude
     private List<UserRole> userRoles;
 
     @OneToOne(optional=false, mappedBy="customer")
@@ -111,10 +116,8 @@ public class User implements Serializable{
     private Set<Role> roles;
 
     @OneToMany(mappedBy = "user")
+    @ToString.Exclude
     private List<Vente> ventes;
-
-    @OneToMany(mappedBy = "customer")
-    private  List<Order> orders;
 
 //    public String getCreatedDate() {
 //        String pattern = "yyyy-MM-dd HH:mm";
@@ -194,5 +197,18 @@ public class User implements Serializable{
             name += " "+this.lastname;
         }
         return  name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        User user = (User) o;
+        return userId != null && Objects.equals(userId, user.userId);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 }

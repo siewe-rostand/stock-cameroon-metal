@@ -1,5 +1,6 @@
 package com.siewe.inventorymanagementsystem.repository;
 
+import com.siewe.inventorymanagementsystem.model.Product;
 import com.siewe.inventorymanagementsystem.model.ProductStock;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
@@ -13,7 +14,10 @@ public interface ProductStockRepository extends JpaRepository<ProductStock,Long>
 
     ProductStock findByProductIdAndDate(Long productId, LocalDate date);
 
+    @Query("select p from ProductStock p where p.product.id = ?1 order by p.date DESC")
     ProductStock findFirstByProductIdOrderByDateDesc(Long productId);
+
+    ProductStock findByProduct(Product product);
 
     List<ProductStock> findByProductIdAndDateAfter(Long id, LocalDate localDate);
 

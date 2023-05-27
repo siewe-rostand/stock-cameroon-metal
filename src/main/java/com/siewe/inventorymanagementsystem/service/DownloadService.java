@@ -82,7 +82,7 @@ public class DownloadService {
     }
 
     public String createInvoice(Long venteId) {
-        Vente vente = venteRepository.findByVenteId(venteId);
+        Vente vente = venteRepository.findOne(venteId);
 
         String filename = "invoice";
 
@@ -199,7 +199,7 @@ public class DownloadService {
                 "~\\\\\n" +
                 "Le \\tab "+ vente.getDate() + "\n" +
                 "~\\\\\n" +
-                "Numéro de la vente : "+  StringUtils.leftPad(vente.getVenteId().toString() , 6, "0") + " \n" +
+                "Numéro de la vente : "+  StringUtils.leftPad(vente.getId().toString() , 6, "0") + " \n" +
                 "\n" +
                 "~\\\\\n" +
                 "\\hrule % Horizontal line\n" +
@@ -230,7 +230,7 @@ public class DownloadService {
                         "~\\\\\n" +
                         "\\hrule\n" +
                         "\\vspace{0.2cm}\n" +
-                        "\\centering{Total  : \\large{\\textbf{ " + Math.round(vente.getTotalPrice())+"}} \\tiny{FCFA}}\n" +
+                        "\\centering{Total  : \\large{\\textbf{ " + Math.round(vente.getPrixTotal())+"}} \\tiny{FCFA}}\n" +
                         "\n" +
                         "\\vfill\n" +
                         "\\hrule % Horizontal line\n" +
@@ -281,7 +281,7 @@ public class DownloadService {
                 "\\vspace{0.2cm}\\\\\n" +
                 "Le \\tab "+ vente.getDate() + "\n" +
                 "\\vspace{0.2cm}\\\\\n" +
-                "Numéro de la vente : "+  StringUtils.leftPad(vente.getVenteId().toString() , 6, "0") + " \n" +
+                "Numéro de la vente : "+  StringUtils.leftPad(vente.getId().toString() , 6, "0") + " \n" +
                 "\n" +
                 "\\vspace{0.5cm}\n" +
                 "\\hrule\n" +
@@ -308,7 +308,7 @@ public class DownloadService {
                         "\\hrule\n" +
                         "\\vspace{1cm}\n" +
                         "\n" +
-                        "\\centering{TOTAL  : \\Huge{\\textbf{"+ Math.round(vente.getTotalPrice())+"}} \\huge{FCFA}}\n" +
+                        "\\centering{TOTAL  : \\Huge{\\textbf{"+ Math.round(vente.getPrixTotal())+"}} \\huge{FCFA}}\n" +
                         "\n" +
                         "\\vfill\n" +
                         "\\hrule % Horizontal line\n" +

@@ -20,7 +20,6 @@ import java.util.Optional;
  */
 @RestController
 @CrossOrigin
-@RequestMapping("/api")
 public class ReglementController {
     private final Logger log = LoggerFactory.getLogger(ReglementController.class);
 

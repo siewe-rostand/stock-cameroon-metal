@@ -41,7 +41,7 @@ public class CustomerService {
 
         Customer customer = new Customer();
 
-        customer.setId(customerDto.getId());
+        customer.setCustomerId(customerDto.getId());
         customer.setName(customerDto.getName());
         customer.setPhone(customerDto.getPhone());
         customer.setAddress(customerDto.getAddress());
@@ -58,11 +58,11 @@ public class CustomerService {
 
 
     public ResponseEntity<Object> update(CustomerDto customerDto) {
-        log.debug("Request to save Customer : {}", customerDto);
+        log.debug("Request to update Customer : {}", customerDto);
+        Customer customer = customerRepository.findByCustomerId(customerDto.getId());
 
-        Customer customer = customerRepository.findOne(customerDto.getId());
 
-        customer.setId(customerDto.getId());
+        customer.setCustomerId(customerDto.getId());
         customer.setName(customerDto.getName());
         customer.setPhone(customerDto.getPhone());
         customer.setPhone2(customerDto.getPhone2());

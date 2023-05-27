@@ -13,21 +13,16 @@ public class ProductDto {
     private String name;
     private String cip;
     private String description;
-//    @NotBlank(message = "product price is not given")
     private Double price;
     private String createdDate;
 
     private Long categoryId;
     private String categoryName;
     private Boolean enabled;
-    private Boolean available;
     private Boolean deleted;
 
-//    @NotBlank(message = "quantity not given")
-    private Double quantity;
     private Double stock;
     private Double stockAlerte;
-
     //cout unitaire moyen pondéré or weighted average cost(anglais)
     private Double cump;
     private Double valeurStock;
@@ -45,12 +40,11 @@ public class ProductDto {
             productDto.setDescription(product.getDescription());
             productDto.setPrice(product.getPrice());
             productDto.setEnabled(product.getEnabled());
-            productDto.setAvailable(product.getAvailable());
             productDto.setDeleted(product.getDeleted());
 
-            productDto.setQuantity(product.getQuantity());
+            productDto.setStock(product.getStock());
             //if(product.getStock() != null)
-//            productDto.setStock(Math.round(product.getStock() * 100.00) / 100.00);
+            productDto.setStock(Math.round(product.getStock() * 100.00) / 100.00);
 
 
             productDto.setStockAlerte((double) 0);
@@ -63,7 +57,7 @@ public class ProductDto {
             productDto.setValeurStock(Math.round(product.getValeurStock() * 100.0) / 100.0);
 
             if(product.getStockAlerte() != null){
-                if(product.getQuantity() <= product.getStockAlerte())
+                if(product.getStock() <= product.getStockAlerte())
                     productDto.setStockBas(true);
             }
 

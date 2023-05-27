@@ -1,10 +1,8 @@
 package com.siewe.inventorymanagementsystem.service;
 
+import com.siewe.inventorymanagementsystem.dto.ProductDto;
 import com.siewe.inventorymanagementsystem.dto.ProductStockDto;
-import com.siewe.inventorymanagementsystem.model.Approvisionnement;
-import com.siewe.inventorymanagementsystem.model.Manquant;
-import com.siewe.inventorymanagementsystem.model.OrderedProduct;
-import com.siewe.inventorymanagementsystem.model.ProductStock;
+import com.siewe.inventorymanagementsystem.model.*;
 import com.siewe.inventorymanagementsystem.repository.ProductRepository;
 import com.siewe.inventorymanagementsystem.repository.ProductStockRepository;
 import com.siewe.inventorymanagementsystem.utils.InvalidActionException;
@@ -73,6 +71,28 @@ public class ProductStockService {
         }
         return new ProductStockDto().createDTO(result);
     }
+    /*
+    public void addStock(ProductDto productDto){
+        Product product = productRepository.findOne(productDto.getId());
+        if (product != null){
+            String pattern = "yyyy-MM-dd";
+            LocalDate date = new LocalDate(DateTimeZone.forOffsetHours(1));
+            ProductStock lastProductStock = productStockRepository.findFirstByProductIdOrderByDateDesc(productDto.getId());
+            ProductStock productStock = productStockRepository.findByProductIdAndDate(productDto.getId(), date);
+
+            if(productStock == null)
+                productStock = new ProductStock();
+
+            productStock.setProduct(product);
+            productStock.setStock(productDto.getStock());
+            productStock.setCump(productDto.getPrice());
+            productStock.setDate(date.toString(pattern));
+
+            productStockRepository.save(productStock);
+        }
+
+    }
+     */
 
     //after deleting approvisionnement
     @Transactional
@@ -107,7 +127,7 @@ public class ProductStockService {
 
         String pattern = "yyyy-MM-dd";
         LocalDate date = new LocalDate(DateTimeZone.forOffsetHours(1));
-        ProductStock lastProductStock = productStockRepository.findFirstByProductIdOrderByDateDesc(op.getProduct().getId());
+        ProductStock lastProductStock = productStockRepository.findByProduct(op.getProduct());
 
         ProductStock productStock = productStockRepository.findByProductIdAndDate(op.getProduct().getId(), date);
 
@@ -134,7 +154,7 @@ public class ProductStockService {
     //after delete vente
     public void restoreStockVente(OrderedProduct op) {
         DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm");
-        LocalDate date = LocalDateTime.parse(op.getOrder().getCreatedDate(), formatter).toLocalDate();
+        LocalDate date = LocalDateTime.parse(op.getVente().getCreatedDate(), formatter).toLocalDate();
         List<ProductStock> productStocks = productStockRepository.findByProductIdAndDateAfter(op.getProduct().getId(), date.minusDays(1));
 
         for(ProductStock productStock: productStocks){

@@ -8,6 +8,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -21,7 +22,7 @@ public class Customer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id")
-    private Long id;
+    private Long customerId;
 
     @Column(name = "name")
     private String name;
@@ -48,6 +49,7 @@ public class Customer {
     @Column(name = "phone2")
     private String phone2;
 
+
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
     @Column(name = "created_date")
@@ -66,7 +68,7 @@ public class Customer {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
         Customer customer = (Customer) o;
-        return id != null && Objects.equals(id, customer.id);
+        return customerId != null && Objects.equals(customerId, customer.customerId);
     }
 
     @Override

@@ -1,7 +1,6 @@
 package com.siewe.inventorymanagementsystem.repository;
 
 import com.siewe.inventorymanagementsystem.model.Customer;
-import com.siewe.inventorymanagementsystem.model.UserLogin;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,6 +14,8 @@ public interface CustomerRepository extends JpaRepository<Customer, Long>{
     default Customer findOne(Long id) {
         return (Customer) findById(id).orElse(null);
     }
+
+    Customer findByCustomerId(Long id);
 
     @Query("select s from Customer s "
             + "where (s.name like ?1 or ?1 is null) ")

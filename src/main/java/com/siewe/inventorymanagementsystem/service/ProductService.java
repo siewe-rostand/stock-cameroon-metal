@@ -104,12 +104,13 @@ public class ProductService {
         product.setCip(productDto.getCip());
         product.setDescription(productDto.getDescription());
 
-        product.setPrice(productDto.getPrice());
+        product.setPrice(0.0);
+        if(productDto.getPrice() != null)
+            product.setPrice(productDto.getPrice());
 
         product.setStockAlerte(productDto.getStockAlerte());
 
-        product.setQuantity(productDto.getQuantity());
-        if(productDto.getQuantity() != null && productDto.getCump() != null){
+        if(productDto.getStock() != null && productDto.getCump() != null){
             product.setStock(productDto.getStock());
             product.setCump(productDto.getCump());
         }
@@ -134,11 +135,12 @@ public class ProductService {
         }
 
         Product result = productRepository.save(product);
+        System.out.println(result.getId());
         if (!update){
-            if(productDto.getQuantity() != null && productDto.getCump() != null) {
-                if(productDto.getCump() != 0 && productDto.getQuantity() != 0){
+            if(productDto.getStock() != null && productDto.getCump() != null) {
+                if(productDto.getCump() != 0 && productDto.getStock() != 0){
                     ApprovisionnementDto approvisionnementDto = new ApprovisionnementDto();
-                    approvisionnementDto.setQuantity(productDto.getQuantity());
+                    approvisionnementDto.setQuantity(productDto.getStock());
                     approvisionnementDto.setPrixEntree(productDto.getCump());
                     approvisionnementDto.setProductId(result.getId());
                     approvisionnementService.save(approvisionnementDto);
@@ -183,10 +185,10 @@ public class ProductService {
 
      Product result = local(productDto,false);
 
-        if(productDto.getQuantity() != null && productDto.getCump() != null) {
-            if(productDto.getCump() != 0 && productDto.getQuantity() != 0){
+        if(productDto.getStock() != null && productDto.getCump() != null) {
+            if(productDto.getCump() != 0 && productDto.getStock() != 0){
                 ApprovisionnementDto approvisionnementDto = new ApprovisionnementDto();
-                approvisionnementDto.setQuantity(productDto.getQuantity());
+                approvisionnementDto.setQuantity(productDto.getStock());
                 approvisionnementDto.setPrixEntree(productDto.getCump());
                 approvisionnementDto.setProductId(result.getId());
                 approvisionnementService.save(approvisionnementDto);

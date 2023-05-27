@@ -20,7 +20,7 @@ import java.util.Optional;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/api")
+//@RequestMapping("/api")
 public class CustomerController {
 
     private final Logger log = LoggerFactory.getLogger(CustomerController.class);
