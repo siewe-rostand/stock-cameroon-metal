@@ -1,7 +1,7 @@
 package com.siewe.inventorymanagementsystem.security;
 
 public class SecurityConstants {
-    public static final String SECRET = "medilox@huruspace.com";
+    public static final String SECRET = "rostand@siewe.com";
 
     public static final long EXPIRATION_TIME = 864_000_000;     // 10 days
 

@@ -28,8 +28,9 @@ import java.util.Optional;
 /**
  * REST controller for managing Product.
  */
-@CrossOrigin
+@CrossOrigin("*")
 @RestController
+@RequestMapping("/api")
 public class ProductController {
     private final Logger log = LoggerFactory.getLogger(ProductController.class);
 

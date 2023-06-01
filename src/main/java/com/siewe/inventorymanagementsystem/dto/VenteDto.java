@@ -31,16 +31,23 @@ public class VenteDto {
     private String typePaimentBadge;
     private Boolean deleted;
 
+    /**
+     * la somme d'argeent recu
+     */
     private Double reglement;
+    /**
+     * le montant rendue
+     */
     private Double rendu;
 
     public VenteDto createDTO(Vente vente) {
         VenteDto venteDto = new VenteDto();
         if(vente != null){
             venteDto.setId(vente.getId());
-            venteDto.setNumVente(StringUtils.leftPad(vente.getId().toString(), 6, "0"));
+            venteDto.setNumVente("Ref NO:"+StringUtils.leftPad(vente.getId().toString(), 6, "0"));
             venteDto.setCreatedDate(vente.getCreatedDate());
             venteDto.setDeleted(vente.getDeleted());
+
 
             if(vente.getCustomer() != null){
                 venteDto.setCustomerId(vente.getCustomer().getCustomerId());

@@ -15,8 +15,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
-@CrossOrigin
+@CrossOrigin("*")
 @RestController
+@RequestMapping("/api")
 public class AuthController {
 
     private  final TokenProvider tokenProvider;

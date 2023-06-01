@@ -11,6 +11,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ProductStockRepository extends JpaRepository<ProductStock,Long> {
+    default ProductStock findOne(Long id) {
+        return (ProductStock) findById(id).orElse(null);
+    }
 
     ProductStock findByProductIdAndDate(Long productId, LocalDate date);
 

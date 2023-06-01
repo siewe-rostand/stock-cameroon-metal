@@ -22,9 +22,9 @@
 						</thead>
 						<tbody>
 						<tr ng-repeat="item in cart">
-							<td>{{item.product.name}}</td>
-							<td>{{item.product.price}}</td>
-							<td>{{item.qty}}</td>
+							<td>{{item.name}}</td>
+							<td>{{item.price}}</td>
+							<td>{{item.quantity}}</td>
 							<td>{{getCost(item)}} FCFA</td>
 						</tr>
 						</tbody>
@@ -41,7 +41,7 @@
 			<span class="float-left ml-4">Par: <b>{{clickedCustomer.name}}</b></span>
 			<span  class="float-left ml-4">Date: <b>{{currentDate | date: 'yyyy-MM-dd'}}</b></span>
 			<div>
-				<button  class="btn btn-outline-info float-right mr-4">Valider</button>
+				<button  class="btn btn-outline-info float-right mr-4" ng-click="createOrder()">Valider</button>
 				<button  class="btn btn-outline-secondary float-right mr-4">Sauvegarder</button>
 				<button  class="btn btn-outline-danger float-right mr-4">Annuler</button>
 			</div>

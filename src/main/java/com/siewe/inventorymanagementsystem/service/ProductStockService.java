@@ -132,7 +132,8 @@ public class ProductStockService {
         ProductStock productStock = productStockRepository.findByProductIdAndDate(op.getProduct().getId(), date);
 
         if(productStock == null)
-            productStock = new ProductStock();
+            productStock = productStockRepository.findByProduct(op.getProduct());
+
 
         productStock.setProduct(op.getProduct());
         productStock.setDate(date.toString(pattern));

@@ -4,10 +4,7 @@ import com.siewe.inventorymanagementsystem.dto.CustomerDto;
 import com.siewe.inventorymanagementsystem.dto.OrderedProductDto;
 import com.siewe.inventorymanagementsystem.dto.ReglementDto;
 import com.siewe.inventorymanagementsystem.dto.VenteDto;
-import com.siewe.inventorymanagementsystem.model.Customer;
-import com.siewe.inventorymanagementsystem.model.OrderedProduct;
-import com.siewe.inventorymanagementsystem.model.User;
-import com.siewe.inventorymanagementsystem.model.Vente;
+import com.siewe.inventorymanagementsystem.model.*;
 import com.siewe.inventorymanagementsystem.model.enumeration.TypePaiement;
 import com.siewe.inventorymanagementsystem.model.error.EntityNotFoundException;
 import com.siewe.inventorymanagementsystem.repository.*;
@@ -107,8 +104,6 @@ public class VenteService {
 
         if(venteDto.getCustomerId() != null){
             Customer customer = customerRepository.findOne(venteDto.getCustomerId());
-            CustomerDto customerDto = new CustomerDto().createDTO(customer);
-//            customerService.update(customerDto);
             vente.setCustomer(customer);
         }
         else{
@@ -132,10 +127,14 @@ public class VenteService {
 
         //set to connected user
         vente.setUser(user);
-
+        for(OrderedProductDto orderedProductDto: venteDto.getOrderedProducts()){
+            Product product = productRepository.findOne(orderedProductDto.getProductId());
+            if(product.getStock() - orderedProductDto.getQuantity() <= 0){
+                throw new RuntimeException("Produit " + orderedProductDto.getName() + " insuffisant  en Stock!");
+            }
+        }
 
         Vente result = venteRepository.save(vente);
-        List<OrderedProductDto> orderedProductList =new  ArrayList<>();
         if(result != null){
             if(venteDto.getOrderedProducts() != null){
                 for(OrderedProductDto orderedProductDto: venteDto.getOrderedProducts()){
@@ -143,10 +142,9 @@ public class VenteService {
                         orderedProductDto.setVenteId(result.getId());
                         orderedProductService.save(orderedProductDto);
                     }
-                    orderedProductList.add(orderedProductDto);
                 }
-                venteDto.setOrderedProducts(orderedProductList);
             }
+
 
             if (result.getPrixTotal() != null){
                 //create reglements
@@ -225,10 +223,15 @@ public class VenteService {
                                         Integer size,
                                         String sortBy,
                                         String direction,
-                                        Long storeId, String createdDateFrom,
+                                         String createdDateFrom,
                                         String createdDateTo, Long sellerId) {
         log.debug("Request to get all Ventes");
         //Pageable pageable = new PageRequest(page, size);
+        Object principal  = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//        User user = (User) authentication.getPrincipal();
+        String username = ((UserDetails) principal).getUsername();
+        User user = userRepository.findByEmail(username);
+        sellerId = user.getUserId();
 
         DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm");
         LocalDateTime cdf = null;
@@ -245,7 +248,7 @@ public class VenteService {
         if(sellerId == 0){
             ventes = venteRepository.findByCreatedDateBetween(cdf, cdt, pageable);
         }
-        else{
+        else{System.out.println("[[]]");
             ventes = venteRepository.findBySellerId(sellerId, cdf, cdt, pageable);
         }
 

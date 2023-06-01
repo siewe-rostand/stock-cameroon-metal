@@ -12,7 +12,6 @@
             <thead>
             <tr>
               <th class="table-plus">Nom</th>
-              <th>Description</th>
               <th>Prix</th>
               <th>Quantité</th>
               <th>Total</th>
@@ -20,7 +19,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="product in products">
+            <tr ng-repeat="product in products" ng-style="{'color':(product.stock <= 5)? '#0f6848' : null}">
               <td class="table-plus">
                 <div class="name-avatar d-flex align-items-center">
                   <div class="avatar mr-2 flex-shrink-0">
@@ -31,14 +30,13 @@
                          alt=""/>
                   </div>
                   <div class="txt">
-                    <div class="weight-600">{{product.product.name}}</div>
+                    <div class="weight-600">{{product.name}}</div>
                   </div>
                 </div>
               </td>
-              <td>{{product.product.description}}</td>
-              <td>{{product.product.price}} FCFA</td>
-              <td><input class="form-control"  type="number" ng-model="product.qty" min="1"></td>
-              <td>{{product.qty * product.product.price}} FCFA</td>
+              <td>{{product.price}} FCFA</td>
+              <td><input class="form-control"  type="number" ng-model="product.quantity" min="1"></td>
+              <td>{{product.quantity * product.price}} FCFA</td>
               <td>
                 <div class="table-actions">
                   <button  data-bgcolor="#e7ebf5" data-color="#265ed7" class="btn btn-outline-info float-right" style="color: rgb(38, 94, 215);" ng-click="addItem(product)">
@@ -72,9 +70,9 @@
             </thead>
             <tbody>
             <tr ng-repeat="item in cart">
-              <td>{{item.product.name}}</td>
-              <td>{{item.product.price}}</td>
-              <td>{{item.qty}}</td>
+              <td>{{item.name}}</td>
+              <td>{{item.price}}</td>
+              <td>{{item.quantity}}</td>
               <td>{{getCost(item)}} FCFA</td>
               <td><div class="table-actions">
                 <button   class="btn btn-outline-danger " ng-click="removeItem(item)">

@@ -76,6 +76,7 @@ myApp.controller('authController', ['$scope', '$location','authService','$rootSc
                     getUserInfo();
                 },
                 function (errResponse) {
+                    $window.localStorage.removeItem('token');
                     Toast.fire({
                         icon:'error',
                         title: 'une erreur s\'est produite'

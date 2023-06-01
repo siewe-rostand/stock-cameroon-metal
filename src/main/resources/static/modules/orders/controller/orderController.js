@@ -1,17 +1,20 @@
 
-myApp.controller('orderController',['$scope','productService','utils','customerControllerService','$window', function($scope, productService,utils,customerControllerService,$window){
+myApp.controller('orderController',['$scope','productService','orderService','utils','customerControllerService','$window', function($scope, productService,orderService,utils,customerControllerService,$window){
 
 
     $scope.fetchCustomers = fetchAllCustomers;
     $scope.getClickedCustomer = getClickUser;
+    $scope.createOrder = createOrder;
 
     fetchAllProducts();
     $scope.cart = [];
-    $scope.qty = 1;
+
+    $scope.quantity = 1;
     $scope.total = 0;
     $scope.currentDate = new Date();
     var products = [];
    var produit;
+   $scope.order ={};
 
    $scope.orderDto = {
        id:null,customerId:'',deleted:'',totalAmount:'',orderedProducts:''
@@ -20,7 +23,7 @@ myApp.controller('orderController',['$scope','productService','utils','customerC
 
     var findItemById = function(items, id) {
         return _.find(items, function(item) {
-            return item.product.id === id;
+            return item.productId === id;
         });
     };
 
@@ -31,22 +34,27 @@ myApp.controller('orderController',['$scope','productService','utils','customerC
         $scope.cartTotal = JSON.parse($window.localStorage.getItem('cartTotal'));
         console.log('cart'+$scope.cart)
         console.log('clicked user'+$scope.cartTotal)
+        $scope.order = {
+            "customerId":$scope.clickedCustomer.id,
+            "prixTotal":$scope.cartTotal,
+            "orderedProducts":$scope.cart
+        }
         fetchAllCustomers();
     }
     $scope.getCost = function(item) {
-        return item.qty * item.product.price;
+        return item.quantity * item.price;
     };
 
     $scope.addItem = function(itemToAdd) {
-        var found = findItemById($scope.cart, itemToAdd.product.id);
+        var found = findItemById($scope.cart, itemToAdd.productId);
         if (found) {
-            found.qty += itemToAdd.qty;
+            found.quantity += itemToAdd.quantity;
         }
         else {
+            itemToAdd.prixVente = itemToAdd.price;
             $scope.cart.push(angular.copy(itemToAdd));}
         localStorage.setItem("cart", JSON.stringify($scope.cart));
         localStorage.setItem("cartTotal", $scope.getTotal());
-        console.log($scope.cart)
     };
 
     $scope.getTotal = function() {
@@ -69,6 +77,34 @@ myApp.controller('orderController',['$scope','productService','utils','customerC
         console.log($scope.cart)
     };
 
+    function createOrder(){
+        orderService.createOrder($scope.order)
+            .then(
+                function (res){
+                    Toast.fire({
+                        icon:'success',
+                        title: 'Commande enregistré avec success'
+                    })
+                    console.log("save new order response",res);
+                    // $window.history.back();
+                },
+                function (errResponse) {
+                    let error = errResponse.data.errorMessage;
+                    let  error2 = errResponse.data.message;
+                    console.error(errResponse.data.message)
+                    if(error2.includes('insuffisant')){
+                        // $scope.errorMessage = '===='
+                        console.log('==============')
+                    }
+                    Toast.fire({
+                        icon:'error',
+                        title: 'une erreur s\'est produite'
+                    })
+                    console.error(errResponse.message)
+                    console.error('Error while creating order');
+                }
+            );
+    }
 
     function fetchAllProducts() {
         productService.fetchAllProducts()
@@ -84,7 +120,13 @@ myApp.controller('orderController',['$scope','productService','utils','customerC
                                 var binaryString = String.fromCharCode.apply(null, uint8Array);
                                 var base64String = btoa(binaryString);
                                 $scope.productimage = 'data:image/JPEG;base64,' + base64String;
-                                produit = {product:product,qty:1};
+                                // produit = {product:product,qty:1};
+                                produit = {
+                                    productId:product.id,
+                                    stock:product.stock,
+                                    price:product.price,
+                                    name:product.name,
+                                    quantity:1};
                                 products.push(produit);
                                 $scope.products =products;
                             },

@@ -39,9 +39,6 @@ public class TokenProvider {
         Date validity = new Date(now.getTime() + this.tokenValidityInMilliseconds);
 
         User user = userRepository.findByEmail(email);
-        System.out.println("====================");
-        System.out.println(user);
-        System.out.println("====================");
         List<String> roles = new ArrayList<>();
         if(user != null){
             for(Role role: user.getRoles()){

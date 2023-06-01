@@ -62,7 +62,7 @@ public class OrderedProductService {
         orderedProduct.setQuantity(orderedProductDto.getQuantity());
         orderedProduct.setPrixVente(orderedProductDto.getPrixVente());
 
-        if(product.getStock() - orderedProductDto.getQuantity() < 0){
+        if(product.getStock() - orderedProductDto.getQuantity() <= 0){
             throw new InvalidOrderItemException("Stock " + orderedProductDto.getName() + " insuffisant !");
         }
 

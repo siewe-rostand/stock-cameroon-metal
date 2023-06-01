@@ -33,9 +33,9 @@ import java.util.Optional;
 /**
  * REST controller for managing Vente.
  */
-@CrossOrigin
+@CrossOrigin("*")
 @RestController
-@RequestMapping("/vente")
+@RequestMapping("/api")
 public class VenteController {
     private final Logger log = LoggerFactory.getLogger(VenteController.class);
 
@@ -56,7 +56,7 @@ public class VenteController {
      * @return the ResponseEntity with status 201 (Created) and with body the new vente, or with status 400 (Bad Request) if the vente has already an ID
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
-    @PostMapping("/create")
+    @PostMapping("/vente/create")
     public ResponseEntity<VenteDto> createVente(@Valid @RequestBody VenteDto venteDto) throws URISyntaxException {
         log.debug("REST request to save Vente : {}", venteDto);
         //automatically set user to current user
@@ -81,7 +81,7 @@ public class VenteController {
      * or with status 500 (Internal Server Error) if the vente couldnt be updated
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
-    @PutMapping("/ventes")
+    @PutMapping("/vente/update")
     public ResponseEntity<VenteDto> updateVente(@Valid @RequestBody VenteDto venteDto) throws URISyntaxException {
         log.debug("REST request to update Vente : {}", venteDto);
         if (venteDto.getId() == null) {
@@ -95,8 +95,8 @@ public class VenteController {
      * GET  /ventes : get all the ventes.
      */
 
-    @GetMapping("/ventes-by-store/{storeId}")
-    public Page<VenteDto> getByStore(@PathVariable Long storeId,
+    @GetMapping("/vente")
+    public Page<VenteDto> getByStore(
                                      @RequestParam(name = "page", defaultValue = "0") Integer page,
                                      @RequestParam(name = "size", defaultValue = "999999") Integer size,
                                      @RequestParam(name = "sortBy", defaultValue = "createdDate") String sortBy,
@@ -105,10 +105,8 @@ public class VenteController {
                                      @RequestParam(name = "createdDateTo") String createdDateTo,
                                      @RequestParam(name = "seller", defaultValue="0") Long sellerId) {
         log.debug("REST request to get Ventes by store");
-        if(!SecurityUtils.isCurrentUserInRole("ROLE_ADMIN")){
-            sellerId = userRepository.findByEmail(SecurityUtils.getCurrentUserLogin()).getUserId();
-        }
-        return venteService.findByStoreId(page, size, sortBy, direction, storeId, createdDateFrom, createdDateTo, sellerId);
+
+        return venteService.findByStoreId(page, size, sortBy, direction, createdDateFrom, createdDateTo, sellerId);
     }
 
     @GetMapping("/recouvrements-by-store/{storeId}")

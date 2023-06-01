@@ -20,7 +20,6 @@ import java.util.List;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/api")
 public class AccountController {
 
     public static final int PASSWORD_MIN_LENGTH = 4;
@@ -71,7 +70,7 @@ public class AccountController {
      */
     @PostMapping(path = "/account/change-password")
     public ResponseEntity<?> changePassword(@RequestBody String password) {
-        if (!checkPasswordLength(password)) {
+        if (checkPasswordLength(password)) {
             return new ResponseEntity<>("Incorrect password", HttpStatus.BAD_REQUEST);
         }
 //        userService.changePassword(password);
@@ -115,7 +114,7 @@ public class AccountController {
             method = RequestMethod.POST,
             produces = MediaType.TEXT_PLAIN_VALUE)
     public ResponseEntity<String> finishPasswordReset(@RequestBody KeyAndPasswordVM keyAndPassword) {
-        if (!checkPasswordLength(keyAndPassword.getNewPassword())) {
+        if (checkPasswordLength(keyAndPassword.getNewPassword())) {
             return new ResponseEntity<>("Incorrect password", HttpStatus.BAD_REQUEST);
         }
         return userService.completePasswordReset(keyAndPassword.getNewPassword(), keyAndPassword.getKey())
@@ -124,9 +123,9 @@ public class AccountController {
     }
 
     private boolean checkPasswordLength(String password) {
-        return (!StringUtils.isEmpty(password) &&
-                password.length() >= PASSWORD_MIN_LENGTH &&
-                password.length() <= PASSWORD_MAX_LENGTH);
+        return (StringUtils.isEmpty(password) ||
+                password.length() < PASSWORD_MIN_LENGTH ||
+                password.length() > PASSWORD_MAX_LENGTH);
     }
 
 
