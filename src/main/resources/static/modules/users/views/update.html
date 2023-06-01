@@ -1,0 +1,81 @@
+<section id="multiple-column-form">
+  <div class="row match-height">
+    <div class="col-12">
+      <div class="card shadow m-3 border-bottom rounded">
+        <div class="card-header py-3">
+          <h4 >Modification Utilisateur:: <span class="font-weight-bold text-primary">{{clickedUser.fullname}}</span></h4>
+        </div>
+        <div class="card-body">
+          <form class="form" ng-submit="submit()" ng-init="initView()">
+            <div class="row">
+              <!--              firstname field-->
+              <div class="col-md-6 col-12">
+                <div class="form-group">
+                  <label for="firstname">Prenom</label>
+                  <input type="text" id="firstname" class="form-control"
+                         placeholder="Prenom de l'utilisateur" name="firstname" ng-value="clickedUser.firstname"
+                         ng-model="user.firstname">
+                </div>
+              </div>
+              <!--              lastname field-->
+              <div class="col-md-6 col-12">
+                <div class="form-group">
+                  <label for="lastname">Nom</label>
+                  <input type="text" id="lastname" class="form-control" ng-value="clickedUser.lastname"
+                          name="lastname" ng-model="user.lastname">
+                </div>
+              </div>
+              <!--              ville field-->
+              <div class="col-md-6 col-12">
+                <div class="form-group">
+                  <label for="city-column">Ville</label>
+                  <input type="text" id="city-column" class="form-control" ng-value="clickedUser.city"
+                         placeholder="Veuillez choisir la ville"
+                         name="city-column" ng-model="user.city">
+                </div>
+              </div>
+              <!--              quartier field-->
+              <div class="col-md-6 col-12">
+                <div class="form-group">
+                  <label for="quarter">quartier</label>
+                  <input type="text" id="quarter" class="form-control" ng-value="clickedUser.quarter"
+                         name="quarter" placeholder="Veuillez choisir le quartier" ng-model="user.quarter">
+                </div>
+              </div>
+              <!--              telephone field-->
+              <div class="col-md-6 col-12">
+                <div class="form-group">
+                  <label for="telephone">Telephone</label>
+                  <input type="text" id="telephone" class="form-control" ng-value="clickedUser.phone"
+                         name="telephone" placeholder="Numero telephone" ng-model="user.telephone">
+                </div>
+              </div>
+              <!--              telephone 2 field-->
+              <div class="col-md-6 col-12">
+                <div class="form-group">
+                  <label for="telephone_alt">Telephone 2</label>
+                  <input type="text" id="telephone_alt" class="form-control" ng-value="clickedUser.telephone_alt"
+                         name="telephone_alt" placeholder="Numero telephone"
+                         ng-model="user.telephone_alt">
+                </div>
+              </div>
+              <!--              email field-->
+              <div class="col-md-6 col-12">
+                <div class="form-group">
+                  <label for="email">Email</label>
+                  <input type="email" id="email" class="form-control"
+                         name="email" placeholder="Email" ng-model="user.email">
+                </div>
+              </div>
+
+              <div class="col-12 d-flex justify-content-end">
+                <button type="submit" class="btn btn-primary me-1 mb-1">Modifier</button>
+                <!--                  <button type="reset" class="btn btn-light-secondary me-1 mb-1">Reset</button>-->
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
