@@ -12,7 +12,7 @@
             <th>Nom Client</th>
             <th>Ville</th>
             <th>Quartier</th>
-            <th>Active</th>
+            <th>Téléphone</th>
             <th>Action</th>
           </tr>
           </thead>
@@ -21,14 +21,7 @@
             <td>{{customer.name}}</td>
             <td>{{customer.city}}</td>
             <td>{{customer.quarter}}</td>
-            <td>
-              <span class="badge badge-pill"
-                             data-bgcolor="#e7ebf5"
-                             data-color="#265ed7"
-                             style="color: rgb(38, 94, 215); background-color: rgb(231, 235, 245);"
-                             >active
-                      </span>
-                  </td>
+            <td>{{customer.phone}}</td>
             <td>
               <div class="table-actions">
                 <a ng-href="#!/customers/{{customer.id}}/edit" class="btn btn-outline-info"  data-color="#265ed7" style="color: rgb(38, 94, 215);"  ng-click="getClickUser(customer)"><i class="icon-copy dw dw-edit2"></i></a>

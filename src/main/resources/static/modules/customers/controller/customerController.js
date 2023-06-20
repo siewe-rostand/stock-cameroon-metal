@@ -1,6 +1,7 @@
 myApp.controller('customerController', ['$scope', 'customerControllerService', function ($scope, customerControllerService, ) {
 
 
+    $scope.httpError = '';
     $scope.customer = {
         id: null, name: '', address: '', phone: '',
         phone2: '', city: '', quarter: '',
@@ -53,6 +54,8 @@ myApp.controller('customerController', ['$scope', 'customerControllerService', f
                     title: 'une erreur s\'est produite'
                 })
                 console.error(errResponse)
+                $scope.httpError =errResponse.data.message;
+                console.log($scope.httpError);
                 console.error('Error while creating User');
             }
         );

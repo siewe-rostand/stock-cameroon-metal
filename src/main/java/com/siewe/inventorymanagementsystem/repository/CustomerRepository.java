@@ -17,6 +17,8 @@ public interface CustomerRepository extends JpaRepository<Customer, Long>{
 
     Customer findByCustomerId(Long id);
 
+     Boolean existsByPhone(String telephone);
+
     @Query("select s from Customer s "
             + "where (s.name like ?1 or ?1 is null) ")
     Page<Customer> findAll(String name, Pageable pageable);

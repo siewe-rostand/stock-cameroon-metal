@@ -1,15 +1,18 @@
 package com.siewe.inventorymanagementsystem.model;
 
 import lombok.*;
+import org.hibernate.Hibernate;
 import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "inventaire")
@@ -39,6 +42,7 @@ public class Inventaire {
     private LocalDateTime validatedDate;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "inventaire")
+    @ToString.Exclude
     private List<LigneProduct> lignesProduct;
 
     public String getCreatedDate() {
@@ -78,5 +82,18 @@ public class Inventaire {
         if(createdDate != null)
             return "Inventaire du " + this.createdDate.getDayOfMonth() + "-" +  this.createdDate.getMonthOfYear() + "-" + this.createdDate.getYear();
         return "";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Inventaire that = (Inventaire) o;
+        return id != null && Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 }

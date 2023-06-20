@@ -39,21 +39,26 @@ public class CustomerService {
     public Customer save(CustomerDto customerDto) {
         log.debug("Request to save Customer : {}", customerDto);
 
-        Customer customer = new Customer();
+        if (customerRepository.existsByPhone(customerDto.getPhone())){
+            throw new RuntimeException("A customer with phone number "+ customerDto.getPhone()+" already exist");
+        }else {
+            Customer  customer = new Customer();
 
-        customer.setCustomerId(customerDto.getId());
-        customer.setName(customerDto.getName());
-        customer.setPhone(customerDto.getPhone());
-        customer.setAddress(customerDto.getAddress());
-        customer.setCity(customerDto.getCity());
-        customer.setQuarter(customerDto.getQuarter());
-        customer.setPhone2(customerDto.getPhone2());
+            customer.setCustomerId(customerDto.getId());
+            customer.setName(customerDto.getName());
+            customer.setPhone(customerDto.getPhone());
+            customer.setAddress(customerDto.getAddress());
+            customer.setCity(customerDto.getCity());
+            customer.setQuarter(customerDto.getQuarter());
+            customer.setPhone2(customerDto.getPhone2());
 
-        Calendar cal = Calendar.getInstance();
-        customer.setCreatedDate(new Timestamp(cal.getTimeInMillis()));
+            Calendar cal = Calendar.getInstance();
+            customer.setCreatedDate(new Timestamp(cal.getTimeInMillis()));
+
+            return customerRepository.save(customer);
+        }
 
 
-        return customerRepository.save(customer);
     }
 
 

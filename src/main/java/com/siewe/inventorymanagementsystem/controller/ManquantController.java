@@ -74,7 +74,7 @@ public class ManquantController {
      * GET  /manquants : get all the manquants.
      */
     @GetMapping("/api/manquants-by-store/{storeId}")
-    public Page<ManquantDto> getByStore(@PathVariable Long storeId,
+    public Page<ManquantDto> getByStore(
                                         @RequestParam(name = "page", defaultValue = "0") Integer page,
                                         @RequestParam(name = "size", defaultValue = "999999") Integer size,
                                         @RequestParam(name = "sortBy", defaultValue = "createdDate") String sortBy,
@@ -82,7 +82,7 @@ public class ManquantController {
                                         @RequestParam(name = "createdDateFrom") String createdDateFrom,
                                         @RequestParam(name = "createdDateTo") String createdDateTo) {
         log.debug("REST request to get Manquants by store");
-        return manquantService.findByStoreId(page, size, sortBy, direction, storeId, createdDateFrom, createdDateTo);
+        return manquantService.findByStoreId(page, size, sortBy, direction, createdDateFrom, createdDateTo);
     }
 
     @GetMapping("/api/manquants-by-product/{storeId}")

@@ -112,7 +112,7 @@ public class ManquantService {
                                            Integer size,
                                            String sortBy,
                                            String direction,
-                                           Long storeId, String createdDateFrom,
+                                           String createdDateFrom,
                                            String createdDateTo) {
         log.debug("Request to get all Manquants");
         //Pageable pageable = new PageRequest(page, size);
@@ -130,8 +130,7 @@ public class ManquantService {
 
         Page<Manquant> manquants = manquantRepository.findByCreatedDateBetween(cdf, cdt, pageable);
 
-        Page<ManquantDto> manquantDtos = manquants.map(manquant -> new ManquantDto().createDTO(manquant));
-        return manquantDtos;
+        return manquants.map(manquant -> new ManquantDto().createDTO(manquant));
     }
 
     public List<ManquantRepository.ProductManquants> findProductManquantsByDateRange(Long storeId, String createdDateFrom, String createdDateTo) {
@@ -166,7 +165,7 @@ public class ManquantService {
      * @param id the id of the entity
      */
     //@Secured(value = {"ROLE_ADMIN", "ROLE_USER"})
-    public ResponseEntity delete(Long id) {
+    public ResponseEntity<Object> delete(Long id) {
         log.debug("Request to delete Manquant : {}", id);
         Manquant manquant = manquantRepository.findOne(id);
         if(Optional.ofNullable(manquant).isPresent()){

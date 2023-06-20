@@ -13,6 +13,7 @@ public class CustomerDto {
     private String name;
     private String address;
     private String email;
+    @NotNull(message = "customer phone number is empty")
     private String phone;
     private String phone2;
     private String city;

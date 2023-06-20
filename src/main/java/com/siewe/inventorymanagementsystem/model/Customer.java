@@ -41,8 +41,7 @@ public class Customer {
     @Column(name = "quarter")
     private String quarter;
 
-    @Size(max = 15,min = 1)
-    @Column(name = "phone")
+    @Column(name = "phone",unique = true)
     private String phone;
 
     @Size(max = 15)

@@ -293,10 +293,9 @@ public class ProductService {
                 products = productRepository.findByEnabledTrue("%"+name+"%", pageable);
         }*/
 
-        Page<ProductDto> productDtos = products.map(product -> {
+        return products.map(product -> {
             return new ProductDto().createDTO(product);
         });
-        return productDtos;
     }
 
     public Page<ProductDto> findAllByCategory(Integer page, Integer size, String sortBy, String direction, String name, Long categoryId, boolean stockBas) {

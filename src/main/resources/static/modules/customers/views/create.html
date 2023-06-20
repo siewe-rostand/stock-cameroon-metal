@@ -12,8 +12,11 @@
                             <label class="col-sm-12 col-md-2 col-form-label">Nom Client *</label>
                             <div class="col-sm-12 col-md-10">
                                 <input type="text" id="firstname" class="form-control"
-                                       placeholder="Prenom de l'utilisateur" name="firstname"
-                                       ng-model="customer.name">
+                                       placeholder="Nom et Prénom du client" name="firstname"
+                                       ng-model="customer.name" required>
+                                <div class="text-danger"
+                                     ng-show="httpError.includes('name') && httpError != ''">Nom ou Prénom vide!
+                                </div>
                             </div>
                         </div>
                         <div class="form-group row">
@@ -21,7 +24,13 @@
                             <div class="col-sm-12 col-md-10">
                                 <input type="text" id="telephone" class="form-control"
                                        name="telephone" placeholder="numéro de téléphone"
-                                       ng-model="customer.phone">
+                                       ng-model="customer.phone" required>
+<!--                                <div class="text-danger"-->
+<!--                                     ng-show="httpError.includes('phone number') && customer.phone!=''">Veulillez entrer le numéro de téléphone!-->
+<!--                                </div>-->
+                                <div class="text-danger"
+                                     ng-show="httpError.includes('already exist') && httpError != ''">Ce numéro de téléphone existe déjà!
+                                </div>
                             </div>
                         </div>
                         <div class="form-group row">

@@ -1,44 +1,42 @@
-//package com.siewe.inventorymanagementsystem.dto;
-//
-//import com.siewe.inventorymanagementsystem.model.Order;
-//import com.siewe.inventorymanagementsystem.model.OrderedProduct;
-//import com.siewe.inventorymanagementsystem.model.Product;
-//import lombok.Data;
-//
-//import java.util.ArrayList;
-//import java.util.List;
-//
-//@Data
-//public class OrderDto {
-//    private Long id;
-//
-//    private Long customerId;
-//    private String createdDate;
-//    private Boolean deleted;
-//    private double totalAmount;
-//
-//    private List<OrderedProductDto> orderedProducts;
-//
-//    public OrderDto CreateDto(Order order){
-//        OrderDto orderDto = new OrderDto();
-//        if (order != null){
-//            orderDto.setId(order.getId());
-//            orderDto.setCreatedDate(order.getCreatedDate());
-//            orderDto.setDeleted(order.getDeleted());
-//
-//            if (order.getCustomer() != null){
-//               orderDto.setCustomerId(order.getCustomer().getId());
-//            }
-//            ArrayList<OrderedProductDto> orderedProductDtos = new ArrayList<>();
-//            double totalAmt =0;
-//            if (order.getOrderedProducts() != null){
-//                for(OrderedProduct orderedProduct: order.getOrderedProducts()){
-//                    orderedProductDtos.add(new OrderedProductDto().createDTO(orderedProduct));
-//                }
-//            }
-//            orderDto.setOrderedProducts(orderedProductDtos);
-//            return orderDto;
-//        }
-//        return null;
-//    }
-//}
+package com.siewe.inventorymanagementsystem.dto;
+
+
+import com.siewe.inventorymanagementsystem.model.Orders;
+import com.siewe.inventorymanagementsystem.model.Produit;
+import lombok.Data;
+
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
+
+@Data
+public class OrderDto {
+    private Integer id;
+
+    private String orderRef;
+    private String createdUser;
+    private Timestamp createdDate;
+    private Boolean deleted;
+
+    private List<ProduitDto> products;
+
+    public OrderDto CreateDto(Orders order){
+        OrderDto orderDto = new OrderDto();
+        if (order != null){
+            orderDto.setId(order.getOrderId());
+            orderDto.setCreatedDate(order.getCreatedDate());
+            orderDto.setDeleted(order.getDeleted());
+            orderDto.setCreatedUser(order.getUser().getFullName());
+            ArrayList<ProduitDto> produits = new ArrayList<>();
+
+            if (order.getProduits() != null){
+                for(Produit produit: order.getProduits()){
+                    produits.add(new ProduitDto().createDTO(produit));
+                }
+            }
+            orderDto.setProducts(produits);
+            return orderDto;
+        }
+        return null;
+    }
+}

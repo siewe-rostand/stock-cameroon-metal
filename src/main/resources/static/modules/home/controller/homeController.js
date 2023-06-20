@@ -8,8 +8,8 @@ myApp.controller('homeController',function ($scope,$http,config,$window){
         console.log('$scope.clickedUser',user);
     }
     function getUsers() {
-        let data = $scope.users;
-        console.log(config)
+        $scope.loginUser =JSON.parse(localStorage.getItem('loginUser'));
+        console.log($scope.loginUser)
         let url = config.base_url+'/users?roles=user';
         $http({
             url: url,

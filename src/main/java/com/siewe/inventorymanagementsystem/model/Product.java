@@ -57,7 +57,7 @@ public class Product {
 
 //    @NotNull
 //    @Min(value = 0)
-@DecimalMin(value = "1.0")
+    @DecimalMin(value = "1.0")
     @Column(name = "quantity")
     private Double quantity;
     @Min(0)

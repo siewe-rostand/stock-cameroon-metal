@@ -119,6 +119,10 @@ public class User implements Serializable{
     @ToString.Exclude
     private List<Vente> ventes;
 
+    @OneToMany(mappedBy = "user")
+    @ToString.Exclude
+    private List<Orders> orders;
+
 //    public String getCreatedDate() {
 //        String pattern = "yyyy-MM-dd HH:mm";
 //        if(createdDate != null) {
