@@ -38,6 +38,6 @@ public class Orders implements Serializable {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "orders")
     @ToString.Exclude
-    private List<Produit> produits;
+    private List<OrderedProduit> orderedProduits;
 
 }

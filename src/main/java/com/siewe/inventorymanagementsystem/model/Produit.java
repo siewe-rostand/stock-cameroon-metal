@@ -8,6 +8,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import javax.persistence.*;
 import javax.validation.constraints.DecimalMin;
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Objects;
 
 @Getter
@@ -43,6 +44,9 @@ public class Produit {
     private Timestamp createdDate;
     @UpdateTimestamp
     private Timestamp updatedDate;
+
+    @OneToMany(mappedBy = "product")
+    private List<OrderedProduit> orderedProduitList;
 
     @Override
     public boolean equals(Object o) {
