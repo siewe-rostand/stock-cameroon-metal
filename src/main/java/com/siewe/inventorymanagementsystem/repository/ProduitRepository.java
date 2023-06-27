@@ -14,6 +14,8 @@ public interface ProduitRepository extends JpaRepository<Produit,Integer> {
     Produit findByColor(String color);
     Produit findByRef(String ref);
 
+    Boolean existsByRef(String ref);
+
     Page<Produit> findAll( Pageable pageable);
 
     @Query("select p from Produit p WHERE p.color like ?1 or p.ref like ?1")

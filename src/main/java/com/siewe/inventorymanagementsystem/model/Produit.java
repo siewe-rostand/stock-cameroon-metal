@@ -36,10 +36,6 @@ public class Produit {
 
     private Boolean available;
 
-    @JoinColumn(name = "order_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private Orders orders;
-
     @CreationTimestamp
     private Timestamp createdDate;
     @UpdateTimestamp

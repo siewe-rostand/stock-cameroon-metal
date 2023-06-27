@@ -86,4 +86,8 @@ public class ProduitService {
         }
         produitRepository.deleteById(id);
     }
+
+    public Boolean existByRef(String ref){
+        return produitRepository.existsByRef(ref);
+    }
 }

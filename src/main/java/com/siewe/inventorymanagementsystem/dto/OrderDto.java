@@ -1,8 +1,8 @@
 package com.siewe.inventorymanagementsystem.dto;
 
 
+import com.siewe.inventorymanagementsystem.model.OrderedProduit;
 import com.siewe.inventorymanagementsystem.model.Orders;
-import com.siewe.inventorymanagementsystem.model.Produit;
 import lombok.Data;
 
 import java.sql.Timestamp;
@@ -18,7 +18,7 @@ public class OrderDto {
     private Timestamp createdDate;
     private Boolean deleted;
 
-    private List<ProduitDto> products;
+    private List<OrderedProduitDto> products;
 
     public OrderDto CreateDto(Orders order){
         OrderDto orderDto = new OrderDto();
@@ -27,11 +27,12 @@ public class OrderDto {
             orderDto.setCreatedDate(order.getCreatedDate());
             orderDto.setDeleted(order.getDeleted());
             orderDto.setCreatedUser(order.getUser().getFullName());
-            ArrayList<ProduitDto> produits = new ArrayList<>();
+            orderDto.setOrderRef(order.getOrderRef());
+            ArrayList<OrderedProduitDto> produits = new ArrayList<>();
 
-            if (order.getProduits() != null){
-                for(Produit produit: order.getProduits()){
-                    produits.add(new ProduitDto().createDTO(produit));
+            if (order.getOrderedProduits() != null){
+                for(OrderedProduit produit: order.getOrderedProduits()){
+                    produits.add(new OrderedProduitDto().createDTO(produit));
                 }
             }
             orderDto.setProducts(produits);

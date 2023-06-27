@@ -21,7 +21,7 @@ public class OrderedProduit implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id")
-    private Long id;
+    private Integer id;
 
 
     @DecimalMin(value = "1.0")

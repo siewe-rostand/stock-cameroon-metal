@@ -12,16 +12,18 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @Transactional
 @Slf4j
 public class OrderedProduitService {
-    private OrderedProduitRepository orderedProduitRepository;
+    private final OrderedProduitRepository orderedProduitRepository;
 
-    private OrdersRepository ordersRepository;
+    private final OrdersRepository ordersRepository;
 
 
-    private ProduitRepository produitRepository;
+    private final ProduitRepository produitRepository;
 
     public OrderedProduitService(OrderedProduitRepository orderedProduitRepository, OrdersRepository ordersRepository, ProduitRepository produitRepository) {
         this.orderedProduitRepository = orderedProduitRepository;
@@ -47,6 +49,26 @@ public class OrderedProduitService {
         }
 
         OrderedProduit result = orderedProduitRepository.save(orderedProduit);
+        Produit produit1 = produitRepository.findByProduitId(produitDto.getProduitId());
+        double resteMetrageEnStock  = produit1.getMetrage() - result.getMetrage();
+        produit1.setMetrage(resteMetrageEnStock);
+        log.debug("reste en stock{}",resteMetrageEnStock);
+        produitRepository.save(produit1);
+
         return new OrderedProduitDto().createDTO(result);
+    }
+
+    @Transactional(readOnly = true)
+    public OrderedProduitDto findById(Integer id){
+        OrderedProduit orderedProduit = orderedProduitRepository.findOne(id);
+        return new OrderedProduitDto().createDTO(orderedProduit);
+    }
+
+    public void delete(Integer id){
+        log.debug("Request to delete OrderedProduit : {}", id);
+        OrderedProduit orderedProduit = orderedProduitRepository.findOne(id);
+        if (Optional.ofNullable(orderedProduit).isPresent()){
+            orderedProduitRepository.deleteById(id);
+        }
     }
 }

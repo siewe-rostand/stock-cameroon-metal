@@ -1,22 +1,19 @@
 package com.siewe.inventorymanagementsystem.model;
 
-import com.siewe.inventorymanagementsystem.model.enumeration.TypePaiement;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
-import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.List;
 
 @Entity(name = "orders")
-@Setter
 @Getter
+@Setter
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class Orders implements Serializable {
+public class Orders{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,7 +23,7 @@ public class Orders implements Serializable {
 
     private Boolean deleted;
 
-    @Column(name = "order_ref")
+    @Column(name = "order_ref",unique = true)
     private  String orderRef;
 
     @CreationTimestamp
