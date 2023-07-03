@@ -41,13 +41,13 @@ myApp.config(function ($routeProvider){
         controller:'customerController',
         controllerAs:'updateCustomer'
     }).when('/products/save',{
-        templateUrl:'modules/products/views/create_product.html',
-        controller:'productController',
+        templateUrl:'modules/produit/views/save_produit.html',
+        controller:'produitController',
         controllerAs:'saveProduct'
     }).when('/products',{
-        templateUrl:'modules/products/views/product-list.html',
-        controller:'productController',
-        controllerAs:'productList'
+        templateUrl:'modules/produit/views/list_produit.html',
+        controller:'produitController',
+        controllerAs:'liste_produit'
     }).when('/products/:id/edit',{
         templateUrl:'modules/products/views/update_product.html',
         controller:'productController',

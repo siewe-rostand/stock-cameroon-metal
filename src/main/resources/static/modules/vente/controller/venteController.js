@@ -1,5 +1,5 @@
 
-myApp.controller('orderController',['$scope','produitService','orderService','utils','customerControllerService','$window', function($scope, produitService,orderService,utils,customerControllerService,$window){
+myApp.controller('venteController',['$scope','productService','venteService','utils','customerControllerService','$window', function($scope, productService,venteService,utils,customerControllerService,$window){
 
 
     $scope.fetchCustomers = fetchAllCustomers;
@@ -13,17 +13,17 @@ myApp.controller('orderController',['$scope','produitService','orderService','ut
     $scope.total = 0;
     $scope.currentDate = new Date();
     var products = [];
-   var produit;
-   $scope.order ={};
+    var produit;
+    $scope.order ={};
 
-   $scope.orderDto = {
-       id:null,customerId:'',deleted:'',products:''
-   }
+    $scope.orderDto = {
+        id:null,customerId:'',deleted:'',totalAmount:'',orderedProducts:''
+    }
 
 
     var findItemById = function(items, id) {
         return _.find(items, function(item) {
-            return item.produitId === id;
+            return item.productId === id;
         });
     };
 
@@ -32,28 +32,37 @@ myApp.controller('orderController',['$scope','produitService','orderService','ut
         $scope.clickedCustomer = JSON.parse($window.localStorage.getItem('saved'));
         $scope.cart = JSON.parse($window.localStorage.getItem('cart'));
         $scope.cartTotal = JSON.parse($window.localStorage.getItem('cartTotal'));
-        // console.log('cart'+$scope.cart)
-        angular.forEach($scope.cart,function (cart,k){
-            console.log(cart)
-        })
-        // console.log('clicked user'+$scope.cartTotal)
+        console.log('cart'+$scope.cart)
+        console.log('clicked user'+$scope.cartTotal)
         $scope.order = {
             "customerId":$scope.clickedCustomer.id,
-            "products":$scope.cart
+            "prixTotal":$scope.cartTotal,
+            "orderedProducts":$scope.cart
         }
-        console.log($scope.order)
         fetchAllCustomers();
     }
+    $scope.getCost = function(item) {
+        return item.quantity * item.price;
+    };
 
     $scope.addItem = function(itemToAdd) {
-        var found = findItemById($scope.cart, itemToAdd.produitId);
+        var found = findItemById($scope.cart, itemToAdd.productId);
         if (found) {
-            found.metrage += itemToAdd.metrage;
+            found.quantity += itemToAdd.quantity;
         }
         else {
+            itemToAdd.prixVente = itemToAdd.price;
             $scope.cart.push(angular.copy(itemToAdd));}
-        console.log($scope.cart)
         localStorage.setItem("cart", JSON.stringify($scope.cart));
+        localStorage.setItem("cartTotal", $scope.getTotal());
+    };
+
+    $scope.getTotal = function() {
+        var total =  _.reduce($scope.cart, function(sum, item) {
+            return sum + $scope.getCost(item);
+        }, 0);
+        console.log('total: ' + total);
+        return total;
     };
 
     $scope.clearCart = function() {
@@ -64,11 +73,12 @@ myApp.controller('orderController',['$scope','produitService','orderService','ut
         var index = $scope.cart.indexOf(item);
         $scope.cart.splice(index, 1);
         localStorage.setItem("cart", JSON.stringify($scope.cart));
+        localStorage.setItem("cartTotal", $scope.getTotal());
         console.log($scope.cart)
     };
 
     function createOrder(){
-        orderService.createOrder($scope.order)
+        venteService.createOrder($scope.order)
             .then(
                 function (res){
                     Toast.fire({
@@ -97,19 +107,36 @@ myApp.controller('orderController',['$scope','produitService','orderService','ut
     }
 
     function fetchAllProducts() {
-        produitService.fetchAllProducts()
+        productService.fetchAllProducts()
             .then(
                 function (response) {
-                    angular.forEach(response.content,function (produit,k){
-                        produit = {
-                            produitId:produit.id,
-                            stock:produit.metrage,
-                            name:produit.name,
-                            productRef:produit.ref,
-                            metrage:1};
-                        products.push(produit);
-                        $scope.produits = products;
+                    utils.destroyDatatable('product_table');
+                    angular.forEach(response.content, function (product,k){
+
+                        productService.getProductImage(product.id).then(
+                            function (response){
+                                // console.log('product image'+response)
+                                var uint8Array = new Uint8Array(response);
+                                var binaryString = String.fromCharCode.apply(null, uint8Array);
+                                var base64String = btoa(binaryString);
+                                $scope.productimage = 'data:image/JPEG;base64,' + base64String;
+                                // produit = {product:product,qty:1};
+                                produit = {
+                                    productId:product.id,
+                                    stock:product.stock,
+                                    price:product.price,
+                                    name:product.name,
+                                    quantity:1};
+                                products.push(produit);
+                                $scope.products =products;
+                            },
+                            function (errResponse) {
+                                console.log(errResponse)
+                                console.error('controller:Error while fetching products');
+                            }
+                        )
                     })
+                    utils.loadDatatable('product_table');
                     console.log(response)
                 },
                 function (errResponse) {
@@ -123,8 +150,8 @@ myApp.controller('orderController',['$scope','produitService','orderService','ut
         customerControllerService.fetchAllCustomers()
             .then(
                 function (d) {
+                    // utils.destroyDatatable('user_table');
                     $scope.allCustomers=d.content;
-                    console.log()
                     angular.forEach(d.content,function (customer,k){
                         $scope.customer = customer;
                     })

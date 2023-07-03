@@ -12,26 +12,35 @@
             <thead>
             <tr>
               <th class="table-plus">Nom</th>
-              <th>Reference</th>
-              <th>Quantité en Stock</th>
-              <th>Quantité(Metrage)</th>
+              <th>Prix</th>
+              <th>Quantité</th>
+              <th>Total</th>
               <th>Action</th>
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="product in produits" ng-style="{'color':(product.stock <= 10)? 'orange' : null}">
+            <tr ng-repeat="product in products" ng-style="{'color':(product.stock <= 5)? '#0f6848' : null}">
               <td class="table-plus">
-                {{product.name}}
+                <div class="name-avatar d-flex align-items-center">
+                  <div class="avatar mr-2 flex-shrink-0">
+                    <img ng-src="{{productimage}}"
+                         class="border-radius-100 shadow"
+                         width="40"
+                         height="40"
+                         alt=""/>
+                  </div>
+                  <div class="txt">
+                    <div class="weight-600">{{product.name}}</div>
+                  </div>
+                </div>
               </td>
-              <td>{{product.productRef}}</td>
-              <td>{{product.stock}} M</td>
-              <td><input class="form-control" ng-style="{'color':(product.stock < product.metrage)? 'red' : null}"  type="number" ng-model="product.metrage" min="1"></td>
+              <td>{{product.price}} FCFA</td>
+              <td><input class="form-control"  type="number" ng-model="product.quantity" min="1"></td>
+              <td>{{product.quantity * product.price}} FCFA</td>
               <td>
                 <div class="table-actions">
-                  <button  data-bgcolor="#e7ebf5" data-color="#265ed7" class="btn btn-outline-info float-right" ng-show=" product.metrage <product.stock "
-                           style="color: rgb(38, 94, 215);" ng-click="addItem(product)">
-                    Ajouter
-                  </button>
+                  <button data-bgcolor="#e7ebf5" data-color="#265ed7" class="btn btn-outline-info float-right" style="color: rgb(168,31,47);" ng-click="addItem(product)">
+                    Ajouter</i></button>
                 </div>
               </td>
             </tr>
@@ -53,6 +62,7 @@
             <thead class="thead-light">
             <tr>
               <th>Nom Produit</th>
+              <th>Prix Unitaire</th>
               <th>Quantité</th>
               <th>Total</th>
               <th></th>
@@ -61,17 +71,19 @@
             <tbody>
             <tr ng-repeat="item in cart">
               <td>{{item.name}}</td>
-              <td>{{item.metrage}}</td>
+              <td>{{item.price}}</td>
+              <td>{{item.quantity}}</td>
+              <td>{{getCost(item)}} FCFA</td>
               <td><div class="table-actions">
                 <button   class="btn btn-outline-danger " ng-click="removeItem(item)">
-                  Retirer
-                </button>
+                  Retirer</i></button>
               </div></td>
             </tr>
             </tbody>
           </table>
         </div>
         <div>
+          <h3  class="float-left">Total: {{getTotal()}} FCFA</h3>
           <button ng-show="cart.length != 0" class="btn btn-danger float-right" ng-click="clearCart()">vider Panier</button>
         </div>
       </div>

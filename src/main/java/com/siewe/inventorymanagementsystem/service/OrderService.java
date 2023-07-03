@@ -4,9 +4,11 @@ import com.siewe.inventorymanagementsystem.dto.OrderDto;
 import com.siewe.inventorymanagementsystem.dto.OrderedProductDto;
 import com.siewe.inventorymanagementsystem.dto.OrderedProduitDto;
 import com.siewe.inventorymanagementsystem.dto.ProduitDto;
+import com.siewe.inventorymanagementsystem.model.Customer;
 import com.siewe.inventorymanagementsystem.model.Orders;
 import com.siewe.inventorymanagementsystem.model.Produit;
 import com.siewe.inventorymanagementsystem.model.User;
+import com.siewe.inventorymanagementsystem.repository.CustomerRepository;
 import com.siewe.inventorymanagementsystem.repository.OrdersRepository;
 import com.siewe.inventorymanagementsystem.repository.ProduitRepository;
 import com.siewe.inventorymanagementsystem.repository.UserRepository;
@@ -35,6 +37,9 @@ public class OrderService {
     private UserRepository userRepository;
 
     @Autowired
+    private CustomerRepository customerRepository;
+
+    @Autowired
     private OrderedProduitService orderedProductService;
 
     @Autowired
@@ -60,6 +65,16 @@ public class OrderService {
             Produit produit = produitRepository.findByProduitId(orderedProduitDto.getProduitId());
             if (produit.getMetrage() - orderedProduitDto.getMetrage() <= 0){
                 throw new RuntimeException("Produit " + orderedProduitDto.getName() + " insuffisant  en Stock!");
+            }
+        }
+
+        //set customer
+        if (orderDto.getCustomerId() != null){
+            Customer customer = customerRepository.findOne(orderDto.getCustomerId());
+            if (customer != null){
+                orders.setCustomer(customer);
+            }else {
+                throw new RuntimeException("customer with Id "+orderDto.getCustomerId() + " do not exist");
             }
         }
 

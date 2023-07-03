@@ -34,7 +34,7 @@ public class OrderController {
     }
 
 
-    @PostMapping("/orders")
+    @PostMapping("/orders/create")
     public ResponseEntity<Object> createOrder(@RequestBody OrderDto orderDto) throws URISyntaxException {
         log.debug("REST request to create new order : {}",orderDto);
         //automatically set user to current user

@@ -17,6 +17,8 @@ public class OrderDto {
     private String createdUser;
     private Timestamp createdDate;
     private Boolean deleted;
+    private Long customerId;
+    private CustomerDto customer;
 
     private List<OrderedProduitDto> products;
 
@@ -36,6 +38,10 @@ public class OrderDto {
                 }
             }
             orderDto.setProducts(produits);
+            if (order.getCustomer() != null){
+                orderDto.setCustomerId(order.getCustomer().getCustomerId());
+                orderDto.setCustomer(new CustomerDto().createDTO(order.getCustomer()));
+            }
             return orderDto;
         }
         return null;

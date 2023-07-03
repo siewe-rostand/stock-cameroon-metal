@@ -9,32 +9,37 @@
 			<div class="card-header py-3">
 				<h6 class="m-0 font-weight-bold text-info float-left">Commande des articles suivant</h6>
 			</div>
-			<div>
-				<span class="float-left ml-2">Client: <b>{{clickedCustomer.name}}</b></span><br>
-				<span class="float-left ml-2">Telephone: <b>{{clickedCustomer.phone}}</b></span>
-				<span class="float-right mr-2">Crée par: <b>{{loginUser.fullname}}</b></span><br>
-				<span class="float-right mr-3">Téléphone: <b>{{loginUser.telephone}}</b></span>
-			</div>
 			<div class="card-body">
 				<div class="table-responsive">
 					<table class="table table-bordered" >
 						<thead class="thead-light">
 						<tr>
 							<th>Nom Produit</th>
-							<th>Reference Produit</th>
+							<th>Prix Unitaire</th>
 							<th>Quantité</th>
+							<th>Sous Total</th>
 						</tr>
 						</thead>
 						<tbody>
 						<tr ng-repeat="item in cart">
 							<td>{{item.name}}</td>
-							<td>{{item.productRef}}</td>
-							<td>{{item.metrage}}</td>
+							<td>{{item.price}}</td>
+							<td>{{item.quantity}}</td>
+							<td>{{getCost(item)}} FCFA</td>
 						</tr>
 						</tbody>
+						<tfoot>
+						<tr>
+							<td colspan="2"></td>
+							<td>TOTAL</td>
+							<td>{{cartTotal}}</td>
+						</tr>
+						</tfoot>
 					</table>
 				</div>
 			</div>
+			<span class="float-left ml-4">Par: <b>{{clickedCustomer.name}}</b></span>
+			<span  class="float-left ml-4">Date: <b>{{currentDate | date: 'yyyy-MM-dd'}}</b></span>
 			<div>
 				<button  class="btn btn-outline-info float-right mr-4" ng-click="createOrder()">Valider</button>
 				<button  class="btn btn-outline-secondary float-right mr-4">Sauvegarder</button>

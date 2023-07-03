@@ -23,6 +23,7 @@ import java.util.Optional;
  */
 @CrossOrigin
 @RestController
+@RequestMapping("/api/v1")
 public class SupplierController {
     private final Logger log = LoggerFactory.getLogger(SupplierController.class);
 

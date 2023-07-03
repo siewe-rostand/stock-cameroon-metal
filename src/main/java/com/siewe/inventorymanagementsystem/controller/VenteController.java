@@ -35,7 +35,7 @@ import java.util.Optional;
  */
 @CrossOrigin("*")
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/v1")
 public class VenteController {
     private final Logger log = LoggerFactory.getLogger(VenteController.class);
 

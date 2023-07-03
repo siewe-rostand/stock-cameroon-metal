@@ -14,6 +14,7 @@ import java.util.List;
  */
 @CrossOrigin
 @RestController
+@RequestMapping("/api/v1")
 public class ProductStockController {
     private final Logger log = LoggerFactory.getLogger(ProductStockController.class);
 
@@ -23,7 +24,7 @@ public class ProductStockController {
     /**
      * GET  /productStocks : get all the productStocks.
      */
-    @GetMapping("/api/product-stock/{productId}")
+    @GetMapping("/product-stock/{productId}")
     public List<ProductStockDto> getProductStock(@PathVariable Long productId,
                                                  @RequestParam(name = "dateFrom") String dateFrom,
                                                  @RequestParam(name = "dateTo") String dateTo) {

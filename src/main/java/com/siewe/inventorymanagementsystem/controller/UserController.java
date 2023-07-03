@@ -30,7 +30,7 @@ import java.util.Map;
 
 @CrossOrigin("*")
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/v1")
 public class UserController {
     private final Logger log = LoggerFactory.getLogger(UserController.class);
 

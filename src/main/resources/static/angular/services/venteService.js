@@ -1,6 +1,6 @@
 'use strict';
 
-myApp.factory('orderService',['$http','$q','config', function($http,$q,config){
+myApp.factory('venteService',['$http','$q','config', function($http,$q,config){
 
     let base_url = config.base_url;
 
@@ -11,9 +11,9 @@ myApp.factory('orderService',['$http','$q','config', function($http,$q,config){
     };
 
 
-    function createOrder(order) {
+    function createOrder(data) {
         let deferred = $q.defer();
-        $http.post(base_url + '/orders/create', order)
+        $http.post(base_url + '/vente/create', data)
             .then(
                 function (response) {
                     deferred.resolve(response.data);
@@ -27,9 +27,9 @@ myApp.factory('orderService',['$http','$q','config', function($http,$q,config){
     }
 
 
-    function updateOrder(order) {
+    function updateOrder(data) {
         let deferred = $q.defer();
-        $http.post(base_url + '/orders/update', order)
+        $http.post(base_url + '/vente/update', data)
             .then(
                 function (response) {
                     deferred.resolve(response.data);
@@ -47,7 +47,7 @@ myApp.factory('orderService',['$http','$q','config', function($http,$q,config){
         let deferred = $q.defer();
         $http({
             method:'GET',
-            url:base_url+'/orders',
+            url:base_url+'/vente',
             headers:{
                 'Content-Type': 'application/json'
             }

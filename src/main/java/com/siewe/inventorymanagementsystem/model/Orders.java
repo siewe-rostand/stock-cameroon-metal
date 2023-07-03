@@ -33,6 +33,10 @@ public class Orders{
     @ManyToOne(optional = false)
     private User user;
 
+    @JoinColumn(name = "customer_id", referencedColumnName = "id")
+    @ManyToOne
+    private Customer customer;
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "orders")
     @ToString.Exclude
     private List<OrderedProduit> orderedProduits;

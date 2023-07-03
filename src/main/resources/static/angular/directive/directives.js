@@ -35,3 +35,9 @@ myApp.directive('productList',function (){
         templateUrl:'modules/products/views/directive/product_list.html'
     }
 });
+myApp.directive('listProduit',function (){
+    return {
+        restrict:'E',
+        templateUrl:'modules/produit/views/directory/produit_list.html'
+    }
+});
