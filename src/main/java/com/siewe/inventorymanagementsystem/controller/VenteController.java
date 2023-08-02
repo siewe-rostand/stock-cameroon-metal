@@ -219,69 +219,7 @@ public class VenteController {
         return response;
     }
 
-    @RequestMapping(value="/recouvrements-export", method=RequestMethod.GET)
-    public ResponseEntity<byte[]> exportRecouvrements(@RequestParam(name = "store") Long storeId) throws IOException {
 
-        String FILE_PATH = "";
-        HttpHeaders headers = new HttpHeaders();
-
-        FILE_PATH = venteService.createXlsFileRecouvrements(storeId);
-        headers.setContentType(MediaType.parseMediaType("application/xls"));
-
-        Path path = Paths.get(FILE_PATH);
-        byte[] data = Files.readAllBytes(path);
-        String filename = "recouvrements_du_" + new LocalDate(DateTimeZone.forOffsetHours(1)).toString("yyyy-MM-dd") +".xls";
-        filename = filename.replace(" ", "_");
-
-        headers.set(HttpHeaders.CONTENT_DISPOSITION,"attachment; filename=" + filename.toLowerCase());
-        //headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
-        ResponseEntity<byte[]> response = new ResponseEntity<byte[]>(data, headers, HttpStatus.OK);
-        return response;
-    }
-
-
-    @RequestMapping(value="/ventes-export-best-products", method=RequestMethod.GET)
-    public ResponseEntity<byte[]> exportBestProducts(@RequestParam(name = "store") Long storeId,
-                                                     @RequestParam(name = "createdDateFrom") String createdDateFrom,
-                                                     @RequestParam(name = "createdDateTo") String createdDateTo) throws IOException {
-
-        String FILE_PATH = "";
-        HttpHeaders headers = new HttpHeaders();
-
-        FILE_PATH = venteService.createXlsFileBestProducts(storeId, createdDateFrom, createdDateTo);
-        headers.setContentType(MediaType.parseMediaType("application/xls"));
-
-        Path path = Paths.get(FILE_PATH);
-        byte[] data = Files.readAllBytes(path);
-        String filename = "ventes_par_produit_du_" + createdDateFrom + "_au_" + createdDateTo +".xls";
-        filename = filename.replace(" ", "_");
-
-        headers.set(HttpHeaders.CONTENT_DISPOSITION,"attachment; filename=" + filename.toLowerCase());
-        //headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
-        ResponseEntity<byte[]> response = new ResponseEntity<byte[]>(data, headers, HttpStatus.OK);
-        return response;
-    }
-
-    @RequestMapping(value="/ventes-export-best-sellers", method=RequestMethod.GET)
-    public ResponseEntity<byte[]> exportBestSellers(@RequestParam(name = "store") Long storeId,
-                                                    @RequestParam(name = "createdDateFrom") String createdDateFrom,
-                                                    @RequestParam(name = "createdDateTo") String createdDateTo) throws IOException {
-
-        String FILE_PATH = "";
-        HttpHeaders headers = new HttpHeaders();
-        FILE_PATH = venteService.createXlsFileBestSellers(storeId, createdDateFrom, createdDateTo);
-        headers.setContentType(MediaType.parseMediaType("application/xls"));
-
-        Path path = Paths.get(FILE_PATH);
-        byte[] data = Files.readAllBytes(path);
-        String filename = "ventes_par_vendeur_du_" + createdDateFrom + "_au_" + createdDateTo +".xls";
-        filename = filename.replace(" ", "_");
-
-        headers.set(HttpHeaders.CONTENT_DISPOSITION,"attachment; filename=" + filename.toLowerCase());
-        //headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
-        ResponseEntity<byte[]> response = new ResponseEntity<byte[]>(data, headers, HttpStatus.OK);
-        return response;
-    }
 
 
     /**

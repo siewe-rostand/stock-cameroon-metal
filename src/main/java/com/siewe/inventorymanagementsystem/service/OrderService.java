@@ -1,9 +1,6 @@
 package com.siewe.inventorymanagementsystem.service;
 
-import com.siewe.inventorymanagementsystem.dto.OrderDto;
-import com.siewe.inventorymanagementsystem.dto.OrderedProductDto;
-import com.siewe.inventorymanagementsystem.dto.OrderedProduitDto;
-import com.siewe.inventorymanagementsystem.dto.ProduitDto;
+import com.siewe.inventorymanagementsystem.dto.*;
 import com.siewe.inventorymanagementsystem.model.Customer;
 import com.siewe.inventorymanagementsystem.model.Orders;
 import com.siewe.inventorymanagementsystem.model.Produit;
@@ -16,6 +13,12 @@ import com.siewe.inventorymanagementsystem.utils.InvalidOrderItemException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,6 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -89,6 +93,30 @@ public class OrderService {
         }
         ordersRepository.save(result);
         return result;
+    }
+
+    @Transactional(readOnly = true)
+    public ResponseEntity<OrderDto> findOne(int id) {
+        log.debug("Request to get order service : {}", id);
+        Orders orders = ordersRepository.findByOrderId(id);
+
+        OrderDto orderDto = new OrderDto().CreateDto(orders);
+        return Optional.ofNullable(orderDto)
+                .map(result -> new ResponseEntity<>(
+                        result,
+                        HttpStatus.OK))
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    public Page<OrderDto> findAll(Integer page, Integer size, String sortBy, String direction) {
+        log.debug("Request to get all Users");
+
+        Pageable pageable = PageRequest.of(page, size, Sort.Direction.fromString(direction), sortBy);
+
+        //Page<User> users = userRepository.findByRole("USER", pageable);
+        Page<Orders> orders = ordersRepository.findAll( pageable);
+
+        return orders.map(order -> new OrderDto().CreateDto(order));
     }
 
 }

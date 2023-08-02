@@ -64,7 +64,7 @@ public class SecurityConfig  extends WebSecurityConfigurerAdapter {
                 //.httpBasic() // optional, if you want to access
                 //  .and()     // the services from a browser
                 .authorizeRequests()
-                .antMatchers("/api/login/**").permitAll()
+                .antMatchers("/api/v1/login/**").permitAll()
                 .antMatchers("/api/activate").permitAll()
                 .antMatchers("/reset_password/init").permitAll()
                 .antMatchers("/reset_password/finish").permitAll()

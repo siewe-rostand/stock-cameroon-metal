@@ -25,7 +25,7 @@ public class OrderedProduct implements Serializable {
     @Column(name = "quantity")
     private Double quantity;
 
-    @Column(name = "prixVente")
+    @Column(name = "prix_vente")
     private Double prixVente;
 
     @JoinColumn(name = "vente_id", referencedColumnName = "id")

@@ -9,9 +9,6 @@ import com.siewe.inventorymanagementsystem.repository.InventaireRepository;
 import com.siewe.inventorymanagementsystem.repository.LigneProductRepository;
 import com.siewe.inventorymanagementsystem.repository.ProductRepository;
 import com.siewe.inventorymanagementsystem.repository.UserRepository;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
@@ -23,9 +20,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -167,58 +161,58 @@ public class InventaireService {
             inventaireRepository.deleteById(id);
         }
     }
-
-    public String createXlsFile(InventaireDto inventaireDto) throws IOException {
-
-        XSSFWorkbook workbook = new XSSFWorkbook();
-        XSSFSheet sheetCesep = workbook.createSheet("Inventaire");
-
-        this.fillSheetInformationsCesep(sheetCesep, inventaireDto);
-
-        try {
-            FileOutputStream outputStream = new FileOutputStream(FOLDER + "test" + ".xlsx");
-            workbook.write(outputStream);
-            workbook.close();
-            return FOLDER + "test" + ".xlsx";
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
-
-    private void fillSheetInformationsCesep(XSSFSheet sheet, InventaireDto inventaireDto) {
-        int rowNum = 0;
-        Row row = sheet.createRow(rowNum++);
-        int colNum = 0;
-        row.createCell(colNum++).setCellValue("Produit");
-        row.createCell(colNum++).setCellValue("Stock Théorique");
-        row.createCell(colNum++).setCellValue("Stock Physique");
-        row.createCell(colNum++).setCellValue("Ecart");
-        row.createCell(colNum++).setCellValue("Manquant");
-
-        double totalManquant = 0.0;
-        for (LigneProductDto ligneProductDto : inventaireDto.getLignesProduct()){
-            LigneProduct ligneProduct = ligneProductRepository.findOne(ligneProductDto.getId());
-            row = sheet.createRow(rowNum++);
-            colNum = 0;
-            row.createCell(colNum++).setCellValue(ligneProduct.getProduct().getName());
-            row.createCell(colNum++).setCellValue(ligneProduct.getStockTheorique());
-            row.createCell(colNum++).setCellValue(ligneProduct.getStockPhysique());
-            row.createCell(colNum++).setCellValue(ligneProduct.getStockTheorique()-ligneProduct.getStockPhysique());
-            row.createCell(colNum++).setCellValue(Math.round( (ligneProduct.getStockTheorique()-ligneProduct.getStockPhysique()) * ligneProduct.getProduct().getCump()) );
-            totalManquant += (ligneProduct.getStockTheorique()-ligneProduct.getStockPhysique()) * ligneProduct.getProduct().getCump();
-
-        }
-
-        row = sheet.createRow(rowNum++);
-        colNum = 0;
-        row.createCell(colNum++).setCellValue("Total");
-        row.createCell(colNum++).setCellValue("");
-        row.createCell(colNum++).setCellValue("");
-        row.createCell(colNum++).setCellValue("");
-        row.createCell(colNum++).setCellValue(Math.round(totalManquant));
-    }
+//
+//    public String createXlsFile(InventaireDto inventaireDto) throws IOException {
+//
+//        XSSFWorkbook workbook = new XSSFWorkbook();
+//        XSSFSheet sheetCesep = workbook.createSheet("Inventaire");
+//
+//        this.fillSheetInformationsCesep(sheetCesep, inventaireDto);
+//
+//        try {
+//            FileOutputStream outputStream = new FileOutputStream(FOLDER + "test" + ".xlsx");
+//            workbook.write(outputStream);
+//            workbook.close();
+//            return FOLDER + "test" + ".xlsx";
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
+//        return null;
+//    }
+//
+//    private void fillSheetInformationsCesep(XSSFSheet sheet, InventaireDto inventaireDto) {
+//        int rowNum = 0;
+//        Row row = sheet.createRow(rowNum++);
+//        int colNum = 0;
+//        row.createCell(colNum++).setCellValue("Produit");
+//        row.createCell(colNum++).setCellValue("Stock Théorique");
+//        row.createCell(colNum++).setCellValue("Stock Physique");
+//        row.createCell(colNum++).setCellValue("Ecart");
+//        row.createCell(colNum++).setCellValue("Manquant");
+//
+//        double totalManquant = 0.0;
+//        for (LigneProductDto ligneProductDto : inventaireDto.getLignesProduct()){
+//            LigneProduct ligneProduct = ligneProductRepository.findOne(ligneProductDto.getId());
+//            row = sheet.createRow(rowNum++);
+//            colNum = 0;
+//            row.createCell(colNum++).setCellValue(ligneProduct.getProduct().getName());
+//            row.createCell(colNum++).setCellValue(ligneProduct.getStockTheorique());
+//            row.createCell(colNum++).setCellValue(ligneProduct.getStockPhysique());
+//            row.createCell(colNum++).setCellValue(ligneProduct.getStockTheorique()-ligneProduct.getStockPhysique());
+//            row.createCell(colNum++).setCellValue(Math.round( (ligneProduct.getStockTheorique()-ligneProduct.getStockPhysique()) * ligneProduct.getProduct().getCump()) );
+//            totalManquant += (ligneProduct.getStockTheorique()-ligneProduct.getStockPhysique()) * ligneProduct.getProduct().getCump();
+//
+//        }
+//
+//        row = sheet.createRow(rowNum++);
+//        colNum = 0;
+//        row.createCell(colNum++).setCellValue("Total");
+//        row.createCell(colNum++).setCellValue("");
+//        row.createCell(colNum++).setCellValue("");
+//        row.createCell(colNum++).setCellValue("");
+//        row.createCell(colNum++).setCellValue(Math.round(totalManquant));
+//    }
 }

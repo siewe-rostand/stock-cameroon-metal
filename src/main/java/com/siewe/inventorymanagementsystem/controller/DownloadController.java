@@ -1,48 +1,66 @@
 package com.siewe.inventorymanagementsystem.controller;
 
+import com.siewe.inventorymanagementsystem.model.Customer;
+import com.siewe.inventorymanagementsystem.model.Invoice;
 import com.siewe.inventorymanagementsystem.service.DownloadService;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-@RestController
+@Controller
 public class DownloadController {
 
     @Autowired
     private DownloadService downloadService;
 
-    @Value("${dir.pharma}")
-    private String PHARMA_FOLDER;
+    @GetMapping("/downloadReceipt")
+    public void downloadReceipt(HttpServletResponse response) throws IOException {
+        Map<String, Object> data = createTestData();
+        ByteArrayInputStream exportedData = downloadService.exportReceiptPdf("invoice", data);
+        response.setContentType("application/octet-stream");
+        response.setHeader("Content-Disposition", "attachment; filename=receipt.pdf");
+        IOUtils.copy(exportedData, response.getOutputStream());
+    }
 
-    @GetMapping("/api/download/invoice")
-    public ResponseEntity<byte[]> getInvoice(@RequestParam(name = "vente") Long venteId) throws IOException {
+    private Map<String, Object> createTestData() {
+        Map<String, Object> data = new HashMap<>();
+        Customer customer = new Customer();
+        customer.setName("Simple Solution");
+        customer.setAddress("123, Simple Street");
+        customer.setEmail("contact@simplesolution.dev");
+        customer.setPhone("123 456 789");
+        data.put("customer", customer);
 
-        HttpHeaders headers = new HttpHeaders();
-        String FILE_PATH = downloadService.createInvoice(venteId);
-        headers.setContentType(MediaType.parseMediaType("application/pdf"));
+        List<Invoice> receiptItems = new ArrayList<>();
+        Invoice receiptItem1 = new Invoice();
+        receiptItem1.setProductName("Test Item 1");
+        receiptItem1.setQuantity(1);
+        receiptItem1.setTotal(100.0);
+        receiptItems.add(receiptItem1);
 
-        Path path = Paths.get(FILE_PATH);
-        byte[] data = Files.readAllBytes(path);
-        String filename = StringUtils.stripAccents(path.getFileName().toString());
-        filename = filename.replace(" ", "_");
-        //String filename = path.getFileName().toString();
+        Invoice receiptItem2 = new Invoice();
+        receiptItem2.setProductName("Test Item 2");
+        receiptItem2.setQuantity(4);
+        receiptItem2.setTotal(2000.0);
+        receiptItems.add(receiptItem2);
 
-        headers.set(HttpHeaders.CONTENT_DISPOSITION,"attachment; filename=" + filename.toLowerCase());
-        //headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
-        ResponseEntity<byte[]> response = new ResponseEntity<byte[]>(data, headers, HttpStatus.OK);
-        return response;
+        Invoice receiptItem3 = new Invoice();
+        receiptItem3.setProductName("Test Item 3");
+        receiptItem3.setQuantity(2);
+        receiptItem3.setTotal(400.0);
+        receiptItems.add(receiptItem3);
+
+        data.put("receiptItems", receiptItems);
+        return data;
     }
 }
 

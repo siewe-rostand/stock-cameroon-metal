@@ -90,23 +90,7 @@ public class InventaireController {
     }
 
 
-    @RequestMapping(value="/api/inventaires-export", method= RequestMethod.POST)
-    public ResponseEntity<byte[]> export(@RequestBody InventaireDto inventaireDto) throws IOException {
 
-        String FILE_PATH = "";
-        HttpHeaders headers = new HttpHeaders();
-
-        FILE_PATH = inventaireService.createXlsFile(inventaireDto);
-        headers.setContentType(MediaType.parseMediaType("application/xls"));
-
-        Path path = Paths.get(FILE_PATH);
-        byte[] data = Files.readAllBytes(path);
-        String filename = "fiche_" + inventaireDto.getLabel() + ".xls";
-        filename = filename.replace(" ", "_");
-
-        headers.set(HttpHeaders.CONTENT_DISPOSITION,"attachment; filename=" + filename.toLowerCase());
-        return new ResponseEntity<>(data, headers, HttpStatus.OK);
-    }
 
 
     @DeleteMapping("/api/inventaires/{id}")

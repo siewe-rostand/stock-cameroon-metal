@@ -1,6 +1,6 @@
 package com.siewe.inventorymanagementsystem.model.error;
 
-import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.StringUtils;
 
 import java.util.HashMap;
 import java.util.Map;

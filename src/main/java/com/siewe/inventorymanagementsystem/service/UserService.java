@@ -7,7 +7,6 @@ import com.siewe.inventorymanagementsystem.model.error.EntityNotFoundException;
 import com.siewe.inventorymanagementsystem.repository.RoleRepository;
 import com.siewe.inventorymanagementsystem.repository.UserRepository;
 import com.siewe.inventorymanagementsystem.security.SecurityUtils;
-import com.siewe.inventorymanagementsystem.utils.RandomUtil;
 import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
@@ -132,7 +131,7 @@ public class UserService {
         return userRepository.findOneByTelephone(mail)
                 .filter(User::getActivated)
                 .map(user -> {
-                    user.setResetKey(RandomUtil.generateResetKey());
+                    user.setResetKey("RandomUtil.generateResetKey()");
                     user.setResetDate(datetime.toString(pattern));
                     userRepository.save(user);
                     return user;
@@ -595,4 +594,7 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public List<User> listAll() {
+        return userRepository.findAll(Sort.by("email").ascending());
+    }
 }

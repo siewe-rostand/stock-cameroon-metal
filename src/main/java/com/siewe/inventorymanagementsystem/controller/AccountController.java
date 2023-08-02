@@ -4,14 +4,13 @@ import com.siewe.inventorymanagementsystem.controller.enumeration.view_model.Key
 import com.siewe.inventorymanagementsystem.model.Role;
 import com.siewe.inventorymanagementsystem.repository.RoleRepository;
 import com.siewe.inventorymanagementsystem.repository.UserRepository;
-import com.siewe.inventorymanagementsystem.service.MailService;
 import com.siewe.inventorymanagementsystem.service.UserService;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -34,8 +33,6 @@ public class AccountController {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private MailService mailService;
 
     /**
      * GET  /account : get the current user.

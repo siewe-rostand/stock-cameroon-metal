@@ -1,6 +1,8 @@
 package com.siewe.inventorymanagementsystem.controller;
 
 import com.siewe.inventorymanagementsystem.dto.OrderDto;
+import com.siewe.inventorymanagementsystem.dto.PdfGenerator;
+import com.siewe.inventorymanagementsystem.dto.UserDto;
 import com.siewe.inventorymanagementsystem.model.Orders;
 import com.siewe.inventorymanagementsystem.repository.UserRepository;
 import com.siewe.inventorymanagementsystem.security.SecurityUtils;
@@ -12,10 +14,14 @@ import com.siewe.inventorymanagementsystem.utils.ResponseHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.net.URISyntaxException;
 
 @CrossOrigin
@@ -33,6 +39,16 @@ public class OrderController {
         this.userRepository = userRepository;
     }
 
+    @GetMapping(value = "/generate-pdf", produces = MediaType.APPLICATION_PDF_VALUE)
+    public ResponseEntity<byte[]> generatePdf() throws IOException {
+        byte[] pdfBytes = PdfGenerator.generatePdf();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        headers.setContentDispositionFormData("attachment", "example.pdf");
+
+        return new ResponseEntity<>(pdfBytes, headers, 200);
+    }
 
     @PostMapping("/orders/create")
     public ResponseEntity<Object> createOrder(@RequestBody OrderDto orderDto) throws URISyntaxException {
@@ -49,6 +65,23 @@ public class OrderController {
 
         return ResponseHandler.generateResponse("Order created successfully",HttpStatus.CREATED,orderDto.CreateDto(result));
     }
+    @GetMapping("/orders/{id}")
+    public ResponseEntity<OrderDto> getOrder(@PathVariable int id) {
+        log.debug("REST request to get order by : {}", id);
+        return orderService.findOne(id);
+    }
+
+
+    @GetMapping("/orders")
+    public Page<OrderDto> getAllUsers(@RequestParam(name = "page", defaultValue = "0") Integer page,
+                                     @RequestParam(name = "size", defaultValue = "5") Integer size,
+                                     @RequestParam(name = "sortBy", defaultValue = "createdDate") String sortBy,
+                                     @RequestParam(name = "direction", defaultValue = "desc") String direction
+    ) {
+        log.debug("REST request to get orders");
+        return orderService.findAll(page, size, sortBy, direction);
+    }
+
 
 //    @GetMapping("/orders")
 //    public Page<OrderDto> getAllOrders(@RequestParam(name = "page", defaultValue = "0") Integer page,

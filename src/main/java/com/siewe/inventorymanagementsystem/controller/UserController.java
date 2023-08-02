@@ -1,10 +1,7 @@
 package com.siewe.inventorymanagementsystem.controller;
 
-import com.siewe.inventorymanagementsystem.dto.CategoryDto;
 import com.siewe.inventorymanagementsystem.dto.UserDto;
-import com.siewe.inventorymanagementsystem.model.User;
 import com.siewe.inventorymanagementsystem.repository.UserRepository;
-import com.siewe.inventorymanagementsystem.service.MailService;
 import com.siewe.inventorymanagementsystem.service.UserService;
 import com.siewe.inventorymanagementsystem.utils.CustomErrorType;
 import com.siewe.inventorymanagementsystem.utils.InvalidActionException;
@@ -15,10 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -40,8 +33,6 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private MailService mailService;
 
     /**
      * POST  /users : Create a new user.

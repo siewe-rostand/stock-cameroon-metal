@@ -5,7 +5,6 @@ import com.siewe.inventorymanagementsystem.model.Reglement;
 import com.siewe.inventorymanagementsystem.model.Vente;
 import com.siewe.inventorymanagementsystem.model.enumeration.TypePaiement;
 import lombok.Data;
-import org.apache.commons.lang.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +43,7 @@ public class VenteDto {
         VenteDto venteDto = new VenteDto();
         if(vente != null){
             venteDto.setId(vente.getId());
-            venteDto.setNumVente("Ref NO:"+StringUtils.leftPad(vente.getId().toString(), 6, "0"));
+//            venteDto.setNumVente("Ref NO:"+ StringUtils.leftPad(vente.getId().toString(), 6, "0"));
             venteDto.setCreatedDate(vente.getCreatedDate());
             venteDto.setDeleted(vente.getDeleted());
 
