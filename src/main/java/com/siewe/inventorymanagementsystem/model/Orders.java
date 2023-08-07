@@ -19,7 +19,7 @@ public class Orders{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id")
-    private Integer orderId;
+    private Long orderId;
 
     private Boolean deleted;
 
@@ -30,11 +30,11 @@ public class Orders{
     private Timestamp createdDate;
 
     @JoinColumn(name = "user_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false,cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     private User user;
 
     @JoinColumn(name = "customer_id", referencedColumnName = "id")
-    @ManyToOne
+    @ManyToOne(optional = false,cascade = CascadeType.ALL)
     private Customer customer;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "orders")

@@ -99,27 +99,14 @@ public class User implements Serializable{
     @Column(name = "reset_date", nullable = true)
     private LocalDateTime resetDate = null;
 
-    @OneToMany(mappedBy="user")
-    @ToString.Exclude
-    private List<UserRole> userRoles;
-
-    @OneToOne(optional=false, mappedBy="customer")
-    private Receipt receipt;
-
-    @OneToOne(optional=false, mappedBy="employee")
-    private Receipt userReceipt;
-
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_roles", joinColumns = {
             @JoinColumn(name = "user_id", referencedColumnName = "id")}, inverseJoinColumns = {
             @JoinColumn(name = "role_id", referencedColumnName = "id")})
     private Set<Role> roles;
 
-    @OneToMany(mappedBy = "user")
-    @ToString.Exclude
-    private List<Vente> ventes;
-
-    @OneToMany(mappedBy = "user")
+    @OneToMany
+    @JoinColumn(name = "user_id",referencedColumnName = "id",foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     @ToString.Exclude
     private List<Orders> orders;
 

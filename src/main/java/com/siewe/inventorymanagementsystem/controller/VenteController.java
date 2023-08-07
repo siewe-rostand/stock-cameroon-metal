@@ -189,6 +189,8 @@ public class VenteController {
     public ResponseEntity<VenteDto> getVente(@PathVariable Long id) {
         log.debug("REST request to get Vente : {}", id);
         VenteDto venteDto = venteService.findOne(id);
+        System.out.println(venteDto);
+
         return Optional.ofNullable(venteDto)
                 .map(result -> new ResponseEntity<>(
                         result,

@@ -59,7 +59,7 @@ public class UserController {
 
     @GetMapping("/user")
     public ResponseEntity<Object> getUserInfo() {
-        UserDto userDto = userService.getUserInfo();
+        UserDto userDto = userService.findByUserFromToken();
         return  ResponseHandler.generateResponse("user data successfully gotten",HttpStatus.OK,userDto);
     }
 //

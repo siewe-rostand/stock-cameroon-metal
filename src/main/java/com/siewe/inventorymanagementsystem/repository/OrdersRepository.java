@@ -9,15 +9,17 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface OrdersRepository extends JpaRepository<Orders,Integer> {
-    default Orders findOne(Integer id) {
+public interface OrdersRepository extends JpaRepository<Orders,Long> {
+    default Orders findOne(Long id) {
         return (Orders) findById(id).orElse(null);
     }
 
-    Orders findByOrderId(Integer orderId);
+    Orders findByOrderId(Long orderId);
 
     List<Orders> findByOrderRef(String ref);
 
     @Override
     Page<Orders> findAll(Pageable pageable);
+
+    Boolean existsByOrderId(Long id);
 }

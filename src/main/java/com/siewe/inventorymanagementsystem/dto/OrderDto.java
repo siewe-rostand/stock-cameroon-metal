@@ -11,7 +11,7 @@ import java.util.List;
 
 @Data
 public class OrderDto {
-    private Integer id;
+    private Long id;
 
     private String orderRef;
     private String createdUser;
@@ -19,6 +19,8 @@ public class OrderDto {
     private Boolean deleted;
     private Long customerId;
     private CustomerDto customer;
+    private  Long userId;
+    private  String username;
 
     private List<OrderedProduitDto> products;
 
@@ -28,7 +30,6 @@ public class OrderDto {
             orderDto.setId(order.getOrderId());
             orderDto.setCreatedDate(order.getCreatedDate());
             orderDto.setDeleted(order.getDeleted());
-            orderDto.setCreatedUser(order.getUser().getFullName());
             orderDto.setOrderRef(order.getOrderRef());
             ArrayList<OrderedProduitDto> produits = new ArrayList<>();
 
@@ -41,6 +42,11 @@ public class OrderDto {
             if (order.getCustomer() != null){
                 orderDto.setCustomerId(order.getCustomer().getCustomerId());
                 orderDto.setCustomer(new CustomerDto().createDTO(order.getCustomer()));
+            }
+
+            if (order.getUser() != null){
+                orderDto.setUserId(order.getUser().getUserId());
+                orderDto.setUsername(order.getUser().getFullName());
             }
             return orderDto;
         }

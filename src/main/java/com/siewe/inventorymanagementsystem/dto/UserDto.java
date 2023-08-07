@@ -82,8 +82,8 @@ public class UserDto {
             userDto.setValidated(user.getValidated());
             userDto.setDeleted(user.getDeleted());
 
-            if(user.getVentes() != null){
-                if(user.getVentes().isEmpty())
+            if(user.getOrders() != null){
+                if(user.getOrders().isEmpty())
                     userDto.setDeletable(true);
             }
 

@@ -9,6 +9,7 @@ import com.siewe.inventorymanagementsystem.repository.CustomerRepository;
 import com.siewe.inventorymanagementsystem.repository.OrdersRepository;
 import com.siewe.inventorymanagementsystem.repository.ProduitRepository;
 import com.siewe.inventorymanagementsystem.repository.UserRepository;
+import com.siewe.inventorymanagementsystem.security.SecurityUtils;
 import com.siewe.inventorymanagementsystem.utils.InvalidOrderItemException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +26,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import java.sql.Timestamp;
 import java.util.Optional;
 
@@ -49,13 +51,14 @@ public class OrderService {
     @Autowired
     private ProduitRepository produitRepository;
 
+
     public Orders save(OrderDto orderDto) throws InvalidOrderItemException{
         log.debug("Request to save new order : {}", orderDto);
 
         //get connected user
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        User user = userRepository.findByEmail(userDetails.getUsername());
+        User user = userRepository.findByEmail(SecurityUtils.getCurrentUserLogin());
 
         Timestamp createdDate =new Timestamp(1);
         Orders orders= new Orders();
@@ -91,21 +94,14 @@ public class OrderService {
                 }
             }
         }
-        ordersRepository.save(result);
-        return result;
+        return ordersRepository.save(result);
     }
 
     @Transactional(readOnly = true)
-    public ResponseEntity<OrderDto> findOne(int id) {
-        log.debug("Request to get order service : {}", id);
-        Orders orders = ordersRepository.findByOrderId(id);
-
-        OrderDto orderDto = new OrderDto().CreateDto(orders);
-        return Optional.ofNullable(orderDto)
-                .map(result -> new ResponseEntity<>(
-                        result,
-                        HttpStatus.OK))
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    public OrderDto findOne(Long id) {
+        log.debug("Request to get order by id : {}", id);
+        Orders orders = ordersRepository.findOne(id);
+        return new OrderDto().CreateDto(orders);
     }
 
     public Page<OrderDto> findAll(Integer page, Integer size, String sortBy, String direction) {

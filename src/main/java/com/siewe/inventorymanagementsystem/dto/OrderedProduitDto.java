@@ -8,7 +8,7 @@ public class OrderedProduitDto {
 
     private Integer id;
     private Double metrage;
-    private Integer orderId;
+    private Long orderId;
     private String name;
     private Integer produitId;
     private String productRef;

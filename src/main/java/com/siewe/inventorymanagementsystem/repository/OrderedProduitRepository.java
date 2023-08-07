@@ -11,4 +11,5 @@ public interface OrderedProduitRepository extends JpaRepository<OrderedProduit, 
         return (OrderedProduit) findById(id).orElse(null);
     }
     OrderedProduit findByOrdersAndProduct(Orders orders, Produit produit);
+
 }

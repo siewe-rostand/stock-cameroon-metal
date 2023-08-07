@@ -13,9 +13,8 @@
 //import org.springframework.http.ResponseEntity;
 //import org.springframework.http.converter.HttpMessageNotReadableException;
 //import org.springframework.http.converter.HttpMessageNotWritableException;
+//import org.springframework.security.core.AuthenticationException;
 //import org.springframework.validation.BindException;
-//import org.springframework.validation.FieldError;
-//import org.springframework.validation.ObjectError;
 //import org.springframework.web.HttpMediaTypeNotSupportedException;
 //import org.springframework.web.HttpRequestMethodNotSupportedException;
 //import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -29,7 +28,6 @@
 //import org.springframework.web.multipart.support.MissingServletRequestPartException;
 //import org.springframework.web.servlet.NoHandlerFoundException;
 //import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-//
 //
 //import java.util.ArrayList;
 //import java.util.List;
@@ -294,6 +292,24 @@
 //        ApiError apiError = new ApiError(HttpStatus.EXPECTATION_FAILED,"File too large",exc);
 //        return buildResponseEntity(apiError);
 //    }
+//
+//    @ExceptionHandler(AuthenticationException.class)
+//    protected ResponseEntity<Object> handleAuthenticationException(AuthenticationException ex) {
+//        ApiError apiError = new ApiError(HttpStatus.UNAUTHORIZED, "Unauthorized", ex);
+//        return buildResponseEntity(apiError);
+//    }
+//
+//    @ExceptionHandler(AuthorizationException.class)
+//    protected ResponseEntity<Object> handleAuthorizationException(AuthorizationException ex) {
+//        ApiError apiError = new ApiError(HttpStatus.FORBIDDEN, "Forbidden", ex);
+//        return buildResponseEntity(apiError);
+//    }
+////    @ExceptionHandler(AuthenticationException.class)
+////    public ResponseEntity<Object> invalidCredentials(AuthenticationException ex) {
+////        ApiError apiError = new ApiError(HttpStatus.UNAUTHORIZED, "Invalid Credentials", ex);
+////
+////        return buildResponseEntity(apiError);
+////    }
 //
 //    private ResponseEntity<Object> buildResponseEntity(ApiError apiError) {
 //        return new ResponseEntity<>(apiError, apiError.getStatus());

@@ -348,7 +348,7 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public UserDto findByUserIsCurrentUser() {
+    public UserDto findByUserFromToken() {
    User user = userRepository.findByEmail(SecurityUtils.getCurrentUserLogin());
         return new UserDto().createDTO(user);
     }
@@ -519,7 +519,7 @@ public class UserService {
         if(user == null){
             throw new EntityNotFoundException(User.class,"id",id.toString());
         }
-        if (!user.getVentes().isEmpty()) {
+        if (!user.getOrders().isEmpty()) {
             user.setDeleted(true);
             userRepository.save(user);
         } else {

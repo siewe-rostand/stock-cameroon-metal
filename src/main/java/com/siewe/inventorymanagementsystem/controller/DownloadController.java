@@ -7,6 +7,8 @@ import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
@@ -16,16 +18,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Controller
+@RestController
 public class DownloadController {
 
     @Autowired
     private DownloadService downloadService;
 
-    @GetMapping("/downloadReceipt")
-    public void downloadReceipt(HttpServletResponse response) throws IOException {
+    @GetMapping("/downloadReceipt/{orderId}")
+    public void downloadReceipt(HttpServletResponse response, @PathVariable Long orderId) throws IOException {
         Map<String, Object> data = createTestData();
-        ByteArrayInputStream exportedData = downloadService.exportReceiptPdf("invoice", data);
+        ByteArrayInputStream exportedData = downloadService.exportReceiptPdf("invoice",orderId);
         response.setContentType("application/octet-stream");
         response.setHeader("Content-Disposition", "attachment; filename=receipt.pdf");
         IOUtils.copy(exportedData, response.getOutputStream());

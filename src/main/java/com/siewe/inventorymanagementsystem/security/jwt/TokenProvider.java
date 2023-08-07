@@ -47,6 +47,7 @@ public class TokenProvider {
         }
 
 
+        assert user != null;
         return Jwts.builder().setId(UUID.randomUUID().toString()).setSubject(email)
                 .setIssuedAt(now).signWith(SignatureAlgorithm.HS512, this.secretKey)
                 .setExpiration(validity).claim("id", user.getUserId())

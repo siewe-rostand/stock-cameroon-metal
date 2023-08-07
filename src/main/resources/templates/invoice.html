@@ -33,26 +33,40 @@
 			<td>
 				<table>
 					<tr>
-						<th>Bill To:</th>
+						<th>Facture De :</th>
 					</tr>
 					<tr>
-						<td th:text="'Company Name: ' + ${customer.name}"></td>
+						<td th:text="'Nom Client: ' + ${customer.name}"></td>
 					</tr>
 					<tr>
-						<td th:text="'Address: ' + ${customer.address}"></td>
+						<td th:text="'Téléphone: ' + ${customer.phone}"></td>
 					</tr>
 					<tr>
-						<td th:text="'Email: ' + ${customer.email}"></td>
+						<td th:text="'Ville: ' + ${customer.city}"></td>
 					</tr>
 					<tr>
-						<td th:text="'Phone: ' + ${customer.phone}"></td>
+						<td th:text="'Quartier: ' + ${customer.quarter}"></td>
 					</tr>
 				</table>
 			</td>
 			<td align="right">
-				<img width="140" src="https://simplesolution.dev/images/Logo_S_v1.png" />
-				<br />
-				Simple Solution
+				<table>
+					<tr>
+						<th>Bill To:</th>
+					</tr>
+					<tr>
+						<td th:text="'Date ' + ${date}"></td>
+					</tr>
+					<tr>
+						<td th:text="'Téléphone: ' + ${customer.phone}"></td>
+					</tr>
+					<tr>
+						<td th:text="'CAMEROON METAL'"></td>
+					</tr>
+					<tr>
+						<td th:text="'Facture par: ' + ${userName}"></td>
+					</tr>
+				</table>
 			</td>
 		</tr>
 	</table>
@@ -62,20 +76,15 @@
 <table class="receipt">
 	<tr>
 		<th>Item #</th>
+		<th>Ref Produit</th>
 		<th>Description</th>
 		<th>Quantity</th>
-		<th>Unit Price</th>
-		<th>Total</th>
 	</tr>
-	<tr th:each="item, iterStat: ${receiptItems}">
+	<tr th:each="item, iterStat: ${products}">
 		<td th:text="${iterStat.index + 1}"></td>
-		<td th:text="${item.productName}"></td>
-		<td th:text="${item.quantity}"></td>
-		<td th:text="${item.total}"></td>
-	</tr>
-	<tr>
-		<td class="total" colspan="4"><b>Total</b></td>
-		<td><b th:text="${#aggregates.sum(receiptItems.![total])}"></b></td>
+		<td th:text="${item.productRef}"></td>
+		<td th:text="${item.name}"></td>
+		<td th:text="${item.metrage}"></td>
 	</tr>
 </table>
 </body>
