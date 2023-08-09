@@ -1,10 +1,7 @@
 package com.siewe.inventorymanagementsystem.service;
 
 import com.siewe.inventorymanagementsystem.dto.*;
-import com.siewe.inventorymanagementsystem.model.Customer;
-import com.siewe.inventorymanagementsystem.model.Orders;
-import com.siewe.inventorymanagementsystem.model.Produit;
-import com.siewe.inventorymanagementsystem.model.User;
+import com.siewe.inventorymanagementsystem.model.*;
 import com.siewe.inventorymanagementsystem.repository.CustomerRepository;
 import com.siewe.inventorymanagementsystem.repository.OrdersRepository;
 import com.siewe.inventorymanagementsystem.repository.ProduitRepository;
@@ -28,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Optional;
 
 @Service

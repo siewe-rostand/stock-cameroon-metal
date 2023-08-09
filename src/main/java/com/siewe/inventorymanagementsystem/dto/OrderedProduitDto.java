@@ -19,7 +19,7 @@ public class OrderedProduitDto {
         if (orderedProduit != null){
             orderedProduitDto.setId(orderedProduit.getId());
             orderedProduitDto.setMetrage(orderedProduit.getMetrage());
-            if (orderedProduitDto.getProduitId() != null){
+            if (orderedProduit.getProduct() != null){
                 orderedProduitDto.setProduitId(orderedProduit.getProduct().getProduitId());
                 orderedProduitDto.setName(orderedProduit.getProduct().getName());
                 orderedProduitDto.setProductRef(orderedProduit.getProduct().getRef());

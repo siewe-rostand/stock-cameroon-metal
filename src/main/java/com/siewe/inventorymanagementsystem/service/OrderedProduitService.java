@@ -1,6 +1,7 @@
 package com.siewe.inventorymanagementsystem.service;
 
 import com.siewe.inventorymanagementsystem.dto.OrderedProduitDto;
+import com.siewe.inventorymanagementsystem.dto.ProduitDto;
 import com.siewe.inventorymanagementsystem.model.OrderedProduit;
 import com.siewe.inventorymanagementsystem.model.Orders;
 import com.siewe.inventorymanagementsystem.model.Produit;
@@ -8,6 +9,7 @@ import com.siewe.inventorymanagementsystem.repository.OrderedProduitRepository;
 import com.siewe.inventorymanagementsystem.repository.OrdersRepository;
 import com.siewe.inventorymanagementsystem.repository.ProduitRepository;
 import com.siewe.inventorymanagementsystem.utils.InvalidOrderItemException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +19,7 @@ import java.util.Optional;
 @Service
 @Transactional
 @Slf4j
+@RequiredArgsConstructor
 public class OrderedProduitService {
     private final OrderedProduitRepository orderedProduitRepository;
 
@@ -24,23 +27,18 @@ public class OrderedProduitService {
 
 
     private final ProduitRepository produitRepository;
+    private final ProduitService produitService;
 
-    public OrderedProduitService(OrderedProduitRepository orderedProduitRepository, OrdersRepository ordersRepository, ProduitRepository produitRepository) {
-        this.orderedProduitRepository = orderedProduitRepository;
-        this.ordersRepository = ordersRepository;
-        this.produitRepository = produitRepository;
-    }
 
     @Transactional
     public OrderedProduitDto save(OrderedProduitDto produitDto) throws InvalidOrderItemException {
-        Produit produit = produitRepository.findByProduitId(produitDto.getProduitId());
-        Orders orders = ordersRepository.findByOrderId(produitDto.getOrderId());
-
-        OrderedProduit orderedProduit = orderedProduitRepository.findByOrdersAndProduct(orders,produit);
+        log.debug("save a new order produit : {}",produitDto);
+        OrderedProduit orderedProduit = orderedProduitRepository.findByOrdersIdAndProductId(produitDto.getOrderId(),produitDto.getProduitId());
         if (orderedProduit == null){
             orderedProduit = new OrderedProduit();
         }
-
+        Produit produit = produitRepository.findByProduitId(produitDto.getProduitId());
+        Orders orders = ordersRepository.findByOrderId(produitDto.getOrderId());
         orderedProduit.setProduct(produit);
         orderedProduit.setMetrage(produitDto.getMetrage());
         orderedProduit.setOrders(orders);
@@ -60,7 +58,7 @@ public class OrderedProduitService {
 
     @Transactional(readOnly = true)
     public OrderedProduitDto findById(Integer id){
-        OrderedProduit orderedProduit = orderedProduitRepository.findOne(id);
+        OrderedProduit orderedProduit = orderedProduitRepository.getById(id);
         return new OrderedProduitDto().createDTO(orderedProduit);
     }
 

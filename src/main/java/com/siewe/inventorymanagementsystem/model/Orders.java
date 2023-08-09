@@ -8,9 +8,6 @@ import java.sql.Timestamp;
 import java.util.List;
 
 @Entity(name = "orders")
-@Getter
-@Setter
-@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 public class Orders{
@@ -41,4 +38,59 @@ public class Orders{
     @ToString.Exclude
     private List<OrderedProduit> orderedProduits;
 
+    public Long getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(Long orderId) {
+        this.orderId = orderId;
+    }
+
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
+    }
+
+    public String getOrderRef() {
+        return orderRef;
+    }
+
+    public void setOrderRef(String orderRef) {
+        this.orderRef = orderRef;
+    }
+
+    public Timestamp getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Timestamp createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
+    public List<OrderedProduit> getOrderedProduits() {
+        return orderedProduits;
+    }
+
+    public void setOrderedProduits(List<OrderedProduit> orderedProduits) {
+        this.orderedProduits = orderedProduits;
+    }
 }

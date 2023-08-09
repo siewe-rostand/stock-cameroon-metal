@@ -49,16 +49,10 @@ public class ProductService {
     private final Logger log = LoggerFactory.getLogger(ProductService.class);
 
     @Autowired
-    private ProductRepository productRepository;
-
-    @Autowired
-    private ProductStockRepository productStockRepository;
+    private final ProductRepository productRepository;
 
     @Autowired
     private CategoryRepository categoryRepository;
-
-    @Autowired
-    private UserRepository userRepository;
 
     @Autowired
     private ApprovisionnementService approvisionnementService;

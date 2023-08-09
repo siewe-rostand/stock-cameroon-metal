@@ -43,17 +43,4 @@ public class Produit {
 
     @OneToMany(mappedBy = "product")
     private List<OrderedProduit> orderedProduitList;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        Produit produit = (Produit) o;
-        return produitId != null && Objects.equals(produitId, produit.produitId);
-    }
-
-    @Override
-    public int hashCode() {
-        return getClass().hashCode();
-    }
 }

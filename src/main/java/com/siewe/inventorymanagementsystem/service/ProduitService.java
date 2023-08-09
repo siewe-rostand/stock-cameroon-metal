@@ -71,10 +71,9 @@ public class ProduitService {
         });
     }
 
-    public ProduitDto findById(Integer id){
-        Produit produit = produitRepository.findByProduitId(id);
+    public Produit findById(Integer id){
 
-        return new ProduitDto().createDTO(produit);
+        return produitRepository.findByProduitId(id);
     }
 
     public void deleteById(Integer id){

@@ -7,7 +7,8 @@
             text-align: center;
         }
         .receipt-header {
-            width: 100%;
+            margin: 0;
+	        padding: 0;
         }
         .receipt {
             width: 100%;
@@ -20,59 +21,53 @@
             background-color: #25a7e7;
             color: white;
         }
-        .total {
-            text-align: right;
-        }
 	</style>
 </head>
 <body>
-<h1>Receipt</h1>
-<div>
-	<table class="receipt-header">
-		<tr>
-			<td>
-				<table>
-					<tr>
-						<th>Facture De :</th>
-					</tr>
-					<tr>
-						<td th:text="'Nom Client: ' + ${customer.name}"></td>
-					</tr>
-					<tr>
-						<td th:text="'Téléphone: ' + ${customer.phone}"></td>
-					</tr>
-					<tr>
-						<td th:text="'Ville: ' + ${customer.city}"></td>
-					</tr>
-					<tr>
-						<td th:text="'Quartier: ' + ${customer.quarter}"></td>
-					</tr>
-				</table>
-			</td>
-			<td align="right">
-				<table>
-					<tr>
-						<th>Bill To:</th>
-					</tr>
-					<tr>
-						<td th:text="'Date ' + ${date}"></td>
-					</tr>
-					<tr>
-						<td th:text="'Téléphone: ' + ${customer.phone}"></td>
-					</tr>
-					<tr>
-						<td th:text="'CAMEROON METAL'"></td>
-					</tr>
-					<tr>
-						<td th:text="'Facture par: ' + ${userName}"></td>
-					</tr>
-				</table>
-			</td>
-		</tr>
-	</table>
-</div>
+	<h1>Facture</h1>
+<table class="receipt-header">
+	<tr>
+		<td align="left">
+			<table>
+				<tr>
+					<th>Facture De :</th>
+				</tr>
+				<tr>
+					<td th:text="'Nom Client: ' + ${customer.name}"></td>
+				</tr>
+				<tr>
+					<td th:text="'Téléphone: ' + ${customer.phone}"></td>
+				</tr>
+				<tr>
+					<td th:text="'Ville: ' + ${customer.city}"></td>
+				</tr>
+				<tr>
+					<td th:text="'Quartier: ' + ${customer.quarter}"></td>
+				</tr>
+			</table>
+		</td>
+		<td align="right">
+			<table>
+				<tr>
+					<th>Bill To:</th>
+				</tr>
+				<tr>
+					<td th:text="'Date ' + ${date}"></td>
+				</tr>
+				<tr>
+					<td th:text="'Téléphone: ' + ${customer.phone}"></td>
+				</tr>
+				<tr>
+					<td th:text="'CAMEROON METAL'"></td>
+				</tr>
+				<tr>
+					<td th:text="'Facture par: ' + ${userName}"></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
 
-<br />
 <table class="receipt">
 	<tr>
 		<th>Item #</th>
